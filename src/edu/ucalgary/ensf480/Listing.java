@@ -35,4 +35,6 @@ public class Listing {
     public void setState(String state) {
         this.state = state;
     }
+
+    public void hi(){}
 }
