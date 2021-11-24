@@ -36,5 +36,4 @@ public class Listing {
         this.state = state;
     }
 
-    public void hi(){}
 }
