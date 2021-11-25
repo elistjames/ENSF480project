@@ -1,4 +1,9 @@
-package edu.ucalgary.ensf480;
+package SingletonDatabase;
+
+import Properties.Listing;
+import Properties.ListingFee;
+import Properties.Property;
+import User.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,8 +29,12 @@ public class Database {
         DBURL = "whatever";
         USERNAME = "whatever";
         PASSWORD = "whatever";
-        initializeConnection();
-        this.pullAll();
+        users = new ArrayList<User>();
+        users.add(new Renter(10001,"eli","ehstjames","H@ckey00","ehstjames@gmail.com"));
+        fees = new ArrayList<ListingFee>();
+        fees.add(new ListingFee(100, 100));
+        //initializeConnection();
+        //this.pullAll();
     }
 
     public static Database getOnlyInstance() {
@@ -396,6 +405,7 @@ public class Database {
         }
         return true;
     }
+
 
     //public void addRenter()
 

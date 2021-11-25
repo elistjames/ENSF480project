@@ -1,4 +1,6 @@
-package edu.ucalgary.ensf480;
+package Properties;
+
+import User.Landlord;
 
 public class Property {
     private Landlord landlord;

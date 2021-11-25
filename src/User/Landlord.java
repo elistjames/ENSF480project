@@ -1,4 +1,6 @@
-package edu.ucalgary.ensf480;
+package User;
+
+import Properties.Property;
 
 import java.util.ArrayList;
 

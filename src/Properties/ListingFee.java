@@ -1,4 +1,4 @@
-package edu.ucalgary.ensf480;
+package Properties;
 
 public class ListingFee {
     private int price;
