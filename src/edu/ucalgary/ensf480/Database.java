@@ -324,7 +324,6 @@ public class Database {
         }
     }
 
-
     public void pullAll(){
         this.pullRenters();
         this.pullLandlords();
@@ -333,6 +332,16 @@ public class Database {
         this.pullFees();
         this.pullListings();
         this.pullUsers();
+    }
+
+    public void pushAll(){
+        this.pushRenters();
+        this.pushLandlords();
+        this.pushProperties();
+        this.pushManagers();
+        this.pushFees();
+        this.pushListings();
+        this.pushUsers();
     }
 
     public ArrayList<User> getUsers() {
