@@ -8,6 +8,8 @@ public class Renter extends User implements Observer{
         super(userID, name, username, password, email);
     }
 
+
+
     @Override
     public void update(ArrayList<Listing> listings) {
 

@@ -15,6 +15,7 @@ public class Database {
     private ArrayList<Manager> managers;
     private ArrayList<ListingFee> fees;
     private ArrayList<Listing> listings;
+    private ArrayList<Listing> newListings;
 
     private Connection dbConnect;
     private ResultSet results;
@@ -366,6 +367,26 @@ public class Database {
         }
         return null;
     }
+
+    public boolean validateUsername(String username){
+        for(User user : users){
+           if(user.getUsername().compareTo(username) == 0){
+               return false;
+           }
+        }
+        return true;
+    }
+
+    public boolean validatePassword(String password){
+        for(User user : users){
+            if(user.getPassword().compareTo(password) == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //public void addRenter()
 
     private Property getProperty(int propertyID){
         for(Property p : properties){
