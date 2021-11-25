@@ -324,6 +324,15 @@ public class Database {
         }
     }
 
+    public void pushAll(){
+        this.pushRenters();
+        this.pushLandlords();
+        this.pushProperties();
+        this.pushManagers();
+        this.pushFees();
+        this.pushListings();
+        this.pushUsers();
+    }
 
     public void pullAll(){
         this.pullRenters();
@@ -334,6 +343,8 @@ public class Database {
         this.pullListings();
         this.pullUsers();
     }
+
+
 
     public ArrayList<User> getUsers() {
         return users;
