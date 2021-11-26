@@ -153,7 +153,7 @@ public class Database {
             Statement myStmt = dbConnect.createStatement(); //create new statement
             result = myStmt.executeQuery("SELECT * FROM LISTINGS"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
-                this.listings.add(new Listing(this.getProperty(result.getInt("PropertyID")),
+                this.listings.add(new Listing(result.getInt("PropertyID"),
                         result.getInt("Duration"), result.getString("State")));
             }
         } catch (SQLException ex) {
@@ -223,7 +223,7 @@ public class Database {
                 query = "INSERT INTO PROPERTIES (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant) VALUES (?,?,?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-                myStmt.setInt(1, property.getLandlord());
+                myStmt.setInt(1, property.getLandlordID());
                 myStmt.setInt(2, property.getID());
                 myStmt.setString(3, property.getType());
                 myStmt.setInt(4, property.getBedrooms());
@@ -292,7 +292,7 @@ public class Database {
                 query = "INSERT INTO LISTINGS (PropertyID,Duration,State) VALUES (?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-                myStmt.setInt(1, listing.getProperty().getID());
+                myStmt.setInt(1, listing.getPropertyID());
                 myStmt.setInt(2, listing.getDuration());
                 myStmt.setString(3, listing.getState());
 

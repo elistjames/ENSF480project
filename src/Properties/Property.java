@@ -34,6 +34,8 @@ public class Property {
         this.cityQuadrant = cityQuadrant;
     }
 
+
+
     public int getID() {
         return ID;
     }
@@ -42,12 +44,12 @@ public class Property {
         this.ID = ID;
     }
 
-    public int getLandlord() {
+    public int getLandlordID() {
         return landlordID;
     }
 
-    public void setLandlord(int landlord) {
-        this.landlordID = landlord;
+    public void setLandlordID(int landlordID) {
+        this.landlordID = landlordID;
     }
 
     public String getAddress() {
