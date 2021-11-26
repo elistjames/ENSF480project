@@ -3,19 +3,29 @@ package Properties;
 import User.Landlord;
 
 public class Property {
-    private Landlord landlord;
+    private int landlordID;
     private int ID;
     private String type;
     private int bedrooms;
     private int bathrooms;
-    private boolean furnished;
+    private int furnished;
     private String address;
     private String cityQuadrant;
 
-    public Property(Landlord landlord, int ID, String type, int bedrooms, int bathrooms, boolean furnished,
+    public Property(int landlordID, int ID, String type, int bedrooms, int bathrooms, int furnished,
                     String address, String cityQuadrant) {
-        this.landlord = landlord;
+        this.landlordID = landlordID;
         this.ID = ID;
+        this.type = type;
+        this.bedrooms = bedrooms;
+        this.bathrooms = bathrooms;
+        this.furnished = furnished;
+        this.address = address;
+        this.cityQuadrant = cityQuadrant;
+    }
+
+    public Property(int landlordID, String type, int bedrooms, int bathrooms, int furnished, String address, String cityQuadrant) {
+        this.landlordID = landlordID;
         this.type = type;
         this.bedrooms = bedrooms;
         this.bathrooms = bathrooms;
@@ -32,12 +42,12 @@ public class Property {
         this.ID = ID;
     }
 
-    public Landlord getLandlord() {
-        return landlord;
+    public int getLandlord() {
+        return landlordID;
     }
 
-    public void setLandlord(Landlord landlord) {
-        this.landlord = landlord;
+    public void setLandlord(int landlord) {
+        this.landlordID = landlord;
     }
 
     public String getAddress() {
@@ -72,11 +82,11 @@ public class Property {
         this.bathrooms = bathrooms;
     }
 
-    public boolean isFurnished() {
+    public int isFurnished() {
         return furnished;
     }
 
-    public void setFurnished(boolean furnished) {
+    public void setFurnished(int furnished) {
         this.furnished = furnished;
     }
 

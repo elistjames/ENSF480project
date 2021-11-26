@@ -52,6 +52,26 @@ public class Database {
         }
     }
 
+    public void registerRenter(Renter r){
+        int nextID = getNextUserID();
+        r.setUserID(nextID);
+        renters.add(r);
+    }
+
+    public void registerProperty(Property p){
+        int nextID = getNextPropertyID();
+        p.setID(nextID);
+        properties.add(p);
+    }
+/*
+    public User getCurrentUser(String username, String password) {
+        for(Renter r : renters){
+            if(r.getUsername().equals(username)&&r.getPassword().equals(password)){
+
+            }
+        }
+    }
+*/
     private void pullRenters(){
         ResultSet result; //create new ResultSet object
         try {
@@ -88,10 +108,10 @@ public class Database {
             Statement myStmt = dbConnect.createStatement(); //create new statement
             result = myStmt.executeQuery("SELECT * FROM PROPERTIES"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
-                this.properties.add(new Property(this.getLandlord(result.getInt("LandlordID")),
+                this.properties.add(new Property(result.getInt("LandlordID"),
                         result.getInt("ID"), result.getString("Type"),
                         result.getInt("Bedrooms"), result.getInt("Bathrooms"),
-                        result.getBoolean("Furnished"), result.getString("Address"),
+                        result.getInt("Furnished"), result.getString("Address"),
                         result.getString("CityQuadrant")));
             }
         } catch (SQLException ex) {
@@ -203,12 +223,12 @@ public class Database {
                 query = "INSERT INTO PROPERTIES (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant) VALUES (?,?,?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-                myStmt.setInt(1, property.getLandlord().getUserID());
+                myStmt.setInt(1, property.getLandlord());
                 myStmt.setInt(2, property.getID());
                 myStmt.setString(3, property.getType());
                 myStmt.setInt(4, property.getBedrooms());
                 myStmt.setInt(5, property.getBathrooms());
-                myStmt.setBoolean(6, property.isFurnished());
+                myStmt.setInt(6, property.isFurnished());
                 myStmt.setString(7, property.getAddress());
                 myStmt.setString(8, property.getCityQuadrant());
 
@@ -379,15 +399,6 @@ public class Database {
         return listings;
     }
 
-    private Landlord getLandlord(int userID){
-        for(Landlord l : landlords){
-            if(l.getUserID() == userID){
-                return l;
-            }
-        }
-        return null;
-    }
-
     public boolean validateUsername(String username){
         for(User user : users){
            if(user.getUsername().compareTo(username) == 0){
@@ -407,7 +418,32 @@ public class Database {
     }
 
 
-    //public void addRenter()
+
+    private int getNextPropertyID(){
+        if(properties.isEmpty()){
+            return 1000000;
+        }
+        int nextID = properties.get(0).getID();
+        for(Property p : properties){
+            if(p.getID() > nextID){
+                nextID = p.getID();
+            }
+        }
+        return (nextID+1);
+    }
+
+    private int getNextUserID(){
+        if(users.isEmpty()){
+            return 1000000;
+        }
+        int nextID = users.get(0).getUserID();
+        for(User user : users){
+            if(user.getUserID() > nextID){
+                nextID = user.getUserID();
+            }
+        }
+        return (nextID+1);
+    }
 
     private Property getProperty(int propertyID){
         for(Property p : properties){

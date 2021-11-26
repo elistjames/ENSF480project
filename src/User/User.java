@@ -1,7 +1,6 @@
 package User;
 
 import SingletonDatabase.Database;
-import Strategy.ValidateData;
 
 public abstract class User {
     private String name;
@@ -9,8 +8,6 @@ public abstract class User {
     private String password;
     private int userID;
     private String email;
-    private Database db;
-    ValidateData vd;
 
     public User(int userID, String name, String username, String password, String email) {
         this.username = username;
@@ -20,38 +17,26 @@ public abstract class User {
         this.name = name;
     }
 
-    public void setValidateData(ValidateData vd) {
-        this.vd = vd;
-    }
-
-    public boolean performValidateData(Object d){
-        return vd.validate(d);
-    }
+    public User(){}
 
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public int getUserID() {
         return userID;
     }
-
     public void setUserID(int userID) {
         this.userID = userID;
     }
-
     public String getUsername() {
         return username;
     }
