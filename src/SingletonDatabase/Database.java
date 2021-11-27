@@ -5,8 +5,10 @@ import Properties.ListingFee;
 import Properties.Property;
 import User.*;
 
+
 import java.sql.*;
 import java.util.ArrayList;
+
 
 public class Database {
     private static Database onlyInstance;
@@ -20,7 +22,6 @@ public class Database {
     private ArrayList<Manager> managers;
     private ArrayList<ListingFee> fees;
     private ArrayList<Listing> listings;
-    private ArrayList<Listing> newListings;
 
     private Connection dbConnect;
     private ResultSet results;
@@ -153,7 +154,7 @@ public class Database {
             Statement myStmt = dbConnect.createStatement(); //create new statement
             result = myStmt.executeQuery("SELECT * FROM LISTINGS"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
-                this.listings.add(new Listing(result.getInt("PropertyID"),
+                this.listings.add(new Listing(this.getProperty(result.getInt("PropertyID")),
                         result.getInt("Duration"), result.getString("State")));
             }
         } catch (SQLException ex) {
@@ -292,7 +293,7 @@ public class Database {
                 query = "INSERT INTO LISTINGS (PropertyID,Duration,State) VALUES (?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-                myStmt.setInt(1, listing.getPropertyID());
+                myStmt.setInt(1, listing.getProperty().getID());
                 myStmt.setInt(2, listing.getDuration());
                 myStmt.setString(3, listing.getState());
 

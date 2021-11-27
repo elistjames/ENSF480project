@@ -2,18 +2,18 @@ package Properties;
 
 public class Listing {
 
-    private int propertyID;
+    private Property property;
     private int duration;
     private String state;
 
-    public Listing(int propertyID, int duration, String state) {
-        this.propertyID = propertyID;
+    public Listing(Property property, int duration, String state) {
+        this.property = property;
         this.duration = duration;
         this.state = state;
     }
 
-    public int getPropertyID() {
-        return propertyID;
+    public Property getProperty() {
+        return property;
     }
 
     public int getDuration() {

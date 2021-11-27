@@ -12,6 +12,16 @@ public class SearchCriteria {
         this.renterID = renterID;
     }
 
+    public SearchCriteria(int renterID, String type, int n_bedrooms, int n_bathrooms, int furnished,
+                          String cityQuadrant) {
+        this.renterID = renterID;
+        this.type = type;
+        this.n_bedrooms = n_bedrooms;
+        this.n_bathrooms = n_bathrooms;
+        this.furnished = furnished;
+        this.cityQuadrant = cityQuadrant;
+    }
+
     public int getRenterID() {
         return renterID;
     }

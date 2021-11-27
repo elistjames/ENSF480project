@@ -3,6 +3,7 @@ package User;
 import SingletonDatabase.Database;
 
 public abstract class User {
+
     private String name;
     private String username;
     private String password;
