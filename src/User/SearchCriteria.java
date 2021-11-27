@@ -10,6 +10,11 @@ public class SearchCriteria {
 
     public SearchCriteria(int renterID) {
         this.renterID = renterID;
+        type = "any";
+        n_bedrooms = -1;
+        n_bathrooms = -1;
+        furnished = -1;
+        cityQuadrant = "any";
     }
 
     public SearchCriteria(int renterID, String type, int n_bedrooms, int n_bathrooms, int furnished,
