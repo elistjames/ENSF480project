@@ -1,6 +1,6 @@
-package User;
+package Model.User;
 
-import Properties.Property;
+import Model.Lising.Property;
 
 import java.util.ArrayList;
 

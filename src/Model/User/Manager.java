@@ -1,7 +1,7 @@
-package User;
+package Model.User;
 
-import Properties.ListingFee;
-import SingletonDatabase.Database;
+import Model.Lising.ListingFee;
+import Database.Database;
 
 public class Manager extends User{
     private Database db;

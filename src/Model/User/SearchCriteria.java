@@ -1,4 +1,4 @@
-package User;
+package Model.User;
 
 public class SearchCriteria {
     private int renterID;

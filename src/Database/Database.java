@@ -1,9 +1,9 @@
-package SingletonDatabase;
+package Database;
 
-import Properties.Listing;
-import Properties.ListingFee;
-import Properties.Property;
-import User.*;
+import Model.Lising.Listing;
+import Model.Lising.ListingFee;
+import Model.Lising.Property;
+import Model.User.*;
 
 
 import java.sql.*;
@@ -22,6 +22,10 @@ public class Database {
     private ArrayList<Manager> managers;
     private ArrayList<ListingFee> fees;
     private ArrayList<Listing> listings;
+    private ArrayList<Date> listingDates;
+    private ArrayList<Property> rentedProperties;
+    private ArrayList<SearchCriteria> searches;
+    private ArrayList<Renter> rentersToNotify;
 
     private Connection dbConnect;
     private ResultSet results;
@@ -30,10 +34,6 @@ public class Database {
         DBURL = "whatever";
         USERNAME = "whatever";
         PASSWORD = "whatever";
-        users = new ArrayList<User>();
-        users.add(new Renter(10001,"eli","ehstjames","H@ckey00","ehstjames@gmail.com"));
-        fees = new ArrayList<ListingFee>();
-        fees.add(new ListingFee(100, 100));
         //initializeConnection();
         //this.pullAll();
     }
@@ -53,6 +53,42 @@ public class Database {
         }
     }
 
+    public boolean validateUsername(String username){
+        for(User user : users){
+            if(user.getUsername().compareTo(username) == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validatePassword(String password){
+        for(User user : users){
+            if(user.getPassword().compareTo(password) == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validateListingFee(int duration){
+
+    }
+
+    public boolean validateLogin(String username, String password){
+
+    }
+
+    public void updateListingDates(Date currentDate){
+
+    }
+
+    public void postListing(Listing listing){
+
+    }
+
+
+
     public void registerRenter(Renter r){
         int nextID = getNextUserID();
         r.setUserID(nextID);
@@ -64,15 +100,16 @@ public class Database {
         p.setID(nextID);
         properties.add(p);
     }
-/*
+
     public User getCurrentUser(String username, String password) {
         for(Renter r : renters){
             if(r.getUsername().equals(username)&&r.getPassword().equals(password)){
 
             }
         }
+
     }
-*/
+
     private void pullRenters(){
         ResultSet result; //create new ResultSet object
         try {
@@ -400,23 +437,7 @@ public class Database {
         return listings;
     }
 
-    public boolean validateUsername(String username){
-        for(User user : users){
-           if(user.getUsername().compareTo(username) == 0){
-               return false;
-           }
-        }
-        return true;
-    }
 
-    public boolean validatePassword(String password){
-        for(User user : users){
-            if(user.getPassword().compareTo(password) == 0){
-                return false;
-            }
-        }
-        return true;
-    }
 
 
 

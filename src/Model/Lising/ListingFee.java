@@ -1,4 +1,4 @@
-package Properties;
+package Model.Lising;
 
 public class ListingFee {
     private int price;

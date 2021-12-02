@@ -1,6 +1,4 @@
-package User;
-
-import SingletonDatabase.Database;
+package Model.User;
 
 public abstract class User {
 

@@ -1,6 +1,4 @@
-package Properties;
-
-import User.Landlord;
+package Model.Lising;
 
 public class Property {
     private int landlordID;
