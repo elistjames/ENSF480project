@@ -1,13 +1,10 @@
 package Database;
-
-import Model.Lising.Listing;
-import Model.Lising.ListingFee;
-import Model.Lising.Property;
-import Model.User.*;
-
-
 import java.sql.*;
 import java.util.ArrayList;
+import Model.User.*;
+
+import Model.Lising.*;
+
 
 
 public class Database {
@@ -70,7 +67,7 @@ public class Database {
         }
         return true;
     }
-
+/*
     public boolean validateListingFee(int duration){
 
     }
@@ -86,7 +83,7 @@ public class Database {
     public void postListing(Listing listing){
 
     }
-
+*/
 
 
     public void registerRenter(Renter r){
@@ -100,7 +97,7 @@ public class Database {
         p.setID(nextID);
         properties.add(p);
     }
-
+/*
     public User getCurrentUser(String username, String password) {
         for(Renter r : renters){
             if(r.getUsername().equals(username)&&r.getPassword().equals(password)){
@@ -109,7 +106,7 @@ public class Database {
         }
 
     }
-
+*/
     private void pullRenters(){
         ResultSet result; //create new ResultSet object
         try {
