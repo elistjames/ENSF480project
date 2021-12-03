@@ -1,7 +1,6 @@
 package Controller.UserController;
 
-import Model.Lising.Listing;
-import Model.Lising.Property;
+import Model.Lising.*;
 import Model.User.Landlord;
 import Model.User.User;
 
@@ -31,9 +30,9 @@ public class LandlordController extends UserController {
     }
 
 
-    public void sendEmail(int toId, String msg){
+    public void sendEmail(int toId, String msg) {
         //db.getEmails().add(new Email(current.getUserID, toID, msg);
-  
+    }
 
     public void changeListingState(Listing listing, String state){
         if(listing.getState().equals("suspended")){
