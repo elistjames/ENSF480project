@@ -24,6 +24,8 @@ public class Database {
     private ArrayList<SearchCriteria> searches;
     private ArrayList<Integer> rentersToNotify;
 
+    private ArrayList<Listing> suspendedListings;
+
     private Connection dbConnect;
     private ResultSet results;
 
@@ -289,6 +291,21 @@ public class Database {
         }
     }
 
+    private void pullSuspendedListings(){
+        ResultSet result; //create new ResultSet object
+        try {
+            Statement myStmt = dbConnect.createStatement(); //create new statement
+            result = myStmt.executeQuery("SELECT * FROM SUSPENDED"); //execute statement select all from Chair table
+            while(result.next()) { //run while next row exists
+                this.suspendedListings.add(new Listing(this.getProperty(result.getInt("PropertyID")),
+                        result.getInt("Duration"), result.getString("State"),
+                        result.getDate("StartDate"), result.getInt("CurrentDay")));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void pullRTN(){
         ResultSet result; //create new ResultSet object
         try {
@@ -476,6 +493,7 @@ public class Database {
 
         }
     }
+
     private void pushUsers(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -517,6 +535,30 @@ public class Database {
                 myStmt.setString(3, manager.getUsername());
                 myStmt.setString(4, manager.getPassword());
                 myStmt.setString(5, manager.getEmail());
+
+                myStmt.execute();
+                myStmt.close();
+            }
+        } catch (SQLException e){
+
+        }
+    }
+
+    private void pushSuspendedListings(){
+        try{
+            Statement statement = dbConnect.createStatement();
+            statement.executeUpdate("TRUNCATE SUSPENDED");
+            String query;
+
+            for(Listing listing : suspendedListings){
+                query = "INSERT INTO SUSPENDED (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
+                PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+                myStmt.setInt(1, listing.getProperty().getID());
+                myStmt.setInt(2, listing.getDuration());
+                myStmt.setString(3, listing.getState());
+                myStmt.setDate(4, (Date) listing.getStartDate());
+                myStmt.setInt(5, listing.getCurrentDay());
 
                 myStmt.execute();
                 myStmt.close();
@@ -681,6 +723,17 @@ public class Database {
         return null;
     }
 
+    public String lookupLandlordemail(int id){
+        String email = "";
+        for(Landlord l : landlords){
+            if(l.getUserID() == id){
+                email = l.getEmail();
+                break;
+            }
+        }
+        return email;
+    }
+
 
     //getters
     public ArrayList<User> getUsers() {
@@ -712,5 +765,17 @@ public class Database {
 
     public ArrayList<Property> getRentedProperties() {
         return rentedProperties;
+    }
+
+    public ArrayList<SearchCriteria> getSearches() {
+        return searches;
+    }
+
+    public ArrayList<Integer> getRentersToNotify() {
+        return rentersToNotify;
+    }
+
+    public ArrayList<Listing> getSuspendedListings() {
+        return suspendedListings;
     }
 }
