@@ -1,8 +1,10 @@
 package Controller.UserController;
 
 
+import Model.Lising.Listing;
 import Model.Lising.ListingFee;
 import Model.User.Manager;
+import Model.User.SummaryReport;
 import Model.User.User;
 
 
@@ -27,9 +29,10 @@ public class ManagerController extends UserController {
 
     }
 
-//    public SummaryReport getReport(){
-//
-//    }
+    public void getReport(){
+        int active_list = db.getListings().size();
+        //  SummaryReport monthlyReport = new SummaryReport();
+    }
 
     public void changeFee(ListingFee lf, int new_price){
             for (ListingFee f : db.getFees()) {

@@ -31,9 +31,9 @@ public class LandlordController extends UserController {
     }
 
 
-    public void sendEmail(int toId, String msg){
+    public void sendEmail(int toId, String msg) {
         //db.getEmails().add(new Email(current.getUserID, toID, msg);
-  
+    }
 
     public void changeListingState(Listing listing, String state){
         if(listing.getState().equals("suspended")){
