@@ -23,5 +23,4 @@ public class SystemController {
         db = Database.getOnlyInstance();
         currentDate = Date.valueOf(LocalDate.now());
     }
-    int i =0;
 }

@@ -1,12 +1,14 @@
 package Controller.UserController;
 
+import Model.User.Renter;
 import Model.User.User;
 
 public class RenterController extends UserController {
+    Renter current;
 
-
-    public RenterController(User currentUser){
+    public RenterController(Renter currentUser){
         super(currentUser);
+        current = currentUser;
 
     }
 
