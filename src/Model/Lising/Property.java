@@ -9,9 +9,10 @@ public class Property {
     private int furnished;
     private String address;
     private String cityQuadrant;
+    private String state;
 
     public Property(int landlordID, int ID, String type, int bedrooms, int bathrooms, int furnished,
-                    String address, String cityQuadrant) {
+                    String address, String cityQuadrant, String state) {
         this.landlordID = landlordID;
         this.ID = ID;
         this.type = type;
@@ -20,6 +21,7 @@ public class Property {
         this.furnished = furnished;
         this.address = address;
         this.cityQuadrant = cityQuadrant;
+        this.state = state;
     }
 
     public Property(int landlordID, String type, int bedrooms, int bathrooms, int furnished, String address, String cityQuadrant) {
@@ -98,5 +100,11 @@ public class Property {
         this.cityQuadrant = cityQuadrant;
     }
 
+    public String getState() {
+        return state;
+    }
 
+    public void setState(String state) {
+        this.state = state;
+    }
 }

@@ -18,11 +18,17 @@ public class LandlordController extends UserController {
                                  String cityQuadrant){
         int next = db.getNextPropertyID();
         db.getProperties().add(new Property(current.getUserID(), next, type, bedrooms, bathrooms, furnished,
-                address, cityQuadrant));
+                address, cityQuadrant, "unlisted"));
         current.getMyProperties().add(db.getProperties().get(db.getProperties().size()-1));
     }
 
     public void cancelListing(Listing l){
-
+        for(Listing cl : db.getListings()){
+            if(cl.getProperty().getID() == l.getProperty().getID()){
+                db.getListings().remove(cl);
+            }
+        }
     }
+
+
 }

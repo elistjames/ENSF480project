@@ -222,7 +222,7 @@ public class Database {
                         result.getInt("ID"), result.getString("Type"),
                         result.getInt("Bedrooms"), result.getInt("Bathrooms"),
                         result.getInt("Furnished"), result.getString("Address"),
-                        result.getString("CityQuadrant")));
+                        result.getString("CityQuadrant"), result.getString("State")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -282,7 +282,7 @@ public class Database {
                         result.getInt("ID"), result.getString("Type"),
                         result.getInt("Bedrooms"), result.getInt("Bathrooms"),
                         result.getInt("Furnished"), result.getString("Address"),
-                        result.getString("CityQuadrant")));
+                        result.getString("CityQuadrant"), "rented"));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -390,7 +390,7 @@ public class Database {
             String query;
 
             for(Property property : properties){
-                query = "INSERT INTO PROPERTIES (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant) VALUES (?,?,?,?,?,?,?,?)";
+                query = "INSERT INTO PROPERTIES (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant,State) VALUES (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, property.getLandlordID());
@@ -401,6 +401,7 @@ public class Database {
                 myStmt.setInt(6, property.isFurnished());
                 myStmt.setString(7, property.getAddress());
                 myStmt.setString(8, property.getCityQuadrant());
+                myStmt.setString(9, property.getState());
 
                 myStmt.execute();
                 myStmt.close();
