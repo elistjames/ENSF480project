@@ -7,13 +7,13 @@ import java.util.ArrayList;
 public class SummaryReport {
     private int housesListed;
     private int housesRented;
-    private int activitiesListings;
+    private int activeListings;
     private ArrayList<Property> rentedProperties;
 
-    public SummaryReport(int housesListed, int housesRented, int activitiesListings, ArrayList<Property> rentedProperties) {
+    public SummaryReport(int housesListed, int housesRented, int activeListings, ArrayList<Property> rentedProperties) {
         this.housesListed = housesListed;
         this.housesRented = housesRented;
-        this.activitiesListings = activitiesListings;
+        this.activeListings = activeListings;
         this.rentedProperties = rentedProperties;
     }
 
@@ -26,7 +26,7 @@ public class SummaryReport {
     }
 
     public int getActivitiesListings() {
-        return activitiesListings;
+        return activeListings;
     }
 
     public ArrayList<Property> getRentedProperties() {

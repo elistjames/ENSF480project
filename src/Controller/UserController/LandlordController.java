@@ -1,8 +1,12 @@
 package Controller.UserController;
 
 import Model.Lising.*;
+import Model.User.Email;
 import Model.User.Landlord;
 import Model.User.User;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class LandlordController extends UserController {
     Landlord current;
@@ -18,7 +22,12 @@ public class LandlordController extends UserController {
         int next = db.getNextPropertyID();
         db.getProperties().add(new Property(current.getUserID(), next, type, bedrooms, bathrooms, furnished,
                 address, cityQuadrant, "unlisted"));
-        current.getMyProperties().add(db.getProperties().get(db.getProperties().size()-1));
+    }
+
+    public void postProperty(Property p, int days){
+        db.getListings().add(new Listing(p, days, "listed", Date.valueOf(LocalDate.now()), 0));
+        p.setState("listed");
+        db.updateRentersToNotify(p);
     }
 
     public void cancelListing(Listing l){
@@ -30,8 +39,8 @@ public class LandlordController extends UserController {
     }
 
 
-    public void sendEmail(int toId, String msg) {
-        //db.getEmails().add(new Email(current.getUserID, toID, msg);
+    public void replyEmail(Email recived, String msg){
+        db.getEmails().add(new Email(current.getEmail(), recived.getFromEmail(), recived.getSubject(), msg));
     }
 
     public void changeListingState(Listing listing, String state){

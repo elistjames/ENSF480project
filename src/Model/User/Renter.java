@@ -12,14 +12,6 @@ public class Renter extends User{
 
     public Renter(int userID, String name, String username, String password, String email, String type) {
         super(userID, name, username, password, email, type);
-
-    }
-
-    public void makeAccount(String name, String username, String password, String email){
-        setName(name);
-        setUsername(username);
-        setPassword(password);
-        setEmail(email);
     }
 
     public SearchCriteria getSc() {
