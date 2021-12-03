@@ -1,5 +1,6 @@
 package Controller.UserController;
 
+import Model.Lising.Listing;
 import Model.Lising.Property;
 import Model.User.Landlord;
 import Model.User.User;
@@ -19,5 +20,9 @@ public class LandlordController extends UserController {
         db.getProperties().add(new Property(current.getUserID(), next, type, bedrooms, bathrooms, furnished,
                 address, cityQuadrant));
         current.getMyProperties().add(db.getProperties().get(db.getProperties().size()-1));
+    }
+
+    public void cancelListing(Listing l){
+
     }
 }
