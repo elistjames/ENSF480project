@@ -30,5 +30,8 @@ public class LandlordController extends UserController {
         }
     }
 
+    public void sendEmail(int toId, String msg){
+        //db.getEmails().add(new Email(current.getUserID, toID, msg);
+    }
 
 }
