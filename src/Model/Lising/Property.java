@@ -97,4 +97,6 @@ public class Property {
     public void setCityQuadrant(String cityQuadrant) {
         this.cityQuadrant = cityQuadrant;
     }
+
+
 }

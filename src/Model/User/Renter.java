@@ -7,13 +7,11 @@ import java.util.ArrayList;
 
 public class Renter extends User{
     SearchCriteria sc;
-    ArrayList<Listing> newListings;
 
     public Renter(){}
 
-
-    public Renter(int userID, String name, String username, String password, String email) {
-        super(userID, name, username, password, email);
+    public Renter(int userID, String name, String username, String password, String email, String type) {
+        super(userID, name, username, password, email, type);
 
     }
 
@@ -24,9 +22,12 @@ public class Renter extends User{
         setEmail(email);
     }
 
-    public SearchCriteria getSearchCriteria() {
-        return this.sc;
+    public SearchCriteria getSc() {
+        return sc;
     }
 
+    public void setSc(SearchCriteria sc) {
+        this.sc = sc;
+    }
 
 }

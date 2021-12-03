@@ -1,15 +1,21 @@
 package Model.Lising;
 
+import java.sql.Date;
+
 public class Listing {
 
     private Property property;
     private int duration;
     private String state;
+    private Date startDate;
+    private int currentDay;
 
-    public Listing(Property property, int duration, String state) {
+    public Listing(Property property, int duration, String state, Date startDate, int currentDay) {
         this.property = property;
         this.duration = duration;
         this.state = state;
+        this.startDate = startDate;
+        this.currentDay = currentDay;
     }
 
     public Property getProperty() {
@@ -32,4 +38,23 @@ public class Listing {
         this.state = state;
     }
 
+    public void setProperty(Property property) {
+        this.property = property;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public int getCurrentDay() {
+        return currentDay;
+    }
+
+    public void setCurrentDay(int currentDay) {
+        this.currentDay = currentDay;
+    }
 }

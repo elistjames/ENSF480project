@@ -7,13 +7,15 @@ public abstract class User {
     private String password;
     private int userID;
     private String email;
+    private String type;
 
-    public User(int userID, String name, String username, String password, String email) {
+    public User(int userID, String name, String username, String password, String email, String type) {
         this.username = username;
         this.password = password;
         this.userID = userID;
         this.email = email;
         this.name = name;
+        this.type = type;
     }
 
     public User(){}
@@ -47,5 +49,13 @@ public abstract class User {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
