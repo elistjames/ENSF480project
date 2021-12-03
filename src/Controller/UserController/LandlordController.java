@@ -30,8 +30,58 @@ public class LandlordController extends UserController {
         }
     }
 
+
     public void sendEmail(int toId, String msg){
         //db.getEmails().add(new Email(current.getUserID, toID, msg);
+  
+
+    public void changeListingState(Listing listing, String state){
+        if(listing.getState().equals("suspended")){
+            if(state.equals("cancelled")){
+                unsuspendListing(listing);
+                cancelListing(listing);
+            }
+            else if(state.equals("listed")){
+                unsuspendListing(listing);
+            }
+        }
+        else if(listing.getState().equals("listed")){
+            if(state.equals("suspended")){
+                suspendListing(listing);
+            }
+            else if(state.equals("rented")){
+                rentOutListing(listing);
+            }
+        }
     }
 
+    public void unsuspendListing(Listing listing){
+        for(Listing l : db.getSuspendedListings()){
+            if(l.getProperty().getID() == listing.getProperty().getID()){
+                l.getProperty().setState("listed");
+                db.getListings().add(l);
+                db.getSuspendedListings().remove(l);
+            }
+        }
+    }
+
+    public void suspendListing(Listing listing){
+        for(Listing l : db.getListings()){
+            if(l.getProperty().getID() == listing.getProperty().getID()){
+                l.getProperty().setState("suspended");
+                db.getSuspendedListings().add(l);
+                db.getListings().remove(l);
+            }
+        }
+    }
+
+    public void rentOutListing(Listing listing){
+        for(Listing l : db.getListings()){
+            if(l.getProperty().getID() == listing.getProperty().getID()){
+                l.getProperty().setState("rented");
+                db.getRentedProperties().add(l.getProperty());
+                db.getListings().remove(l);
+            }
+        }
+    }
 }
