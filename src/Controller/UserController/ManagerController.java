@@ -16,22 +16,29 @@ public class ManagerController extends UserController {
         current = currentUser;
     }
 
-    public void cancelListing(Listing l){
-
-    }
-
     public void viewListings(){
 
     }
 
 
-    public void changeListingState(String state, Listing l){
-
+    public void cancelListing(Listing l){
+        for(Listing cl : db.getListings()){
+            if(cl.getProperty().getID() == l.getProperty().getID()){
+                db.getListings().remove(cl);
+            }
+        }
     }
 
     public void getReport(){
+        int monthlyListings = 0;
+        for(Listing l : db.getListings()) {
+            if(l.getCurrentDay() <= 30){
+                monthlyListings++;
+            }
+        }
         int active_list = db.getListings().size();
-        //  SummaryReport monthlyReport = new SummaryReport();
+        SummaryReport monthlyReport = new SummaryReport(monthlyListings,4,active_list,db.getRentedProperties());
+        //gui implementation
     }
 
     public void changeFee(ListingFee lf, int new_price){
