@@ -3,6 +3,8 @@ import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import Model.User.*;
 
 import Model.Lising.*;
@@ -23,6 +25,7 @@ public class Database {
     private ArrayList<Property> rentedProperties;
     private ArrayList<SearchCriteria> searches;
     private ArrayList<Integer> rentersToNotify;
+    private ArrayList<Email> emails;
 
     private ArrayList<Listing> suspendedListings;
 
@@ -98,10 +101,6 @@ public class Database {
         }
     }
 
-    public void postListing(Listing listing){
-
-    }
-
     public void registerRenter(Renter r){
         int nextID = getNextUserID();
         r.setUserID(nextID);
@@ -115,39 +114,38 @@ public class Database {
         properties.add(p);
     }
 
-    private void pullCurrentLandlordProperties(Landlord current){
-        for(Property p : properties){
-            if(p.getLandlordID() == current.getUserID()){
-                current.getMyProperties().add(p);
+    public void updateRentersToNotify(Property p){
+        for(Renter r : renters){
+            if(r.getSc().getType().equals(p.getType())||r.getSc().getType().equals("any")){
+                if(r.getSc().getN_bedrooms() == p.getBedrooms() || r.getSc().getN_bedrooms() == -1){
+                    if(r.getSc().getN_bathrooms() == p.getBathrooms() || r.getSc().getN_bathrooms() == -1){
+                        if(r.getSc().isFurnished() == p.isFurnished() || r.getSc().isFurnished() == -1){
+                            if(r.getSc().getCityQuadrant().equals(p.getCityQuadrant())||r.getSc().getCityQuadrant().equals("any")){
+                                if(!rentersToNotify.contains(r.getUserID())){
+                                    rentersToNotify.add(r.getUserID());
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        for(Listing l : listings){
-            if(l.getProperty().getLandlordID() == current.getUserID()){
-                current.getMyListings().add(l);
+    }
+
+    public boolean notifyRenter(int id){
+        for(int i : rentersToNotify){
+            if(i == id){
+                rentersToNotify.remove(i);
+                return true;
             }
         }
+        return false;
     }
 
     private void pullCurrentSearchCriteria(Renter current){
         for(SearchCriteria sc : searches){
             if(sc.getRenterID() == current.getUserID()){
                 current.setSc(sc);
-            }
-        }
-    }
-
-    private void updateCurrentLandlordProperty(Property current){
-        for(int i = 0; i < properties.size(); i++){
-            if(properties.get(i).getID() == current.getID()){
-                properties.set(i, current);
-            }
-        }
-    }
-
-    public void updateCurrentLandlordListing(Listing current){
-        for(int i = 0; i < listings.size(); i++){
-            if(listings.get(i).getProperty().getID() == current.getProperty().getID()){
-                listings.set(i, current);
             }
         }
     }
@@ -172,7 +170,6 @@ public class Database {
         }
         for(Landlord l : landlords){
             if(l.getUsername().equals(username)&&l.getPassword().equals(password)){
-                pullCurrentLandlordProperties(l);
                 return l;
             }
         }
@@ -352,6 +349,21 @@ public class Database {
         users.addAll(renters);
         users.addAll(landlords);
         users.addAll(managers);
+    }
+
+    private void pullEmails(){
+        ResultSet result; //create new ResultSet object
+        try {
+            Statement myStmt = dbConnect.createStatement(); //create new statement
+            result = myStmt.executeQuery("SELECT * FROM EMAILS");
+            while(result.next()) { //run while next row exists
+                this.emails.add(new Email(result.getString("From"), result.getString("To"),
+                        result.getDate("Date"), result.getString("Subject"),
+                        result.getString("Message")));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void pushRenters(){
@@ -660,6 +672,31 @@ public class Database {
         }
     }
 
+    private void pushEmails(){
+        try{
+            Statement statement = dbConnect.createStatement();
+            statement.executeUpdate("TRUNCATE EMAILS");
+            String query;
+
+            for(Email e : emails){
+                query = "INSERT INTO EMAILS (From,To,Date,Subject,Message) VALUES (?,?,?,?,?)";
+                PreparedStatement myStmt = dbConnect.prepareStatement(query);
+
+                myStmt.setString(1, e.getFromEmail());
+                myStmt.setString(2, e.getToEmail());
+                myStmt.setDate(3, e.getDate());
+                myStmt.setString(4, e.getSubject());
+                myStmt.setString(5, e.getMessage());
+
+
+                myStmt.execute();
+                myStmt.close();
+            }
+        } catch (SQLException e){
+
+        }
+    }
+
     public void pushAll(){
         this.pushRenters();
         this.pushLandlords();
@@ -689,11 +726,16 @@ public class Database {
     }
 
     public int getNextPropertyID(){
-        if(properties.isEmpty()){
+        if(properties.isEmpty()&&rentedProperties.isEmpty()){
             return 1000000;
         }
         int nextID = properties.get(0).getID();
         for(Property p : properties){
+            if(p.getID() > nextID){
+                nextID = p.getID();
+            }
+        }
+        for(Property p : rentedProperties){
             if(p.getID() > nextID){
                 nextID = p.getID();
             }
@@ -723,7 +765,7 @@ public class Database {
         return null;
     }
 
-    public String lookupLandlordemail(int id){
+    public String lookupLandlordEmail(int id){
         String email = "";
         for(Landlord l : landlords){
             if(l.getUserID() == id){
@@ -777,5 +819,9 @@ public class Database {
 
     public ArrayList<Listing> getSuspendedListings() {
         return suspendedListings;
+    }
+
+    public ArrayList<Email> getEmails() {
+        return emails;
     }
 }
