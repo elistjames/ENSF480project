@@ -3,9 +3,14 @@ package Controller.UserController;
 
 import Model.Lising.Listing;
 import Model.Lising.ListingFee;
+import Model.Lising.Property;
 import Model.User.Manager;
 import Model.User.SummaryReport;
 import Model.User.User;
+
+import java.sql.Date;
+import java.time.Duration;
+import java.time.LocalDate;
 
 
 public class ManagerController extends UserController {
@@ -29,18 +34,29 @@ public class ManagerController extends UserController {
         }
     }
 
-    public void getReport(){
+    public SummaryReport getReport(){
         int monthlyListings = 0;
-        for(Listing l : db.getListings()) {
-            if(l.getCurrentDay() <= 30){
+        int monthlyRented = 0;
+        for(Date d : db.getListingDates()) {
+            if(((int)Duration.between(d.toLocalDate(), LocalDate.now()).toDays()) <= 30){
                 monthlyListings++;
+            }
+            else{
+                db.getListingDates().remove(d);
+            }
+        }
+        for(Date d : db.getRentedDates()){
+            if(((int)Duration.between(d.toLocalDate(), LocalDate.now()).toDays()) <= 30){
+                monthlyRented++;
+            }
+            else{
+                db.getRentedDates().remove(d);
             }
         }
         int active_list = db.getListings().size();
-        SummaryReport monthlyReport = new SummaryReport(monthlyListings,4,active_list,db.getRentedProperties());
-        //gui implementation
+        SummaryReport monthlyReport = new SummaryReport(monthlyListings,monthlyRented,active_list,db.getRentedProperties());
+        return monthlyReport;
     }
-
     public void changeFee(ListingFee lf, int new_price){
             for (ListingFee f : db.getFees()) {
                 if (f.getDays() ==  lf.getDays()){
