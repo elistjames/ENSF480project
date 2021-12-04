@@ -22,7 +22,9 @@ public class Database {
     private ArrayList<ListingFee> fees;
     private ArrayList<Listing> listings;
     private ArrayList<Date> listingDates;
+    private ArrayList<Date> listing;
     private ArrayList<Property> rentedProperties;
+    private ArrayList<Date> rentedDates;
     private ArrayList<SearchCriteria> searches;
     private ArrayList<Integer> rentersToNotify;
     private ArrayList<Email> emails;
@@ -282,6 +284,7 @@ public class Database {
                         result.getInt("Bedrooms"), result.getInt("Bathrooms"),
                         result.getInt("Furnished"), result.getString("Address"),
                         result.getString("CityQuadrant"), "rented"));
+                this.rentedDates.add(result.getDate("DateRented"));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -606,18 +609,19 @@ public class Database {
             statement.executeUpdate("TRUNCATE RENTED");
             String query;
 
-            for(Property property : rentedProperties){
-                query = "INSERT INTO RENTED (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant) VALUES (?,?,?,?,?,?,?,?)";
+            for(int i = 0; i < rentedProperties.size(); i++){
+                query = "INSERT INTO RENTED (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant,DateRented) VALUES (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-                myStmt.setInt(1, property.getLandlordID());
-                myStmt.setInt(2, property.getID());
-                myStmt.setString(3, property.getType());
-                myStmt.setInt(4, property.getBedrooms());
-                myStmt.setInt(5, property.getBathrooms());
-                myStmt.setInt(6, property.isFurnished());
-                myStmt.setString(7, property.getAddress());
-                myStmt.setString(8, property.getCityQuadrant());
+                myStmt.setInt(1, rentedProperties.get(i).getLandlordID());
+                myStmt.setInt(2, rentedProperties.get(i).getID());
+                myStmt.setString(3, rentedProperties.get(i).getType());
+                myStmt.setInt(4, rentedProperties.get(i).getBedrooms());
+                myStmt.setInt(5, rentedProperties.get(i).getBathrooms());
+                myStmt.setInt(6, rentedProperties.get(i).isFurnished());
+                myStmt.setString(7, rentedProperties.get(i).getAddress());
+                myStmt.setString(8, rentedProperties.get(i).getCityQuadrant());
+                myStmt.setDate(9, rentedDates.get(i));
 
                 myStmt.execute();
                 myStmt.close();
@@ -823,5 +827,9 @@ public class Database {
 
     public ArrayList<Email> getEmails() {
         return emails;
+    }
+
+    public ArrayList<Date> getRentedDates() {
+        return rentedDates;
     }
 }

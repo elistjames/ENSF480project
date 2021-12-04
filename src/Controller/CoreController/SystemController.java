@@ -2,6 +2,7 @@ package Controller.CoreController;
 
 import Controller.UserController.UserController;
 import Database.Database;
+import Viewer.Startup.StartPage;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +10,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 public class SystemController {
-    static Database db;
+    public static Database db;
     UserController currentController;
     static Date currentDate;
 
@@ -17,7 +18,11 @@ public class SystemController {
         //db.initializeConnection();
         //db.pullAll();
         //db.updateListingDates(currentDate);
-        JFrame frame = new JFrame("ENSF480 Application");
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new StartPage().setVisible(true);
+            }
+        });
     }
 
     public SystemController(){
