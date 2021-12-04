@@ -88,6 +88,7 @@ public class LandlordController extends UserController {
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("rented");
                 db.getRentedProperties().add(l.getProperty());
+                db.getRentedDates().add(Date.valueOf(LocalDate.now()));
                 db.getListings().remove(l);
             }
         }
