@@ -233,6 +233,7 @@ public class LandlordPage extends javax.swing.JFrame {
     // End of variables declaration
 
 
+
     public JList<String> getPostedList() {
         return PostedList;
     }
