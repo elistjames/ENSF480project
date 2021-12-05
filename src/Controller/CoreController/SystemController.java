@@ -42,12 +42,6 @@ public class SystemController {
                                 sc.startPage.setVisible(false);
                                 sc.renterPage = new RenterView();
                                 sc.currentController = new RenterController((Renter)current, sc.renterPage);
-                                sc.renterPage.getSearchButton().addActionListener(new java.awt.event.ActionListener() {
-                                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-
-                                    }
-                                });
-
                             }
                             else if(current.getType().equals("landlord")){
 
@@ -63,13 +57,21 @@ public class SystemController {
                 });
                 sc.startPage.getjButton2().addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-
+                        sc.startPage.setVisible(false);
+                        sc.renterPage = new RenterView();
+                        sc.currentController = new RenterController(new Renter(0, "none", "none",
+                                "none", "none", "renter"), sc.renterPage);
                     }
                 });
                 sc.startPage.getjButton3().addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        sc.db.pushAll();
-                        System.exit(0);
+                        int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
+                                "Confirmation:", JOptionPane.YES_NO_OPTION);
+                        if(choice == JOptionPane.YES_OPTION){
+                            sc.db.pushAll();
+                            System.exit(0);
+                        }
+
                     }
                 });
 

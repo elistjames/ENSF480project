@@ -55,7 +55,7 @@ public class RenterView extends javax.swing.JFrame {
         accountButton.setText("Register / Unregister");
         accountButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                accountButtonActionPerformed(evt);
+                rc.accountButtonActionPerformed(evt);
             }
         });
 
@@ -84,11 +84,11 @@ public class RenterView extends javax.swing.JFrame {
         DefaultListModel<String> model = new DefaultListModel<>();
 
         for(Listing l : rc.db.getListings()){
-            if(l.getProperty().getType().equals(rc.db.getCurrentSearch(rc.current).getType())||rc.db.getCurrentSearch(rc.current).getType().equals("N/A")){
-                if(l.getProperty().getBedrooms() == rc.db.getCurrentSearch(rc.current).getN_bedrooms()||rc.db.getCurrentSearch(rc.current).getN_bedrooms() == -1){
-                    if(l.getProperty().getBathrooms() == rc.db.getCurrentSearch(rc.current).getN_bathrooms()||rc.db.getCurrentSearch(rc.current).getN_bathrooms() == -1){
-                        if(l.getProperty().isFurnished() == rc.db.getCurrentSearch(rc.current).isFurnished()||rc.db.getCurrentSearch(rc.current).isFurnished() == -1){
-                            if(l.getProperty().getCityQuadrant().equals(rc.db.getCurrentSearch(rc.current).getCityQuadrant())||rc.db.getCurrentSearch(rc.current).getCityQuadrant().equals("N/A")){
+            if(l.getProperty().getType().equals(rc.db.getCurrentSearch(rc.current.getUserID()).getType())||rc.db.getCurrentSearch(rc.current.getUserID()).getType().equals("N/A")){
+                if(l.getProperty().getBedrooms() == rc.db.getCurrentSearch(rc.current.getUserID()).getN_bedrooms()||rc.db.getCurrentSearch(rc.current.getUserID()).getN_bedrooms() == -1){
+                    if(l.getProperty().getBathrooms() == rc.db.getCurrentSearch(rc.current.getUserID()).getN_bathrooms()||rc.db.getCurrentSearch(rc.current.getUserID()).getN_bathrooms() == -1){
+                        if(l.getProperty().isFurnished() == rc.db.getCurrentSearch(rc.current.getUserID()).isFurnished()||rc.db.getCurrentSearch(rc.current.getUserID()).isFurnished() == -1){
+                            if(l.getProperty().getCityQuadrant().equals(rc.db.getCurrentSearch(rc.current.getUserID()).getCityQuadrant())||rc.db.getCurrentSearch(rc.current.getUserID()).getCityQuadrant().equals("N/A")){
                                 String tmp2 = "Address: "+l.getProperty().getAddress()+"          Posted By: "+ rc.db.lookupLandlord(l.getProperty().getLandlordID()).getName()+"       Expires in "+(l.getDuration()-l.getCurrentDay())+" days.";
                                 String tmp = String.format("Address: %1$-25s Posted by: %2$-20s Posting expires in %3$3d days",
                                         l.getProperty().getAddress(), rc.db.lookupLandlord(l.getProperty().getLandlordID()).getName(),
@@ -132,7 +132,7 @@ public class RenterView extends javax.swing.JFrame {
         contactButton.setText("Contact Landlord");
         contactButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contactButtonActionPerformed(evt);
+                rc.contactButtonActionPerformed(evt);
             }
         });
 
@@ -237,21 +237,21 @@ public class RenterView extends javax.swing.JFrame {
     }// </editor-fold>
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        rc.db.pushAll();
-        System.exit(0);
+        int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
+                "Confirmation:", JOptionPane.YES_NO_OPTION);
+        if(choice == JOptionPane.YES_OPTION) {
+            rc.db.pushAll();
+            System.exit(0);
+        }
     }
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {
         rc.searchListings();
     }
 
-    private void contactButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
 
-    private void accountButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+
+
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String tmpType = String.valueOf(typeOption.getSelectedItem());

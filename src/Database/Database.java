@@ -24,7 +24,7 @@ public class Database {
     private ArrayList<Listing> listings = new ArrayList<>();
     private ArrayList<LocalDate> listingDates = new ArrayList<>();
     private ArrayList<Property> rentedProperties = new ArrayList<>();
-    private ArrayList<Date> rentedDates = new ArrayList<>();
+    private ArrayList<LocalDate> rentedDates = new ArrayList<>();
     private ArrayList<SearchCriteria> searches = new ArrayList<>();
     private ArrayList<Integer> rentersToNotify = new ArrayList<>();
     private ArrayList<Email> emails = new ArrayList<>();
@@ -68,6 +68,15 @@ public class Database {
     public boolean validatePassword(String password){
         for(User user : users){
             if(user.getPassword().compareTo(password) == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validateEmail(String email){
+        for(User user : users){
+            if(user.getEmail().compareTo(email) == 0){
                 return false;
             }
         }
@@ -127,11 +136,11 @@ public class Database {
 
     public void updateRentersToNotify(Property p){
         for(Renter r : renters){
-            if(getCurrentSearch(r).getType().equals(p.getType())||getCurrentSearch(r).getType().equals("N/A")){
-                if(getCurrentSearch(r).getN_bedrooms() == p.getBedrooms() || getCurrentSearch(r).getN_bedrooms() == -1){
-                    if(getCurrentSearch(r).getN_bathrooms() == p.getBathrooms() || getCurrentSearch(r).getN_bathrooms() == -1){
-                        if(getCurrentSearch(r).isFurnished() == p.isFurnished() || getCurrentSearch(r).isFurnished() == -1){
-                            if(getCurrentSearch(r).getCityQuadrant().equals(p.getCityQuadrant())||getCurrentSearch(r).getCityQuadrant().equals("N/A")){
+            if(getCurrentSearch(r.getUserID()).getType().equals(p.getType())||getCurrentSearch(r.getUserID()).getType().equals("N/A")){
+                if(getCurrentSearch(r.getUserID()).getN_bedrooms() == p.getBedrooms() || getCurrentSearch(r.getUserID()).getN_bedrooms() == -1){
+                    if(getCurrentSearch(r.getUserID()).getN_bathrooms() == p.getBathrooms() || getCurrentSearch(r.getUserID()).getN_bathrooms() == -1){
+                        if(getCurrentSearch(r.getUserID()).isFurnished() == p.isFurnished() || getCurrentSearch(r.getUserID()).isFurnished() == -1){
+                            if(getCurrentSearch(r.getUserID()).getCityQuadrant().equals(p.getCityQuadrant())||getCurrentSearch(r.getUserID()).getCityQuadrant().equals("N/A")){
                                 if(!rentersToNotify.contains(r.getUserID())){
                                     rentersToNotify.add(r.getUserID());
                                 }
@@ -153,9 +162,9 @@ public class Database {
         return false;
     }
 
-    public SearchCriteria getCurrentSearch(Renter current){
+    public SearchCriteria getCurrentSearch(int currentId){
         for(SearchCriteria sc : searches){
-            if(sc.getRenterID() == current.getUserID()){
+            if(sc.getRenterID() == currentId){
                 return sc;
             }
         }
@@ -293,7 +302,7 @@ public class Database {
                         result.getInt("Bedrooms"), result.getInt("Bathrooms"),
                         result.getInt("Furnished"), result.getString("Address"),
                         result.getString("CityQuadrant"), "rented"));
-                this.rentedDates.add(result.getDate("DateRented"));
+                this.rentedDates.add(LocalDate.parse(result.getString("DateRented")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -370,7 +379,7 @@ public class Database {
             result = myStmt.executeQuery("SELECT * FROM emails");
             while(result.next()) { //run while next row exists
                 this.emails.add(new Email(result.getString("From"), result.getString("To"),
-                        result.getDate("Date"), result.getString("Subject"),
+                        LocalDate.parse(result.getString("Date")), result.getString("Subject"),
                         result.getString("Message")));
             }
         } catch (SQLException ex) {
@@ -511,7 +520,6 @@ public class Database {
                 myStmt.setInt(2, l[i].getDuration());
                 myStmt.setString(3, l[i].getState());
                 myStmt.setString(4, l[i].getStartDate().toString());
-                System.out.println(l[i].getCurrentDay());
                 myStmt.setInt(5, l[i].getCurrentDay());
 
                 myStmt.execute();
@@ -668,6 +676,15 @@ public class Database {
     }
 
     private void pushSearchCriterias(){
+        for(SearchCriteria criteria : searches){
+            if(criteria.getRenterID() == 0){
+                criteria.setType("N/A");
+                criteria.setN_bedrooms(-1);
+                criteria.setN_bathrooms(-1);
+                criteria.setFurnished(-1);
+                criteria.setCityQuadrant("N/A");
+            }
+        }
         try{
             Statement statement = dbConnect.createStatement();
             statement.executeUpdate("DELETE FROM searches");
@@ -704,7 +721,7 @@ public class Database {
 
                 myStmt.setString(1, e.getFromEmail());
                 myStmt.setString(2, e.getToEmail());
-                myStmt.setDate(3, e.getDate());
+                myStmt.setString(3, e.getDate().toString());
                 myStmt.setString(4, e.getSubject());
                 myStmt.setString(5, e.getMessage());
 
@@ -875,7 +892,7 @@ public class Database {
         return emails;
     }
 
-    public ArrayList<Date> getRentedDates() {
+    public ArrayList<LocalDate> getRentedDates() {
         return rentedDates;
     }
 }

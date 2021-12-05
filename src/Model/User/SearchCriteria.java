@@ -8,8 +8,8 @@ public class SearchCriteria {
     private int furnished;
     private String cityQuadrant;
 
-    public SearchCriteria() {
-        this.renterID = 0;
+    public SearchCriteria(int id) {
+        this.renterID = id;
         type = "N/A";
         n_bedrooms = -1;
         n_bathrooms = -1;
