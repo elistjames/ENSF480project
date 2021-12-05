@@ -48,7 +48,7 @@ public class Database {
 
     public void initializeConnection() {
         try {
-            String DBURL = "jdbc:sqlite:C:/Users/Eli/Documents/ensf480.db";
+            String DBURL = "jdbc:sqlite:480projdb.db";
                 dbConnect = DriverManager.getConnection(DBURL); //initialize connections
         }
         catch (SQLException ex) {

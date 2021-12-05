@@ -18,6 +18,7 @@ public class RenterController extends UserController {
         current = currentUser;
         this.rv = rv;
         rv.setLocationRelativeTo(null);
+
         rv.setVisible(true);
 
     }
@@ -77,8 +78,30 @@ public class RenterController extends UserController {
     }
 
     public void updateSearchCriteria(String type, String nbed, String nbath, String furnished, String cq){
-        if(type.equals("N/A")){
+        current.getSc().setType(type);
 
+        if(nbed.equals("N/A")){
+            current.getSc().setN_bedrooms(-1);
         }
+        else{
+            current.getSc().setN_bedrooms(Integer.parseInt(nbed));
+        }
+        if(nbath.equals("N/A")){
+            current.getSc().setN_bathrooms(-1);
+        }
+        else{
+            current.getSc().setN_bathrooms(Integer.parseInt(nbath));
+        }
+        if(furnished.equals("N/A")){
+            current.getSc().setFurnished(-1);
+        }
+        else if(furnished.equals("Yes")){
+            current.getSc().setFurnished(1);
+        }
+        else{
+            current.getSc().setFurnished(0);
+        }
+
+        current.getSc().setCityQuadrant(cq);
     }
 }
