@@ -83,7 +83,7 @@ public class LandlordPage extends javax.swing.JFrame {
         String col3Format2 = "%-4.4s";
         for(Listing l : lc.db.getListings()){
             if(l.getProperty().getLandlordID() == lc.current.getUserID()){
-                model2.addElement(String.format("id: "+col1Format2+" ||  State: "+col2Format2+" || Expires in "+col3Format2+" days",
+                model2.addElement(String.format("id: "+col1Format2+" || State: "+col2Format2+" || Expires: "+col3Format2+" days",
                         l.getProperty().getID(), l.getState(), l.getDuration()-l.getCurrentDay()));
             }
 

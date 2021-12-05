@@ -12,6 +12,7 @@ import Model.Lising.*;
 import Model.User.Email;
 import Model.User.Landlord;
 import Model.User.User;
+import Viewer.View.FeePaymentView;
 import Viewer.View.LandlordPage;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 public class LandlordController extends UserController {
     public Landlord current;
     LandlordPage lp;
+    FeePaymentView fp;
     
     /**
      * A constructor that takes a Landlord object as input.
@@ -67,8 +69,8 @@ public class LandlordController extends UserController {
      * @param {int} days Number of days to be listed
      */
     public void postProperty(Property p, int days){
-        db.getListings().add(new Listing(p, days, "listed", LocalDate.now(), 0));
         p.setState("listed");
+        db.getListings().add(new Listing(p, days, "listed", LocalDate.now(), 0));
         db.updateRentersToNotify(p);
     }
 
@@ -164,7 +166,20 @@ public class LandlordController extends UserController {
     }
 
     public void postPropertButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        String selected = lp.getPropertyList().getSelectedValue();
+        selected = selected.substring(4, 11);
+        if(db.getProperty(Integer.parseInt(selected.trim())).getState().equals("listed")){
+            JOptionPane.showMessageDialog(null, "The property with id: "+selected+", is already listed.");
+        }
+        else{
+            fp = new FeePaymentView();
+            fp.setLc(this);
+            fp.initComponents();
+            fp.setLocationRelativeTo(null);
+            lp.setVisible(false);
+            fp.setVisible(true);
+        }
+        System.out.println(selected);
     }
 
     public void cancelPostingButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -185,6 +200,40 @@ public class LandlordController extends UserController {
         if(choice == JOptionPane.YES_OPTION){
             db.pushAll();
             System.exit(0);
+        }
+    }
+    public void payButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        String selectedFee = fp.getFeeList().getSelectedValue();
+        selectedFee = selectedFee.substring(0, selectedFee.length()-5);
+        String selectedProperty = lp.getPropertyList().getSelectedValue();
+        selectedProperty = selectedProperty.substring(4, 11);
+        for(ListingFee lf : db.getFees()){
+            if(lf.getDays() == Integer.parseInt(selectedFee.trim())){
+                postProperty(db.getProperty(Integer.parseInt(selectedProperty.trim())), lf.getDays());
+                break;
+            }
+        }
+        lp = new LandlordPage();
+        lp.setLc(this);
+        lp.initComponents();
+        lp.setLocationRelativeTo(null);
+        fp.setVisible(false);
+        lp.setVisible(true);
+        JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully posted.");
+    }
+
+    public void cancelPayButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        fp.setVisible(false);
+        lp.setVisible(true);
+    }
+    public void feeListMouseClicked(java.awt.event.MouseEvent evt) {
+        String selected = fp.getFeeList().getSelectedValue();
+        selected = selected.substring(0, selected.length()-5);
+        for(ListingFee lf : db.getFees()){
+            if(lf.getDays() == Integer.parseInt(selected.trim())){
+                fp.getPriceTextPane().setText(lf.getPrice() +".00");
+                break;
+            }
         }
     }
 

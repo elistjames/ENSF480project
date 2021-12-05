@@ -812,7 +812,7 @@ public class Database {
         return (nextID+1);
     }
 
-    private Property getProperty(int propertyID){
+    public Property getProperty(int propertyID){
         for(Property p : properties){
             if(p.getID() == propertyID){
                 return p;
