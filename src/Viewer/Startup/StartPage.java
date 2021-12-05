@@ -2,6 +2,8 @@ package Viewer.Startup;
 
 import Controller.CoreController.SystemController;
 
+import javax.swing.*;
+
 public class StartPage extends javax.swing.JFrame {
 
     /**
@@ -26,8 +28,8 @@ public class StartPage extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
-        login = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -37,25 +39,10 @@ public class StartPage extends javax.swing.JFrame {
         jLabel2.setText("Password:");
 
         jButton1.setText("login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginActionPerformed(evt);
-            }
-        });
 
-        login.setText("skip");
-        login.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                skipActionPerformed(evt);
-            }
-        });
+        jButton2.setText("skip");
 
-        jButton2.setText("exit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        jButton3.setText("exit");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -70,14 +57,14 @@ public class StartPage extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(jButton1)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(login)
+                                                .addComponent(jButton2)
                                                 .addGap(0, 141, Short.MAX_VALUE))
                                         .addComponent(jTextField1)
                                         .addComponent(jPasswordField1))
                                 .addContainerGap())
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -94,9 +81,9 @@ public class StartPage extends javax.swing.JFrame {
                                 .addGap(39, 39, 39)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jButton1)
-                                        .addComponent(login))
+                                        .addComponent(jButton2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                                .addComponent(jButton2))
+                                .addComponent(jButton3))
         );
 
         jLabel3.setText("Welcome");
@@ -128,17 +115,11 @@ public class StartPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
-    private void loginActionPerformed(java.awt.event.ActionEvent evt) {
-        SystemController.db.validateLogin(jTextField1.getText(), new String(jPasswordField1.getPassword()));
-    }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        System.exit(0);
-    }
 
-    private void skipActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+
+
+
 
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -148,6 +129,43 @@ public class StartPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JButton login;
+    private javax.swing.JButton jButton3;
 // End of variables declaration
+
+
+    public JButton getjButton1() {
+        return jButton1;
+    }
+
+    public JButton getjButton2() {
+        return jButton2;
+    }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
+    public JLabel getjLabel2() {
+        return jLabel2;
+    }
+
+    public JLabel getjLabel3() {
+        return jLabel3;
+    }
+
+    public JPanel getjPanel1() {
+        return jPanel1;
+    }
+
+    public JPasswordField getjPasswordField1() {
+        return jPasswordField1;
+    }
+
+    public JTextField getjTextField1() {
+        return jTextField1;
+    }
+
+    public JButton getjButton3() {
+        return jButton3;
+    }
 }
