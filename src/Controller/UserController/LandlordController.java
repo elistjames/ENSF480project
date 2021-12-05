@@ -25,7 +25,7 @@ public class LandlordController extends UserController {
     }
 
     public void postProperty(Property p, int days){
-        db.getListings().add(new Listing(p, days, "listed", Date.valueOf(LocalDate.now()), 0));
+        db.getListings().add(new Listing(p, days, "listed", LocalDate.now(), 0));
         p.setState("listed");
         db.updateRentersToNotify(p);
     }

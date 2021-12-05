@@ -24,9 +24,9 @@ public class SystemController {
         SystemController sc = new SystemController();
         sc.db = Database.getOnlyInstance();
         sc.currentDate = Date.valueOf(LocalDate.now());
-        //db.initializeConnection();
-        //db.pullAll();
-        //db.updateListingDates(currentDate);
+        sc.db.initializeConnection();
+        sc.db.pullAll();
+        sc.db.updateListingDates(sc.currentDate);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 sc.startPage = new StartPage();
@@ -62,6 +62,7 @@ public class SystemController {
                 });
                 sc.startPage.getjButton3().addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        sc.db.pushAll();
                         System.exit(0);
                     }
                 });

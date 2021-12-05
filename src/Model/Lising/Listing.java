@@ -1,16 +1,16 @@
 package Model.Lising;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Listing {
 
     private Property property;
     private int duration;
     private String state;
-    private Date startDate;
+    private LocalDate startDate;
     private int currentDay;
 
-    public Listing(Property property, int duration, String state, Date startDate, int currentDay) {
+    public Listing(Property property, int duration, String state, LocalDate startDate, int currentDay) {
         this.property = property;
         this.duration = duration;
         this.state = state;
@@ -42,11 +42,11 @@ public class Listing {
         this.property = property;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

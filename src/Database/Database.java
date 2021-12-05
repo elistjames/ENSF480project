@@ -1,6 +1,6 @@
 package Database;
 import java.sql.*;
-import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,6 +9,7 @@ import Model.User.*;
 
 import Model.Lising.*;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class Database {
@@ -21,12 +22,14 @@ public class Database {
     private ArrayList<Manager> managers = new ArrayList<>();
     private ArrayList<ListingFee> fees = new ArrayList<>();
     private ArrayList<Listing> listings = new ArrayList<>();
-    private ArrayList<Date> listingDates = new ArrayList<>();
+    private ArrayList<LocalDate> listingDates = new ArrayList<>();
     private ArrayList<Property> rentedProperties = new ArrayList<>();
     private ArrayList<Date> rentedDates = new ArrayList<>();
     private ArrayList<SearchCriteria> searches = new ArrayList<>();
     private ArrayList<Integer> rentersToNotify = new ArrayList<>();
     private ArrayList<Email> emails = new ArrayList<>();
+    private Listing[] l;
+
 
     private ArrayList<Listing> suspendedListings = new ArrayList<>();
 
@@ -34,8 +37,7 @@ public class Database {
     private ResultSet results;
 
     private Database() {
-        renters.add(new Renter(getNextUserID(), "eli", "ehstjames", "H@ckey00", "hjadgfcjhsadgf", "renter"));
-        users.add(renters.get(0));
+
     }
 
     public static Database getOnlyInstance() {
@@ -46,7 +48,7 @@ public class Database {
 
     public void initializeConnection() {
         try {
-            String DBURL = "path to .db file";
+            String DBURL = "jdbc:sqlite:C:/Users/Eli/Documents/ensf480.db";
                 dbConnect = DriverManager.getConnection(DBURL); //initialize connections
         }
         catch (SQLException ex) {
@@ -93,14 +95,21 @@ public class Database {
     }
 
     public void updateListingDates(Date currentDate){
-        for(Listing l : listings){
-            int days = (int)Duration.between(l.getStartDate().toLocalDate(), currentDate.toLocalDate()).toDays();
-            l.setCurrentDay(days);
-            if(l.getCurrentDay() >= l.getDuration()){
-                l.setState("expired");
-                listings.remove(l);
+        int counter = 0;
+        while (counter < listings.size()){
+            for(Listing l : listings){
+                long days = l.getStartDate().until(currentDate.toLocalDate(), DAYS);
+
+                l.setCurrentDay((int)days);
+                if(l.getCurrentDay() >= l.getDuration()){
+                    l.setState("expired");
+                    listings.remove(l);
+                    break;
+                }
             }
+            counter++;
         }
+
     }
 
     public void registerRenter(Renter r){
@@ -118,11 +127,11 @@ public class Database {
 
     public void updateRentersToNotify(Property p){
         for(Renter r : renters){
-            if(r.getSc().getType().equals(p.getType())||r.getSc().getType().equals("any")){
+            if(r.getSc().getType().equals(p.getType())||r.getSc().getType().equals("N/A")){
                 if(r.getSc().getN_bedrooms() == p.getBedrooms() || r.getSc().getN_bedrooms() == -1){
                     if(r.getSc().getN_bathrooms() == p.getBathrooms() || r.getSc().getN_bathrooms() == -1){
                         if(r.getSc().isFurnished() == p.isFurnished() || r.getSc().isFurnished() == -1){
-                            if(r.getSc().getCityQuadrant().equals(p.getCityQuadrant())||r.getSc().getCityQuadrant().equals("any")){
+                            if(r.getSc().getCityQuadrant().equals(p.getCityQuadrant())||r.getSc().getCityQuadrant().equals("N/A")){
                                 if(!rentersToNotify.contains(r.getUserID())){
                                     rentersToNotify.add(r.getUserID());
                                 }
@@ -266,7 +275,7 @@ public class Database {
             while(result.next()) { //run while next row exists
                 this.listings.add(new Listing(this.getProperty(result.getInt("PropertyID")),
                         result.getInt("Duration"), result.getString("State"),
-                        result.getDate("StartDate"), result.getInt("CurrentDay")));
+                        LocalDate.parse(result.getString("StartDate")), result.getInt("CurrentDay")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -299,7 +308,7 @@ public class Database {
             while(result.next()) { //run while next row exists
                 this.suspendedListings.add(new Listing(this.getProperty(result.getInt("PropertyID")),
                         result.getInt("Duration"), result.getString("State"),
-                        result.getDate("StartDate"), result.getInt("CurrentDay")));
+                        LocalDate.parse(result.getString("StartDate")), result.getInt("CurrentDay")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -341,7 +350,7 @@ public class Database {
             Statement myStmt = dbConnect.createStatement(); //create new statement
             result = myStmt.executeQuery("SELECT * FROM listingdates");
             while(result.next()) { //run while next row exists
-                this.listingDates.add(result.getDate("DateOfListing"));
+                this.listingDates.add(LocalDate.parse(result.getString("DateOfListing")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -372,7 +381,7 @@ public class Database {
     private void pushRenters(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE renters");
+            statement.executeUpdate("DELETE FROM renters");
             String query;
 
             for(Renter renter : renters){
@@ -395,7 +404,7 @@ public class Database {
     private void pushLandlords(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE landlords");
+            statement.executeUpdate("DELETE FROM landlords");
             String query;
 
             for(Landlord landlord : landlords){
@@ -418,7 +427,7 @@ public class Database {
     private void pushProperties(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE properties");
+            statement.executeUpdate("DELETE FROM properties");
             String query;
 
             for(Property property : properties){
@@ -445,7 +454,7 @@ public class Database {
     private void pushManagers(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE managers");
+            statement.executeUpdate("DELETE FROM managers");
             String query;
 
             for(Manager manager : managers){
@@ -468,11 +477,11 @@ public class Database {
     private void pushFees(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE fees");
+            statement.executeUpdate("DELETE FROM fees");
             String query;
 
             for(ListingFee fee : fees){
-                query = "INSERT INTO fees (Price,Duration) VALUES (?,?)";
+                query = "INSERT INTO fees (Price,Days) VALUES (?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, fee.getPrice());
@@ -486,33 +495,37 @@ public class Database {
         }
     }
     private void pushListings(){
+        l = new Listing[listings.size()];
+        for(int i = 0; i < l.length; i++){
+            l[i] = listings.get(i);
+        }
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE listings");
+            statement.executeUpdate("DELETE FROM listings");
             String query;
-
-            for(Listing listing : listings){
+            for(int i = 0; i < l.length; i++){
                 query = "INSERT INTO listings (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-                myStmt.setInt(1, listing.getProperty().getID());
-                myStmt.setInt(2, listing.getDuration());
-                myStmt.setString(3, listing.getState());
-                myStmt.setDate(4, (Date) listing.getStartDate());
-                myStmt.setInt(5, listing.getCurrentDay());
+                myStmt.setInt(1, l[i].getProperty().getID());
+                myStmt.setInt(2, l[i].getDuration());
+                myStmt.setString(3, l[i].getState());
+                myStmt.setString(4, l[i].getStartDate().toString());
+                System.out.println(l[i].getCurrentDay());
+                myStmt.setInt(5, l[i].getCurrentDay());
 
                 myStmt.execute();
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
     private void pushUsers(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE users");
+            statement.executeUpdate("DELETE FROM users");
             String query;
 
             for(Renter renter : renters){
@@ -565,7 +578,7 @@ public class Database {
     private void pushSuspendedListings(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE suspended");
+            statement.executeUpdate("DELETE FROM suspended");
             String query;
 
             for(Listing listing : suspendedListings){
@@ -575,7 +588,7 @@ public class Database {
                 myStmt.setInt(1, listing.getProperty().getID());
                 myStmt.setInt(2, listing.getDuration());
                 myStmt.setString(3, listing.getState());
-                myStmt.setDate(4, (Date) listing.getStartDate());
+                myStmt.setString(4, listing.getStartDate().toString());
                 myStmt.setInt(5, listing.getCurrentDay());
 
                 myStmt.execute();
@@ -589,7 +602,7 @@ public class Database {
     private void pushRTN(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE rtn");
+            statement.executeUpdate("DELETE FROM rtn");
             String query;
 
             for(int renterID : rentersToNotify){
@@ -609,7 +622,7 @@ public class Database {
     private void pushRentedProperties(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE rented");
+            statement.executeUpdate("DELETE FROM rented");
             String query;
 
             for(int i = 0; i < rentedProperties.size(); i++){
@@ -624,7 +637,7 @@ public class Database {
                 myStmt.setInt(6, rentedProperties.get(i).isFurnished());
                 myStmt.setString(7, rentedProperties.get(i).getAddress());
                 myStmt.setString(8, rentedProperties.get(i).getCityQuadrant());
-                myStmt.setDate(9, rentedDates.get(i));
+                myStmt.setString(9, rentedDates.get(i).toString());
 
                 myStmt.execute();
                 myStmt.close();
@@ -637,14 +650,14 @@ public class Database {
     private void pushListingDates(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE listingdates");
+            statement.executeUpdate("DELETE FROM listingdates");
             String query;
 
-            for(Date d : listingDates){
+            for(LocalDate d : listingDates){
                 query = "INSERT INTO listingdates (DateOfListing) VALUES (?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
-                myStmt.setDate(1, d);
+                myStmt.setString(1, d.toString());
 
                 myStmt.execute();
                 myStmt.close();
@@ -657,7 +670,7 @@ public class Database {
     private void pushSearchCriterias(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE searches");
+            statement.executeUpdate("DELETE FROM searches");
             String query;
 
             for(SearchCriteria search : searches){
@@ -682,7 +695,7 @@ public class Database {
     private void pushEmails(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE emails");
+            statement.executeUpdate("DELETE FROM emails");
             String query;
 
             for(Email e : emails){
@@ -718,6 +731,7 @@ public class Database {
         this.pushSearchCriterias();
         this.pushEmails();
         this.pushSuspendedListings();
+
     }
 
     public void pullAll(){
@@ -734,6 +748,14 @@ public class Database {
         this.pullSearchCriterias();
         this.pullEmails();
         this.pullSuspendedListings();
+
+        for(User u : users){
+            System.out.println(u.getUserID()+", "+u.getName()+", "+u.getUsername()+", "+u.getPassword()+", "+u.getType());
+        }
+
+        for(Listing l : listings){
+            System.out.println(l.getStartDate()+", "+l.getCurrentDay());
+        }
     }
 
     public int getNextPropertyID(){
@@ -812,7 +834,7 @@ public class Database {
         return properties;
     }
 
-    public ArrayList<Date> getListingDates() {
+    public ArrayList<LocalDate> getListingDates() {
         return listingDates;
     }
 

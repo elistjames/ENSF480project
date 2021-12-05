@@ -1,5 +1,7 @@
 package Viewer.View;
 
+import javax.swing.*;
+
 public class RenterView extends javax.swing.JFrame {
 
     /**
@@ -58,7 +60,8 @@ public class RenterView extends javax.swing.JFrame {
         typeOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Attatched House", "Dettatched House", "Apartment", "Town Home" }));
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1 uhsgdhfgs", "Item 2", "Item 3", "Item 4", "Item 5", "asdasd", "asdasda", "asf", "d", "gs", "fgfg", "dfg", "dfg", "d", "ghd", "fh", "dh", "dh", "d", "hd", "h", "dfh", "dh", "d", "h", "dfh", "dfh", "dh", " ", "fgh", "h", "h", "gh", "h" };
+
+            String[] strings = { "" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -205,4 +208,77 @@ public class RenterView extends javax.swing.JFrame {
     private javax.swing.JButton searchButton;
     private javax.swing.JComboBox<String> typeOption;
     // End of variables declaration
+
+
+    public JButton getAccountButton() {
+        return accountButton;
+    }
+
+    public JButton getContactButton() {
+        return contactButton;
+    }
+
+    public JButton getExitButton() {
+        return exitButton;
+    }
+
+    public JComboBox<String> getFurnishedOption() {
+        return furnishedOption;
+    }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
+    public JLabel getjLabel2() {
+        return jLabel2;
+    }
+
+    public JLabel getjLabel3() {
+        return jLabel3;
+    }
+
+    public JLabel getjLabel4() {
+        return jLabel4;
+    }
+
+    public JLabel getjLabel5() {
+        return jLabel5;
+    }
+
+    public JList<String> getjList1() {
+        return jList1;
+    }
+
+    public JMenuItem getjMenuItem1() {
+        return jMenuItem1;
+    }
+
+    public JScrollPane getListingView() {
+        return listingView;
+    }
+
+    public JComboBox<String> getnBathOption() {
+        return nBathOption;
+    }
+
+    public JComboBox<String> getnBedOption() {
+        return nBedOption;
+    }
+
+    public JComboBox<String> getQuadrantOption() {
+        return quadrantOption;
+    }
+
+    public JPanel getRenterPanel() {
+        return renterPanel;
+    }
+
+    public JButton getSearchButton() {
+        return searchButton;
+    }
+
+    public JComboBox<String> getTypeOption() {
+        return typeOption;
+    }
 }
