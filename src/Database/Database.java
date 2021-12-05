@@ -14,28 +14,29 @@ import Model.Lising.*;
 public class Database {
     private static Database onlyInstance;
 
-    private ArrayList<User> users;
-    private ArrayList<Renter> renters;
-    private ArrayList<Landlord> landlords;
-    private ArrayList<Property> properties;
-    private ArrayList<Manager> managers;
-    private ArrayList<ListingFee> fees;
-    private ArrayList<Listing> listings;
-    private ArrayList<Date> listingDates;
-    private ArrayList<Date> listing;
-    private ArrayList<Property> rentedProperties;
-    private ArrayList<Date> rentedDates;
-    private ArrayList<SearchCriteria> searches;
-    private ArrayList<Integer> rentersToNotify;
-    private ArrayList<Email> emails;
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Renter> renters = new ArrayList<>();
+    private ArrayList<Landlord> landlords = new ArrayList<>();
+    private ArrayList<Property> properties = new ArrayList<>();
+    private ArrayList<Manager> managers = new ArrayList<>();
+    private ArrayList<ListingFee> fees = new ArrayList<>();
+    private ArrayList<Listing> listings = new ArrayList<>();
+    private ArrayList<Date> listingDates = new ArrayList<>();
+    private ArrayList<Date> listing = new ArrayList<>();
+    private ArrayList<Property> rentedProperties = new ArrayList<>();
+    private ArrayList<Date> rentedDates = new ArrayList<>();
+    private ArrayList<SearchCriteria> searches = new ArrayList<>();
+    private ArrayList<Integer> rentersToNotify = new ArrayList<>();
+    private ArrayList<Email> emails = new ArrayList<>();
 
-    private ArrayList<Listing> suspendedListings;
+    private ArrayList<Listing> suspendedListings = new ArrayList<>();
 
     private Connection dbConnect;
     private ResultSet results;
 
     private Database() {
-
+        renters.add(new Renter(getNextUserID(), "eli", "ehstjames", "H@ckey00", "hjadgfcjhsadgf", "renter"));
+        users.add(renters.get(0));
     }
 
     public static Database getOnlyInstance() {

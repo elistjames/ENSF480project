@@ -5,14 +5,18 @@ import Model.User.Email;
 import Model.User.Renter;
 import Model.User.SearchCriteria;
 import Model.User.User;
+import Viewer.View.RenterView;
 
 public class RenterController extends UserController {
     Renter current;
+    RenterView rv;
 
-    public RenterController(Renter currentUser){
+    public RenterController(Renter currentUser, RenterView rv){
         super(currentUser);
         current = currentUser;
-
+        this.rv = rv;
+        rv.setLocationRelativeTo(null);
+        rv.setVisible(true);
     }
 
     public void sendEmail(Listing l, String msg){
