@@ -12,7 +12,9 @@ import Model.Lising.*;
 import Model.User.Email;
 import Model.User.Landlord;
 import Model.User.User;
+import Viewer.View.LandlordPage;
 
+import javax.swing.*;
 import java.sql.Date;
 import java.time.LocalDate;
 
@@ -22,15 +24,20 @@ import java.time.LocalDate;
  * functions that implement the actions a Landlord can take.
  */
 public class LandlordController extends UserController {
-    Landlord current;
+    public Landlord current;
+    LandlordPage lp;
     
     /**
      * A constructor that takes a Landlord object as input.
      */
-    public LandlordController(Landlord currentUser) {
+    public LandlordController(Landlord currentUser, LandlordPage landlordPage) {
         super(currentUser);
         current = currentUser;
-
+        this.lp = landlordPage;
+        this.lp.setLc(this);
+        lp.initComponents();
+        lp.setLocationRelativeTo(null);
+        lp.setVisible(true);
     }
     
     //----------------------------------------------------------------------
@@ -152,6 +159,33 @@ public class LandlordController extends UserController {
             }
         }
     }
+    public void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
 
+    public void postPropertButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    public void cancelPostingButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    public void suspendButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    public void rentOutButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    public void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
+                "Confirmation:", JOptionPane.YES_NO_OPTION);
+        if(choice == JOptionPane.YES_OPTION){
+            db.pushAll();
+            System.exit(0);
+        }
+    }
 
 }

@@ -10,12 +10,15 @@
 
 package Controller.CoreController;
 
+import Controller.UserController.LandlordController;
 import Controller.UserController.RenterController;
 import Controller.UserController.UserController;
 import Database.Database;
+import Model.User.Landlord;
 import Model.User.Renter;
 import Model.User.User;
 import Viewer.Startup.StartPage;
+import Viewer.View.LandlordPage;
 import Viewer.View.RenterView;
 
 import javax.swing.*;
@@ -42,6 +45,7 @@ public class SystemController {
     StartPage startPage; // An object that holds a GUI interface that is shown when the project is
     					 // first booted up.
     RenterView renterPage; //An object that holds the GUI interface for the Renter
+    LandlordPage landlordPage;
     
     
     //-------------------------------------------------------
@@ -82,7 +86,9 @@ public class SystemController {
                                 sc.currentController = new RenterController((Renter)current, sc.renterPage);
                             }
                             else if(current.getType().equals("landlord")){
-
+                                sc.startPage.setVisible(false);
+                                sc.landlordPage = new LandlordPage();
+                                sc.currentController = new LandlordController((Landlord)current, sc.landlordPage);
                             }
                             else if(current.getType().equals("manager")){
 
