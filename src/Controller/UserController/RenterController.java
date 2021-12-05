@@ -7,6 +7,8 @@ import Model.User.SearchCriteria;
 import Model.User.User;
 import Viewer.View.RenterView;
 
+import java.util.ArrayList;
+
 public class RenterController extends UserController {
     Renter current;
     RenterView rv;
@@ -17,6 +19,7 @@ public class RenterController extends UserController {
         this.rv = rv;
         rv.setLocationRelativeTo(null);
         rv.setVisible(true);
+
     }
 
     public void sendEmail(Listing l, String msg){
@@ -65,7 +68,17 @@ public class RenterController extends UserController {
         }
     }
 
-    public void viewListings(){
+    public void SearchListings(){
+        ArrayList<String> strList = new ArrayList<String>();
+        rv.getTypeOption().getSelectedItem().toString();
+        for(Listing l : db.getListings()){
 
+        }
+    }
+
+    public void updateSearchCriteria(String type, String nbed, String nbath, String furnished, String cq){
+        if(type.equals("N/A")){
+
+        }
     }
 }
