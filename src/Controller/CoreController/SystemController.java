@@ -1,3 +1,13 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date Created:
+ * Last Editted:
+ */
+
+
+
 package Controller.CoreController;
 
 import Controller.UserController.RenterController;
@@ -13,13 +23,28 @@ import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.time.LocalDate;
 
+/**
+ * @author 
+ * This class is the main controller for the ENSF480project for group 23 in Fall 2021.
+ * It contains the main function to start the program and the essential objects to link
+ * the View package and the Model package and handles the communication between the two.
+ */
 public class SystemController {
-    public Database db;
-    UserController currentController;
-    Date currentDate;
-    StartPage startPage;
-    RenterView renterPage;
-
+    public Database db; //An object that retrieves data from a MySQL Database
+    					//and stores it.
+    UserController currentController; //An object that stores the current User object and acts
+    								  //as a go between between the User and this page.
+    Date currentDate; // The current date, from when the program was booted up.
+    StartPage startPage; // An object that holds a GUI interface that is shown when the project is
+    					 // first booted up.
+    RenterView renterPage; //An object that holds the GUI interface for the Renter
+    
+    /**
+     * The main function for the ENSF480project for group 23 in Fall 2021.
+     * Initializes the SystemController, Database, currentDate, and runs the initial routine
+     * to ask for a username and password from the user. Then keeps the program running by
+     * waiting for and responding to the users input.
+     */
     public static void main(String[] args){
         SystemController sc = new SystemController();
         sc.db = Database.getOnlyInstance();
