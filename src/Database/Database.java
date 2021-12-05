@@ -153,8 +153,8 @@ public class Database {
     }
 
     public boolean notifyRenter(int id){
-        for(int i : rentersToNotify){
-            if(i == id){
+        for(int i = 0; i < rentersToNotify.size(); i++){
+            if(rentersToNotify.get(i) == id){
                 rentersToNotify.remove(i);
                 return true;
             }
@@ -378,7 +378,7 @@ public class Database {
             Statement myStmt = dbConnect.createStatement(); //create new statement
             result = myStmt.executeQuery("SELECT * FROM emails");
             while(result.next()) { //run while next row exists
-                this.emails.add(new Email(result.getString("From"), result.getString("To"),
+                this.emails.add(new Email(result.getString("UserFrom"), result.getString("UserTo"),
                         LocalDate.parse(result.getString("Date")), result.getString("Subject"),
                         result.getString("Message")));
             }
@@ -716,7 +716,7 @@ public class Database {
             String query;
 
             for(Email e : emails){
-                query = "INSERT INTO emails (From,To,Date,Subject,Message) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO emails (UserFrom,UserTo,Date,Subject,Message) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setString(1, e.getFromEmail());
@@ -730,7 +730,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -749,12 +749,10 @@ public class Database {
         this.pushEmails();
         this.pushSuspendedListings();
 
-        for(SearchCriteria sc : searches){
-            System.out.println(sc.getType());
-            System.out.println(sc.getN_bedrooms());
-            System.out.println(sc.getN_bathrooms());
-            System.out.println(sc.isFurnished());
-            System.out.println(sc.getCityQuadrant());
+        for(Email e : emails){
+            System.out.println(e.getSubject());
+            System.out.println(e.getDate().toString());
+            System.out.println(e.getMessage());
         }
 
     }
