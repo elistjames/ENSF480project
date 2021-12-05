@@ -55,7 +55,7 @@ public class RenterView extends javax.swing.JFrame {
         nBedOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "1", "2", "3", "4", "5" }));
 
         typeOption.setMaximumRowCount(6);
-        typeOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Attatched House", "dettatched House", "Apartment", "Town Home" }));
+        typeOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Attatched House", "Dettatched House", "Apartment", "Town Home" }));
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1 uhsgdhfgs", "Item 2", "Item 3", "Item 4", "Item 5", "asdasd", "asdasda", "asf", "d", "gs", "fgfg", "dfg", "dfg", "d", "ghd", "fh", "dh", "dh", "d", "hd", "h", "dfh", "dh", "d", "h", "dfh", "dfh", "dh", " ", "fgh", "h", "h", "gh", "h" };
