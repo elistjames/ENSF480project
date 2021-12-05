@@ -30,6 +30,10 @@ import java.time.LocalDate;
  * the View package and the Model package and handles the communication between the two.
  */
 public class SystemController {
+	//------------------------------------------------------
+	// Member Variables - Fields
+	//------------------------------------------------------
+	
     public Database db; //An object that retrieves data from a MySQL Database
     					//and stores it.
     UserController currentController; //An object that stores the current User object and acts
@@ -39,6 +43,10 @@ public class SystemController {
     					 // first booted up.
     RenterView renterPage; //An object that holds the GUI interface for the Renter
     
+    
+    //-------------------------------------------------------
+    // Main function
+    //-------------------------------------------------------
     /**
      * The main function for the ENSF480project for group 23 in Fall 2021.
      * Initializes the SystemController, Database, currentDate, and runs the initial routine
@@ -47,11 +55,16 @@ public class SystemController {
      */
     public static void main(String[] args){
         SystemController sc = new SystemController();
-        sc.db = Database.getOnlyInstance();
-        sc.currentDate = Date.valueOf(LocalDate.now());
+        sc.db = Database.getOnlyInstance(); //Get instance of Database, generate one 
+        									//if it doesn't already exist
+        sc.currentDate = Date.valueOf(LocalDate.now()); //Get current data
+        
+        //Downloading data from database and updating data
         sc.db.initializeConnection();
         sc.db.pullAll();
         sc.db.updateListingDates(sc.currentDate);
+        
+        //Runs the following function after all previous events have been completed.
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 sc.startPage = new StartPage();
