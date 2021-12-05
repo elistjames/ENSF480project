@@ -46,31 +46,21 @@ public class EmailPage extends javax.swing.JFrame {
         jLabel1.setText("Email");
 
         emailTextArea.setColumns(20);
-        emailTextArea.setRows(5);
+        emailTextArea.setLineWrap(true);
+        emailTextArea.setRows(10);
         jScrollPane1.setViewportView(emailTextArea);
 
         sendEmailButton.setText("Send");
         sendEmailButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(lc == null){
-                    rc.sendEmailButtonActionPerformed(evt);
-                }
-                else{
-                    //lc.sendEmailButtonActionPerformed(evt);
-                }
+                rc.sendEmailButtonActionPerformed(evt);
             }
         });
 
         cancelEmalButton.setText("Cancel");
         cancelEmalButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(lc == null){
-                    rc.cancelEmailButtonActionPerformed(evt);
-                }
-                else{
-                    //lc.cancelEmailButtonActionPerformed(evt);
-                }
-
+                rc.cancelEmailButtonActionPerformed(evt);
             }
         });
 

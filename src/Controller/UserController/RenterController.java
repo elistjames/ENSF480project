@@ -11,6 +11,7 @@ import Viewer.View.RegisterPage;
 import Viewer.View.RenterView;
 
 import javax.swing.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class RenterController extends UserController {
@@ -31,13 +32,16 @@ public class RenterController extends UserController {
                 db.getCurrentSearch(current.getUserID()).getN_bathrooms(), db.getCurrentSearch(current.getUserID()).isFurnished(),
                 db.getCurrentSearch(current.getUserID()).getCityQuadrant());
         rv.setVisible(true);
+        if(db.notifyRenter(current.getUserID())){
+            JOptionPane.showMessageDialog(null, "There are new listings posted that match your criteria!");
+        }
         for(Listing l : db.getListings()){
             System.out.println(l.getProperty().getAddress());
         }
     }
 
     public void sendEmail(Email email){
-        db.getEmails().add(email);
+        db.getEmails().add(new Email(email.getFromEmail(), email.getToEmail(), email.getDate(), email.getSubject(), email.getMessage()));
     }
 
     public void setSearchCriteria(String type, int bedrooms, int bathrooms, int furnished, String cityQuadrant){
@@ -194,6 +198,7 @@ public class RenterController extends UserController {
         for(Property p : db.getProperties()){
             if(p.getAddress().equals(selected)){
                 email = new Email(current.getEmail(), db.lookupLandlordEmail(p.getLandlordID()));
+                email.setSubject(p.getAddress());
             }
         }
         rv.setVisible(false);
@@ -205,10 +210,16 @@ public class RenterController extends UserController {
         String sub = ep.getSubjectText().getText();
         if(msg.length() >= 1000){
             JOptionPane.showMessageDialog(null, "Message is too long.\n Must be less than 1000 characters");
-
         }
         else{
-
+            String fullSubject = email.getSubject() + "   ||   "+sub;
+            email.setSubject(fullSubject);
+            email.setMessage(msg);
+            email.setDate(LocalDate.now());
+            sendEmail(email);
+            ep.setVisible(false);
+            rv.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Email sent");
         }
     }
 
