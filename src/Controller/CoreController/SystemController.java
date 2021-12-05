@@ -40,7 +40,13 @@ public class SystemController {
                             User current = sc.db.getCurrentUser(usernameIn, passwordIn);
                             if(current.getType().equals("renter")){
                                 sc.startPage.setVisible(false);
-                                sc.currentController = new RenterController((Renter)current, new RenterView());
+                                sc.renterPage = new RenterView();
+                                sc.currentController = new RenterController((Renter)current, sc.renterPage);
+                                sc.renterPage.getSearchButton().addActionListener(new java.awt.event.ActionListener() {
+                                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                                    }
+                                });
 
                             }
                             else if(current.getType().equals("landlord")){
@@ -66,6 +72,7 @@ public class SystemController {
                         System.exit(0);
                     }
                 });
+
             }
         });
 
