@@ -40,7 +40,7 @@ public class LandlordController extends UserController {
 
 
     public void replyEmail(Email recived, String msg){
-        db.getEmails().add(new Email(current.getEmail(), recived.getFromEmail(), recived.getSubject(), msg));
+        //db.getEmails().add(new Email(current.getEmail(), recived.getFromEmail(), recived.getSubject(), msg));
     }
 
     public void changeListingState(Listing listing, String state){
@@ -88,7 +88,7 @@ public class LandlordController extends UserController {
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("rented");
                 db.getRentedProperties().add(l.getProperty());
-                db.getRentedDates().add(Date.valueOf(LocalDate.now()));
+                db.getRentedDates().add(LocalDate.now());
                 db.getListings().remove(l);
             }
         }
