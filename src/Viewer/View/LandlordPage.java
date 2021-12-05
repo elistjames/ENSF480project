@@ -1,14 +1,23 @@
 package Viewer.View;
 
+import Controller.UserController.LandlordController;
+import Controller.UserController.RenterController;
+import Model.Lising.Listing;
+import Model.Lising.Property;
+
 import javax.swing.*;
 
 public class LandlordPage extends javax.swing.JFrame {
-
+    LandlordController lc;
     /**
      * Creates new form LandlordPage
      */
     public LandlordPage() {
-        initComponents();
+
+    }
+
+    public void setLc(LandlordController lc) {
+        this.lc = lc;
     }
 
     /**
@@ -18,7 +27,7 @@ public class LandlordPage extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
+    public void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -37,13 +46,19 @@ public class LandlordPage extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        DefaultListModel<String> model = new DefaultListModel<>();
+        String col1Format = "%-7.7s";
+        String col2Format = "%-20.20s";
+        String col3Format = "%10.10s";
 
+        for(Property p : lc.db.getProperties()){
+            if(p.getLandlordID() == lc.current.getUserID()){
+                model.addElement("id: "+String.format(col1Format+" || "+col2Format+" || "+col3Format, p.getID(), p.getAddress(),
+                        p.getState()));
+            }
+        }
         propertyList.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.white, java.awt.Color.darkGray));
-        propertyList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        propertyList.setModel(model);
         propertyList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(propertyList);
 
@@ -51,43 +66,51 @@ public class LandlordPage extends javax.swing.JFrame {
         registerButton.setToolTipText("");
         registerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerButtonActionPerformed(evt);
+                lc.registerButtonActionPerformed(evt);
             }
         });
 
         postPropertButton.setText("Post Property");
         postPropertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                postPropertButtonActionPerformed(evt);
+                lc.postPropertButtonActionPerformed(evt);
             }
         });
 
+        DefaultListModel<String> model2 = new DefaultListModel<>();
+        String col1Format2 = "%-7.7s";
+        String col2Format2 = "%-10.10s";
+        String col3Format2 = "%-4.4s";
+        for(Listing l : lc.db.getListings()){
+            if(l.getProperty().getLandlordID() == lc.current.getUserID()){
+                model2.addElement(String.format("id: "+col1Format2+" ||  State: "+col2Format2+" || Expires in "+col3Format2+" days",
+                        l.getProperty().getID(), l.getState(), l.getDuration()-l.getCurrentDay()));
+            }
+
+        }
         PostedList.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.white, java.awt.Color.darkGray));
-        PostedList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        PostedList.setModel(model2);
+        propertyList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(PostedList);
 
         cancelPostingButton.setText("Cancel Posting");
         cancelPostingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelPostingButtonActionPerformed(evt);
+                lc.cancelPostingButtonActionPerformed(evt);
             }
         });
 
         suspendButton.setText("Suspend / Unsuspend");
         suspendButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                suspendButtonActionPerformed(evt);
+                lc.suspendButtonActionPerformed(evt);
             }
         });
 
         rentOutButton.setText("Rent Out");
         rentOutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rentOutButtonActionPerformed(evt);
+                lc.rentOutButtonActionPerformed(evt);
             }
         });
 
@@ -100,7 +123,7 @@ public class LandlordPage extends javax.swing.JFrame {
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitButtonActionPerformed(evt);
+                lc.exitButtonActionPerformed(evt);
             }
         });
 
@@ -189,30 +212,6 @@ public class LandlordPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
-    private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void postPropertButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void cancelPostingButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void suspendButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void rentOutButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
 
     // Variables declaration - do not modify
     private javax.swing.JList<String> PostedList;
@@ -231,7 +230,6 @@ public class LandlordPage extends javax.swing.JFrame {
     private javax.swing.JButton rentOutButton;
     private javax.swing.JButton suspendButton;
     // End of variables declaration
-
 
 
     public JList<String> getPostedList() {
