@@ -57,7 +57,7 @@ public class RenterView extends javax.swing.JFrame {
         nBedOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "1", "2", "3", "4", "5" }));
 
         typeOption.setMaximumRowCount(6);
-        typeOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Attatched House", "Dettatched House", "Apartment", "Town Home" }));
+        typeOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Attached House", "Detached House", "Apartment", "Town Home" }));
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
 
@@ -186,6 +186,42 @@ public class RenterView extends javax.swing.JFrame {
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+    }
+
+    public void updateCriteriaBoxes(String t, int nb1, int nb2, int f, String cq){
+        switch (t) {
+            case "N/A" -> typeOption.setSelectedIndex(0);
+            case "Attached House" -> typeOption.setSelectedIndex(1);
+            case "Detached House" -> typeOption.setSelectedIndex(2);
+            case "Apartment" -> typeOption.setSelectedIndex(3);
+            default -> typeOption.setSelectedIndex(4);
+        }
+
+        if (nb1 == -1) {
+            nBedOption.setSelectedIndex(0);
+        } else {
+            nBedOption.setSelectedIndex(nb1);
+        }
+
+        if (nb2 == -1) {
+            nBedOption.setSelectedIndex(0);
+        } else {
+            nBedOption.setSelectedIndex(nb2);
+        }
+
+        switch (f) {
+            case -1 -> furnishedOption.setSelectedIndex(0);
+            case 1 -> furnishedOption.setSelectedIndex(1);
+            default -> furnishedOption.setSelectedIndex(2);
+        }
+
+        switch (cq) {
+            case "N/A" -> quadrantOption.setSelectedIndex(0);
+            case "NW" -> quadrantOption.setSelectedIndex(1);
+            case "NE" -> quadrantOption.setSelectedIndex(2);
+            case "SW" -> quadrantOption.setSelectedIndex(3);
+            default -> quadrantOption.setSelectedIndex(4);
+        }
     }
 
     // Variables declaration - do not modify
