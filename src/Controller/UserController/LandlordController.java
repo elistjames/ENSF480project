@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Controller.UserController;
 
 import Model.Lising.*;
@@ -8,15 +16,36 @@ import Model.User.User;
 import java.sql.Date;
 import java.time.LocalDate;
 
+/**
+ * A class that extends the UserClass where the currentUser
+ * object contains a Landlord instance. Contains various
+ * functions that implement the actions a Landlord can take.
+ */
 public class LandlordController extends UserController {
     Landlord current;
-
+    
+    /**
+     * A constructor that takes a Landlord object as input.
+     */
     public LandlordController(Landlord currentUser) {
         super(currentUser);
         current = currentUser;
 
     }
-
+    
+    //----------------------------------------------------------------------
+    // Public methods
+    //----------------------------------------------------------------------
+    
+    /**
+     * Registers a new property and adds it to the database.
+     * @param {String} type Type of Property
+     * @param {int} bedrooms Number of bedrooms in property
+     * @param {int} bathrooms Number of bathrooms in property
+     * @param {int} furnished Indicates whether property is furnished
+     * @param {String} address Address of Property
+     * @param {String} cityQuadrant Quadrant of Property
+     */
     public void registerProperty(String type, int bedrooms, int bathrooms, int furnished, String address,
                                  String cityQuadrant){
         int next = db.getNextPropertyID();
@@ -24,12 +53,22 @@ public class LandlordController extends UserController {
                 address, cityQuadrant, "unlisted"));
     }
 
+    /**
+     * Creates Listing for Property and posts it.
+     * Notifies all relevant Renters of a new Property.
+     * @param {Property} p Property to be posted
+     * @param {int} days Number of days to be listed
+     */
     public void postProperty(Property p, int days){
         db.getListings().add(new Listing(p, days, "listed", LocalDate.now(), 0));
         p.setState("listed");
         db.updateRentersToNotify(p);
     }
 
+    /**
+     * Cancels Listing and deletes it from the database.
+     * @param {Listing} l Listing to be cancelled
+     */
     public void cancelListing(Listing l){
         for(Listing cl : db.getListings()){
             if(cl.getProperty().getID() == l.getProperty().getID()){
@@ -43,6 +82,14 @@ public class LandlordController extends UserController {
         //db.getEmails().add(new Email(current.getEmail(), recived.getFromEmail(), recived.getSubject(), msg));
     }
 
+    /**
+     * Changes a Listings state.
+     * If the current state is suspended, the listing can become cancelled or listed.
+     * If the current state is listed, the listing can become suspended, rented, or cancelled.
+     * Renting or cancelling a listing deletes the listing.
+     * @param {Listing} listing Listing to be changed
+     * @param {String} state State to change Listing state too
+     */
     public void changeListingState(Listing listing, String state){
         if(listing.getState().equals("suspended")){
             if(state.equals("cancelled")){
@@ -62,7 +109,11 @@ public class LandlordController extends UserController {
             }
         }
     }
-
+    
+    /**
+     * Changes the state of a suspended listing to listed.
+     * @param {Listing} listing Listing to unsuspend.
+     */
     public void unsuspendListing(Listing listing){
         for(Listing l : db.getSuspendedListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
@@ -73,6 +124,10 @@ public class LandlordController extends UserController {
         }
     }
 
+    /**
+     * Changes the state of a listed Listing to suspended.
+     * @param {Listing} listing Listing to be suspended.
+     */
     public void suspendListing(Listing listing){
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
@@ -82,7 +137,11 @@ public class LandlordController extends UserController {
             }
         }
     }
-
+    
+    /**
+     * Changes the Listing's Property's state to rented and deletes the Listing.
+     * @param {Listing} listing Listing that is being rented.
+     */
     public void rentOutListing(Listing listing){
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
