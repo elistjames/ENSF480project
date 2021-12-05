@@ -48,7 +48,7 @@ public class Database {
 
     public void initializeConnection() {
         try {
-            String DBURL = "jdbc:sqlite:480projdb.db";
+            String DBURL = "jdbc:sqlite:ensf480.db";
                 dbConnect = DriverManager.getConnection(DBURL); //initialize connections
         }
         catch (SQLException ex) {
@@ -127,11 +127,11 @@ public class Database {
 
     public void updateRentersToNotify(Property p){
         for(Renter r : renters){
-            if(r.getSc().getType().equals(p.getType())||r.getSc().getType().equals("N/A")){
-                if(r.getSc().getN_bedrooms() == p.getBedrooms() || r.getSc().getN_bedrooms() == -1){
-                    if(r.getSc().getN_bathrooms() == p.getBathrooms() || r.getSc().getN_bathrooms() == -1){
-                        if(r.getSc().isFurnished() == p.isFurnished() || r.getSc().isFurnished() == -1){
-                            if(r.getSc().getCityQuadrant().equals(p.getCityQuadrant())||r.getSc().getCityQuadrant().equals("N/A")){
+            if(getCurrentSearch(r).getType().equals(p.getType())||getCurrentSearch(r).getType().equals("N/A")){
+                if(getCurrentSearch(r).getN_bedrooms() == p.getBedrooms() || getCurrentSearch(r).getN_bedrooms() == -1){
+                    if(getCurrentSearch(r).getN_bathrooms() == p.getBathrooms() || getCurrentSearch(r).getN_bathrooms() == -1){
+                        if(getCurrentSearch(r).isFurnished() == p.isFurnished() || getCurrentSearch(r).isFurnished() == -1){
+                            if(getCurrentSearch(r).getCityQuadrant().equals(p.getCityQuadrant())||getCurrentSearch(r).getCityQuadrant().equals("N/A")){
                                 if(!rentersToNotify.contains(r.getUserID())){
                                     rentersToNotify.add(r.getUserID());
                                 }
@@ -153,12 +153,13 @@ public class Database {
         return false;
     }
 
-    private void pullCurrentSearchCriteria(Renter current){
+    public SearchCriteria getCurrentSearch(Renter current){
         for(SearchCriteria sc : searches){
             if(sc.getRenterID() == current.getUserID()){
-                current.setSc(sc);
+                return sc;
             }
         }
+        return null;
     }
 
     private void updateCurrentSearchCriteria(SearchCriteria current){
@@ -175,7 +176,6 @@ public class Database {
         User current = new Renter(0,"**","**","**","**","**");
         for(Renter r : renters){
             if(r.getUsername().equals(username)&&r.getPassword().equals(password)){
-                pullCurrentSearchCriteria(r);
                 return r;
             }
         }
@@ -398,7 +398,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
     private void pushLandlords(){
@@ -421,7 +421,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
     private void pushProperties(){
@@ -448,7 +448,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
     private void pushManagers(){
@@ -471,7 +471,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
     private void pushFees(){
@@ -491,7 +491,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
     private void pushListings(){
@@ -571,7 +571,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -595,7 +595,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -615,7 +615,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -643,7 +643,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -663,7 +663,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -688,7 +688,7 @@ public class Database {
                 myStmt.close();
             }
         } catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -732,6 +732,14 @@ public class Database {
         this.pushEmails();
         this.pushSuspendedListings();
 
+        for(SearchCriteria sc : searches){
+            System.out.println(sc.getType());
+            System.out.println(sc.getN_bedrooms());
+            System.out.println(sc.getN_bathrooms());
+            System.out.println(sc.isFurnished());
+            System.out.println(sc.getCityQuadrant());
+        }
+
     }
 
     public void pullAll(){
@@ -749,12 +757,12 @@ public class Database {
         this.pullEmails();
         this.pullSuspendedListings();
 
-        for(User u : users){
-            System.out.println(u.getUserID()+", "+u.getName()+", "+u.getUsername()+", "+u.getPassword()+", "+u.getType());
-        }
-
-        for(Listing l : listings){
-            System.out.println(l.getStartDate()+", "+l.getCurrentDay());
+        for(SearchCriteria sc : searches){
+            System.out.println(sc.getType());
+            System.out.println(sc.getN_bedrooms());
+            System.out.println(sc.getN_bathrooms());
+            System.out.println(sc.isFurnished());
+            System.out.println(sc.getCityQuadrant());
         }
     }
 
@@ -807,6 +815,15 @@ public class Database {
             }
         }
         return email;
+    }
+
+    public Landlord lookupLandlord(int id){
+        for(Landlord l : landlords){
+            if(l.getUserID() == id){
+                return l;
+            }
+        }
+        return new Landlord(1, "d", "d", "d", "d", "landlord");
     }
 
 

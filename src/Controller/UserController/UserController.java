@@ -10,6 +10,7 @@ public abstract class UserController {
 
     public UserController(User currentUser){
         this.currentUser = currentUser;
+        db = Database.getOnlyInstance();
     }
 
 

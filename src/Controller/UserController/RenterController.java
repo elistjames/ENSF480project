@@ -7,20 +7,27 @@ import Model.User.SearchCriteria;
 import Model.User.User;
 import Viewer.View.RenterView;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class RenterController extends UserController {
-    Renter current;
+    public Renter current;
     RenterView rv;
 
-    public RenterController(Renter currentUser, RenterView rv){
+    public RenterController(Renter currentUser, RenterView renterV){
         super(currentUser);
         current = currentUser;
-        this.rv = rv;
+        this.rv = renterV;
+        this.rv.setRc(this);
+        rv.initComponents();
         rv.setLocationRelativeTo(null);
-
+        rv.updateCriteriaBoxes(db.getCurrentSearch(current).getType(), db.getCurrentSearch(current).getN_bedrooms(),
+                db.getCurrentSearch(current).getN_bathrooms(), db.getCurrentSearch(current).isFurnished(),
+                db.getCurrentSearch(current).getCityQuadrant());
         rv.setVisible(true);
-
+        for(Listing l : db.getListings()){
+            System.out.println(l.getProperty().getAddress());
+        }
     }
 
     public void sendEmail(Listing l, String msg){
@@ -69,39 +76,76 @@ public class RenterController extends UserController {
         }
     }
 
-    public void SearchListings(){
+    public void searchListings(){
+        rv.setVisible(false);
+        rv = new RenterView();
+        this.rv.setRc(this);
+        rv.initComponents();
+        rv.setLocationRelativeTo(null);
+        rv.updateCriteriaBoxes(db.getCurrentSearch(current).getType(), db.getCurrentSearch(current).getN_bedrooms(),
+                db.getCurrentSearch(current).getN_bathrooms(), db.getCurrentSearch(current).isFurnished(),
+                db.getCurrentSearch(current).getCityQuadrant());
+        rv.setVisible(true);
+        /*
         ArrayList<String> strList = new ArrayList<String>();
-        rv.getTypeOption().getSelectedItem().toString();
+        String tmpType = String.valueOf(rv.getTypeOption().getSelectedItem());
+        String tmpNbed = String.valueOf(rv.getnBedOption().getSelectedItem());
+        String tmpNbath = String.valueOf(rv.getnBathOption().getSelectedItem());
+        String tmpFurnished = String.valueOf(rv.getFurnishedOption().getSelectedItem());
+        String tmpCQ = String.valueOf(rv.getQuadrantOption().getSelectedItem());
+        updateSearchCriteria(tmpType, tmpNbed, tmpNbath, tmpFurnished, tmpCQ);
+        int i = 0;
         for(Listing l : db.getListings()){
-
+            if(l.getProperty().getType().equals(db.getCurrentSearch(current).getType())){
+                if(l.getProperty().getBedrooms() == db.getCurrentSearch(current).getN_bedrooms()){
+                    if(l.getProperty().getBathrooms() == db.getCurrentSearch(current).getN_bathrooms()){
+                        if(l.getProperty().isFurnished() == db.getCurrentSearch(current).isFurnished()){
+                            if(l.getProperty().getCityQuadrant().equals(db.getCurrentSearch(current).getCityQuadrant())){
+                                String tmp = String.format("Address: %1$-40s Posted by: %2$-20s Posting expires in %3$3d days",
+                                        l.getProperty().getAddress(), db.lookupLandlord(l.getProperty().getLandlordID()),
+                                        l.getDuration()-l.getCurrentDay());
+                                rv.getjList1().getModel().
+                            }
+                            else rv.getStrings()[i] = "";
+                        }
+                        else rv.getStrings()[i] = "";
+                    }
+                    else rv.getStrings()[i] = "";
+                }
+                else rv.getStrings()[i] = "";
+            }
+            else rv.getStrings()[i] = "";
+            i++;
         }
+
+        */
     }
 
     public void updateSearchCriteria(String type, String nbed, String nbath, String furnished, String cq){
-        current.getSc().setType(type);
+        db.getCurrentSearch(current).setType(type);
 
         if(nbed.equals("N/A")){
-            current.getSc().setN_bedrooms(-1);
+            db.getCurrentSearch(current).setN_bedrooms(-1);
         }
         else{
-            current.getSc().setN_bedrooms(Integer.parseInt(nbed));
+            db.getCurrentSearch(current).setN_bedrooms(Integer.parseInt(nbed));
         }
         if(nbath.equals("N/A")){
-            current.getSc().setN_bathrooms(-1);
+            db.getCurrentSearch(current).setN_bathrooms(-1);
         }
         else{
-            current.getSc().setN_bathrooms(Integer.parseInt(nbath));
+            db.getCurrentSearch(current).setN_bathrooms(Integer.parseInt(nbath));
         }
         if(furnished.equals("N/A")){
-            current.getSc().setFurnished(-1);
+            db.getCurrentSearch(current).setFurnished(-1);
         }
         else if(furnished.equals("Yes")){
-            current.getSc().setFurnished(1);
+            db.getCurrentSearch(current).setFurnished(1);
         }
         else{
-            current.getSc().setFurnished(0);
+            db.getCurrentSearch(current).setFurnished(0);
         }
 
-        current.getSc().setCityQuadrant(cq);
+        db.getCurrentSearch(current).setCityQuadrant(cq);
     }
 }
