@@ -22,7 +22,6 @@ public class Database {
     private ArrayList<ListingFee> fees = new ArrayList<>();
     private ArrayList<Listing> listings = new ArrayList<>();
     private ArrayList<Date> listingDates = new ArrayList<>();
-    private ArrayList<Date> listing = new ArrayList<>();
     private ArrayList<Property> rentedProperties = new ArrayList<>();
     private ArrayList<Date> rentedDates = new ArrayList<>();
     private ArrayList<SearchCriteria> searches = new ArrayList<>();
@@ -188,7 +187,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM RENTERS"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM renters"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.renters.add(new Renter(result.getInt("ID"), result.getString("Name"),
                         result.getString("Username"), result.getString("Password"),
@@ -203,7 +202,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM LANDLORDS"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM landlords"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.landlords.add(new Landlord(result.getInt("ID"), result.getString("Name"),
                         result.getString("Username"), result.getString("Password"),
@@ -218,7 +217,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM PROPERTIES"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM properties"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.properties.add(new Property(result.getInt("LandlordID"),
                         result.getInt("ID"), result.getString("Type"),
@@ -235,7 +234,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM MANAGERS"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM managers"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.managers.add(new Manager(result.getInt("ID"), result.getString("Name"),
                         result.getString("Username"), result.getString("Password"),
@@ -250,7 +249,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM FEES"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM fees"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.fees.add(new ListingFee(result.getInt("Price"), result.getInt("Days")));
             }
@@ -263,7 +262,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM LISTINGS"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM listings"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.listings.add(new Listing(this.getProperty(result.getInt("PropertyID")),
                         result.getInt("Duration"), result.getString("State"),
@@ -278,7 +277,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM RENTED"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM rented"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.rentedProperties.add(new Property(result.getInt("LandlordID"),
                         result.getInt("ID"), result.getString("Type"),
@@ -296,7 +295,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM SUSPENDED"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM suspended"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.suspendedListings.add(new Listing(this.getProperty(result.getInt("PropertyID")),
                         result.getInt("Duration"), result.getString("State"),
@@ -311,7 +310,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM RTN"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM rtn"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.rentersToNotify.add(result.getInt("renterID"));
             }
@@ -324,7 +323,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM SEARCHES"); //execute statement select all from Chair table
+            result = myStmt.executeQuery("SELECT * FROM searches"); //execute statement select all from Chair table
             while(result.next()) { //run while next row exists
                 this.searches.add(new SearchCriteria(result.getInt("RenterID"),
                         result.getString("Type"),result.getInt("Bedrooms"),
@@ -340,7 +339,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM LISTINGDATES");
+            result = myStmt.executeQuery("SELECT * FROM listingdates");
             while(result.next()) { //run while next row exists
                 this.listingDates.add(result.getDate("DateOfListing"));
             }
@@ -359,7 +358,7 @@ public class Database {
         ResultSet result; //create new ResultSet object
         try {
             Statement myStmt = dbConnect.createStatement(); //create new statement
-            result = myStmt.executeQuery("SELECT * FROM EMAILS");
+            result = myStmt.executeQuery("SELECT * FROM emails");
             while(result.next()) { //run while next row exists
                 this.emails.add(new Email(result.getString("From"), result.getString("To"),
                         result.getDate("Date"), result.getString("Subject"),
@@ -373,11 +372,11 @@ public class Database {
     private void pushRenters(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE RENTERS");
+            statement.executeUpdate("TRUNCATE renters");
             String query;
 
             for(Renter renter : renters){
-                query = "INSERT INTO RENTERS (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO renters (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, renter.getUserID());
@@ -396,11 +395,11 @@ public class Database {
     private void pushLandlords(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE LANDLORDS");
+            statement.executeUpdate("TRUNCATE landlords");
             String query;
 
             for(Landlord landlord : landlords){
-                query = "INSERT INTO LANDLORDS (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO landlords (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, landlord.getUserID());
@@ -419,11 +418,11 @@ public class Database {
     private void pushProperties(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE PROPERTIES");
+            statement.executeUpdate("TRUNCATE properties");
             String query;
 
             for(Property property : properties){
-                query = "INSERT INTO PROPERTIES (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant,State) VALUES (?,?,?,?,?,?,?,?,?)";
+                query = "INSERT INTO properties (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant,State) VALUES (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, property.getLandlordID());
@@ -446,11 +445,11 @@ public class Database {
     private void pushManagers(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE MANAGERS");
+            statement.executeUpdate("TRUNCATE managers");
             String query;
 
             for(Manager manager : managers){
-                query = "INSERT INTO MANAGERS (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO managers (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, manager.getUserID());
@@ -469,11 +468,11 @@ public class Database {
     private void pushFees(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE FEES");
+            statement.executeUpdate("TRUNCATE fees");
             String query;
 
             for(ListingFee fee : fees){
-                query = "INSERT INTO FEES (Price,Duration) VALUES (?,?)";
+                query = "INSERT INTO fees (Price,Duration) VALUES (?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, fee.getPrice());
@@ -489,11 +488,11 @@ public class Database {
     private void pushListings(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE LISTINGS");
+            statement.executeUpdate("TRUNCATE listings");
             String query;
 
             for(Listing listing : listings){
-                query = "INSERT INTO LISTINGS (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO listings (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, listing.getProperty().getID());
@@ -513,11 +512,11 @@ public class Database {
     private void pushUsers(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE USERS");
+            statement.executeUpdate("TRUNCATE users");
             String query;
 
             for(Renter renter : renters){
-                query = "INSERT INTO USERS (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO users (ID,Name,Username,Password,Email,Type) VALUES (?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, renter.getUserID());
@@ -525,12 +524,13 @@ public class Database {
                 myStmt.setString(3, renter.getUsername());
                 myStmt.setString(4, renter.getPassword());
                 myStmt.setString(5, renter.getEmail());
+                myStmt.setString(6, renter.getType());
 
                 myStmt.execute();
                 myStmt.close();
             }
             for(Landlord landlord : landlords){
-                query = "INSERT INTO USERS (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO users (ID,Name,Username,Password,Email,Type) VALUES (?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, landlord.getUserID());
@@ -538,12 +538,13 @@ public class Database {
                 myStmt.setString(3, landlord.getUsername());
                 myStmt.setString(4, landlord.getPassword());
                 myStmt.setString(5, landlord.getEmail());
+                myStmt.setString(6, landlord.getType());
 
                 myStmt.execute();
                 myStmt.close();
             }
             for(Manager manager : managers){
-                query = "INSERT INTO USERS (ID,Name,Username,Password,Email) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO users (ID,Name,Username,Password,Email,Type) VALUES (?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, manager.getUserID());
@@ -551,6 +552,7 @@ public class Database {
                 myStmt.setString(3, manager.getUsername());
                 myStmt.setString(4, manager.getPassword());
                 myStmt.setString(5, manager.getEmail());
+                myStmt.setString(6, manager.getType());
 
                 myStmt.execute();
                 myStmt.close();
@@ -563,11 +565,11 @@ public class Database {
     private void pushSuspendedListings(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE SUSPENDED");
+            statement.executeUpdate("TRUNCATE suspended");
             String query;
 
             for(Listing listing : suspendedListings){
-                query = "INSERT INTO SUSPENDED (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO suspended (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, listing.getProperty().getID());
@@ -587,11 +589,11 @@ public class Database {
     private void pushRTN(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE RTN");
+            statement.executeUpdate("TRUNCATE rtn");
             String query;
 
             for(int renterID : rentersToNotify){
-                query = "INSERT INTO RTN (renterID) VALUES (?)";
+                query = "INSERT INTO rtn (renterID) VALUES (?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, renterID);
@@ -607,11 +609,11 @@ public class Database {
     private void pushRentedProperties(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE RENTED");
+            statement.executeUpdate("TRUNCATE rented");
             String query;
 
             for(int i = 0; i < rentedProperties.size(); i++){
-                query = "INSERT INTO RENTED (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant,DateRented) VALUES (?,?,?,?,?,?,?,?,?)";
+                query = "INSERT INTO rented (LandlordID,ID,Type,Bedrooms,Bathrooms,Furnished,Address,CityQuadrant,DateRented) VALUES (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, rentedProperties.get(i).getLandlordID());
@@ -635,11 +637,11 @@ public class Database {
     private void pushListingDates(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE LISTINGDATES");
+            statement.executeUpdate("TRUNCATE listingdates");
             String query;
 
             for(Date d : listingDates){
-                query = "INSERT INTO LISTINGDATES (DateOfListing) VALUES (?)";
+                query = "INSERT INTO listingdates (DateOfListing) VALUES (?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setDate(1, d);
@@ -655,11 +657,11 @@ public class Database {
     private void pushSearchCriterias(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE SEARCHES");
+            statement.executeUpdate("TRUNCATE searches");
             String query;
 
             for(SearchCriteria search : searches){
-                query = "INSERT INTO SEARCHES (RenterID,Type,Bedrooms,Bathrooms,Furnished,CityQuadrant) VALUES (?,?,?,?,?,?)";
+                query = "INSERT INTO searches (RenterID,Type,Bedrooms,Bathrooms,Furnished,CityQuadrant) VALUES (?,?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setInt(1, search.getRenterID());
@@ -680,11 +682,11 @@ public class Database {
     private void pushEmails(){
         try{
             Statement statement = dbConnect.createStatement();
-            statement.executeUpdate("TRUNCATE EMAILS");
+            statement.executeUpdate("TRUNCATE emails");
             String query;
 
             for(Email e : emails){
-                query = "INSERT INTO EMAILS (From,To,Date,Subject,Message) VALUES (?,?,?,?,?)";
+                query = "INSERT INTO emails (From,To,Date,Subject,Message) VALUES (?,?,?,?,?)";
                 PreparedStatement myStmt = dbConnect.prepareStatement(query);
 
                 myStmt.setString(1, e.getFromEmail());
@@ -714,6 +716,8 @@ public class Database {
         this.pushRentedProperties();
         this.pushRTN();
         this.pushSearchCriterias();
+        this.pushEmails();
+        this.pushSuspendedListings();
     }
 
     public void pullAll(){
@@ -728,6 +732,8 @@ public class Database {
         this.pullRentedProperties();
         this.pullRTN();
         this.pullSearchCriterias();
+        this.pullEmails();
+        this.pullSuspendedListings();
     }
 
     public int getNextPropertyID(){
