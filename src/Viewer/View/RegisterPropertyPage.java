@@ -1,15 +1,19 @@
 package Viewer.View;
 
+import Controller.UserController.LandlordController;
+
 import javax.swing.*;
 
 public class RegisterPropertyPage extends javax.swing.JFrame {
+    LandlordController lc;
 
     /**
      * Creates new form RegisterPropertyPage
      */
     public RegisterPropertyPage() {
-        initComponents();
     }
+
+    public void setLc(LandlordController lc) {this.lc = lc;}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -18,7 +22,7 @@ public class RegisterPropertyPage extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
+    public void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -54,11 +58,7 @@ public class RegisterPropertyPage extends javax.swing.JFrame {
 
         quadrantOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "NW", "NE", "SW", "SE" }));
 
-        addressText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addressTextActionPerformed(evt);
-            }
-        });
+
 
         jLabel2.setText("Address:");
 
@@ -75,14 +75,14 @@ public class RegisterPropertyPage extends javax.swing.JFrame {
         registerBackButton.setText("Back");
         registerBackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerBackButtonActionPerformed(evt);
+                lc.registerBackButtonActionPerformed(evt);
             }
         });
 
         cnfirmRegisterButton.setText("Register");
         cnfirmRegisterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cnfirmRegisterButtonActionPerformed(evt);
+                lc.cnfirmRegisterButtonActionPerformed(evt);
             }
         });
 

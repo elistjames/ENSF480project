@@ -2,6 +2,9 @@ package Viewer.View;
 
 import Controller.UserController.LandlordController;
 import Controller.UserController.RenterController;
+import Model.User.Email;
+
+import java.time.LocalDate;
 
 public class EmailDialog extends javax.swing.JDialog {
     RenterController rc;
@@ -26,7 +29,7 @@ public class EmailDialog extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents(String type) {
+    public void initComponents(Email e) {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -43,6 +46,7 @@ public class EmailDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         fromTextPane.setEditable(false);
+        fromTextPane.setText(e.getFromEmail());
         fromTextPane.setBorder(null);
         jScrollPane1.setViewportView(fromTextPane);
 
@@ -53,10 +57,16 @@ public class EmailDialog extends javax.swing.JDialog {
         jLabel2.setText("Subject:");
 
         jTextPane1.setEditable(false);
-        jTextPane1.setText("Hello my name babbo");
+
+        jTextPane1.setText(e.getSubject());
+
+
         jScrollPane2.setViewportView(jTextPane1);
 
+        messageTextPane.setText(e.getMessage());
+
         messageTextPane.setEditable(false);
+
         jScrollPane3.setViewportView(messageTextPane);
 
         replyButton.setText("Reply");
@@ -133,11 +143,43 @@ public class EmailDialog extends javax.swing.JDialog {
     }// </editor-fold>
 
     private void replyButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        if(rc == null){
+            lc.email = new Email(lc.recieved.getToEmail(), lc.recieved.getFromEmail());
+            lc.email.setDate(LocalDate.now());
+            lc.ep = new EmailPage();
+            lc.ep.setLc(lc);
+            lc.ep.initComponents("reply");
+            lc.ep.setLocationRelativeTo(null);
+            lc.ep.setVisible(true);
+            this.setVisible(false);
+        }
+        else{
+            rc.email = new Email(rc.recieved.getToEmail(), rc.recieved.getFromEmail());
+            rc.email.setDate(LocalDate.now());
+            rc.ep = new EmailPage();
+            rc.ep.setRc(rc);
+            rc.ep.initComponents("reply");
+            rc.ep.setLocationRelativeTo(null);
+            rc.ep.setVisible(true);
+            this.setVisible(false);
+        }
     }
 
     private void ignoreButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        if(rc == null){
+            this.setVisible(false);
+            lc.lp.setVisible(true);
+            if(lc.db.emailNotSeen(lc.current.getEmail())){
+                lc.checkEmails();
+            }
+        }
+        else{
+            this.setVisible(false);
+            rc.rv.setVisible(true);
+            if(rc.db.emailNotSeen(rc.current.getEmail())){
+                rc.checkEmails();
+            }
+        }
     }
 
     // Variables declaration - do not modify
