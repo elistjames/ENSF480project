@@ -8,13 +8,12 @@
 
 package Controller.UserController;
 
+import Controller.CoreController.SystemController;
 import Model.Lising.*;
 import Model.User.Email;
 import Model.User.Landlord;
 import Model.User.User;
-import Viewer.View.FeePaymentView;
-import Viewer.View.LandlordPage;
-import Viewer.View.RegisterPropertyPage;
+import Viewer.View.*;
 
 import javax.swing.*;
 import java.sql.Date;
@@ -26,10 +25,15 @@ import java.time.LocalDate;
  * functions that implement the actions a Landlord can take.
  */
 public class LandlordController extends UserController {
+
     public Landlord current;
-    LandlordPage lp;
+    public LandlordPage lp;
     FeePaymentView fp;
     RegisterPropertyPage rp;
+    public EmailPage ep;
+    public Email email;
+    public Email recieved;
+    EmailDialog ed;
     
     /**
      * A constructor that takes a Landlord object as input.
@@ -42,6 +46,9 @@ public class LandlordController extends UserController {
         lp.initComponents();
         lp.setLocationRelativeTo(null);
         lp.setVisible(true);
+        if(db.emailNotSeen(current.getEmail())){
+            checkEmails();
+        }
     }
     
     //----------------------------------------------------------------------
@@ -81,18 +88,39 @@ public class LandlordController extends UserController {
      * @param {Listing} l Listing to be cancelled
      */
     public void cancelListing(Listing l){
+
         for(Listing cl : db.getListings()){
             if(cl.getProperty().getID() == l.getProperty().getID()){
+
                 cl.getProperty().setState("unlisted");
                 db.getListings().remove(cl);
+                break;
+            }
+        }
+
+    }
+
+    public void checkEmails(){
+        for(Email e : db.getEmails()){
+            if(e.getToEmail().equals(current.getEmail())){
+                JOptionPane.showMessageDialog(null, "You have received a message from a renter.\n" +
+                        "Click Ok to view it.");
+                recieved = e;
+                db.getEmails().remove(e);
+                ed = new EmailDialog(lp, true);
+                ed.setLc(this);
+                ed.initComponents(e);
+                ed.setLocationRelativeTo(null);
+                ed.setVisible(true);
+
                 break;
             }
         }
     }
 
 
-    public void replyEmail(Email recived, String msg){
-        //db.getEmails().add(new Email(current.getEmail(), recived.getFromEmail(), recived.getSubject(), msg));
+    public void sendEmail(Email email){
+        db.getEmails().add(new Email(email.getFromEmail(), email.getToEmail(), email.getDate(), email.getSubject(), email.getMessage()));
     }
 
     /**
@@ -104,7 +132,9 @@ public class LandlordController extends UserController {
      * @param {String} state State to change Listing state too
      */
     public void changeListingState(Listing listing, String state){
+
         if(listing.getState().equals("suspended")){
+
             if(state.equals("cancelled")){
                 unsuspendListing(listing);
                 cancelListing(listing);
@@ -131,8 +161,10 @@ public class LandlordController extends UserController {
      * @param {Listing} listing Listing to unsuspend.
      */
     public void unsuspendListing(Listing listing){
+
         for(Listing l : db.getSuspendedListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
+
                 l.getProperty().setState("listed");
                 l.setState("listed");
                 db.getListings().add(l);
@@ -200,7 +232,7 @@ public class LandlordController extends UserController {
                 lp.setVisible(false);
                 fp.setVisible(true);
             }
-            System.out.println(selected);
+
         }
     }
 
@@ -211,22 +243,37 @@ public class LandlordController extends UserController {
         else{
             int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel this posting?\n" +
                     "You will not get any money back for paying a listing fee", "Confirmation", JOptionPane.YES_NO_OPTION);
-            String selectedProperty = lp.getPostedList().getSelectedValue();
-            selectedProperty = selectedProperty.substring(4, 11);
-            for(Listing l : db.getListings()){
-                if(l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())){
-                    changeListingState(l, "cancelled");
-                    break;
+            if(choice == JOptionPane.YES_OPTION){
+
+                String selectedProperty = lp.getPostedList().getSelectedValue();
+
+                selectedProperty = selectedProperty.substring(4, 11);
+
+                if(db.getProperty(Integer.parseInt(selectedProperty)).getState().equals("listed")){
+                    for(Listing l : db.getListings()){
+                        if(l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())){
+                            changeListingState(l, "cancelled");
+                            break;
+                        }
+                    }
                 }
+                else{
+                    for(Listing l : db.getSuspendedListings()) {
+                        if (l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())) {
+                            changeListingState(l, "cancelled");
+                            break;
+                        }
+                    }
+                }
+                lp.setVisible(false);
+                lp = new LandlordPage();
+                lp.setLc(this);
+                lp.initComponents();
+                lp.setLocationRelativeTo(null);
+                lp.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully un-posted.\n" +
+                        "You may re-post the property if you wish but will have to re-pay the listing fee.");
             }
-            lp.setVisible(false);
-            lp = new LandlordPage();
-            lp.setLc(this);
-            lp.initComponents();
-            lp.setLocationRelativeTo(null);
-            lp.setVisible(true);
-            JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully un-posted.\n" +
-                    "You may re-post the property if you wish but will have to re-pay the listing fee.");
         }
     }
 
@@ -279,7 +326,37 @@ public class LandlordController extends UserController {
     }
 
     public void rentOutButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        if(lp.getPostedList().getSelectedValue() == null){
+            JOptionPane.showMessageDialog(null, "You must select a Posting to rent to someone.");
+        }
+        else{
+            String selectedProperty = lp.getPostedList().getSelectedValue();
+            int propertyID = Integer.parseInt(selectedProperty.substring(4, 11));
+            if(db.getProperty(propertyID).getState().equals("suspended")){
+                JOptionPane.showMessageDialog(null, "Cannot rent out a posting that is suspended.\n" +
+                        "You must un-suspend it first");
+            }
+            else{
+                int choice = JOptionPane.showConfirmDialog(null, "Are you sure you'd like to rent" +
+                        "this property to a customer?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if(choice == JOptionPane.YES_OPTION){
+                    for(Listing l : db.getListings()){
+                        if(l.getProperty().getID() == propertyID){
+                            changeListingState(l, "rented");
+                            break;
+                        }
+                    }
+                    lp.setVisible(false);
+                    lp = new LandlordPage();
+                    lp.setLc(this);
+                    lp.initComponents();
+                    lp.setLocationRelativeTo(null);
+                    lp.setVisible(true);
+                    JOptionPane.showMessageDialog(null, "Property with id: "+propertyID+"\n" +
+                            "has been rented.");
+                }
+            }
+        }
     }
 
     public void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -383,5 +460,43 @@ public class LandlordController extends UserController {
             }
         }
     }
+    public void sendEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        String msg = ep.getEmailTextArea().getText();
+        String sub = ep.getSubjectText().getText();
+        if(msg.length() >= 1000){
+            JOptionPane.showMessageDialog(null, "Message is too long.\n Must be less than 1000 characters");
+        }
+        else{
+            String fullSubject = "";
+            if(recieved==null){
+                fullSubject = email.getSubject() + "   ||   "+sub;
+            }
+            else{
+                fullSubject = sub;
+            }
 
+            email.setSubject(fullSubject);
+            email.setMessage(msg);
+            email.setDate(LocalDate.now());
+            sendEmail(email);
+            ep.setVisible(false);
+            lp.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Email sent");
+            if(db.emailNotSeen(current.getEmail())){
+                recieved = null;
+                email = null;
+                checkEmails();
+            }
+        }
+    }
+
+    public void cancelEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        ep.setVisible(false);
+        lp.setVisible(true);
+        if(db.emailNotSeen(current.getEmail())){
+            recieved = null;
+            email = null;
+            checkEmails();
+        }
+    }
 }
