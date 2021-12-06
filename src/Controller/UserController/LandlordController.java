@@ -26,6 +26,9 @@ import java.time.LocalDate;
  */
 public class LandlordController extends UserController {
 
+	//----------------------------------------------------------------------------------
+	// Member variables
+	//---------------------------------------------------------------------------------
     public Landlord current;
     public LandlordPage lp;
     FeePaymentView fp;
@@ -35,6 +38,9 @@ public class LandlordController extends UserController {
     public Email recieved;
     EmailDialog ed;
     
+    //-------------------------------------------------------
+    // Constructor
+    //-------------------------------------------------------
     /**
      * A constructor that takes a Landlord object as input.
      */
@@ -51,10 +57,10 @@ public class LandlordController extends UserController {
         }
     }
     
-    //----------------------------------------------------------------------
-    // Public methods
-    //----------------------------------------------------------------------
-    
+
+    //--------------------------------------------
+    // Property Creation and Modifying methods
+    //--------------------------------------------
     /**
      * Registers a new property and adds it to the database.
      * @param {String} type Type of Property
@@ -83,23 +89,14 @@ public class LandlordController extends UserController {
         db.updateRentersToNotify(p);
     }
 
+
+
+    //-----------------------------------------------
+    // Email methods
+    //-----------------------------------------------
     /**
-     * Cancels Listing and deletes it from the database.
-     * @param {Listing} l Listing to be cancelled
+     * Searches through database of emails to find ones directed to current user and views them.
      */
-    public void cancelListing(Listing l){
-
-        for(Listing cl : db.getListings()){
-            if(cl.getProperty().getID() == l.getProperty().getID()){
-
-                cl.getProperty().setState("unlisted");
-                db.getListings().remove(cl);
-                break;
-            }
-        }
-
-    }
-
     public void checkEmails(){
         for(Email e : db.getEmails()){
             if(e.getToEmail().equals(current.getEmail())){
@@ -118,10 +115,18 @@ public class LandlordController extends UserController {
     }
 
 
+    /**
+     * Adds an email to the database.
+     * @param {Email} email Email to be added to the database.
+     */
     public void sendEmail(Email email){
         db.getEmails().add(new Email(email.getFromEmail(), email.getToEmail(), email.getDate(), email.getSubject(), email.getMessage()));
     }
 
+    
+    //---------------------------------------------
+    // Methods that modify a Listing
+    //---------------------------------------------
     /**
      * Changes a Listings state.
      * If the current state is suspended, the listing can become cancelled or listed.
@@ -159,7 +164,7 @@ public class LandlordController extends UserController {
      * Changes the state of a suspended listing to listed.
      * @param {Listing} listing Listing to unsuspend.
      */
-    public void unsuspendListing(Listing listing){
+    private void unsuspendListing(Listing listing){
 
         for(Listing l : db.getSuspendedListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
@@ -172,12 +177,29 @@ public class LandlordController extends UserController {
             }
         }
     }
+    
+    /**
+     * Cancels Listing and deletes it from the database.
+     * @param {Listing} l Listing to be cancelled
+     */
+    private void cancelListing(Listing l){
+
+        for(Listing cl : db.getListings()){
+            if(cl.getProperty().getID() == l.getProperty().getID()){
+
+                cl.getProperty().setState("unlisted");
+                db.getListings().remove(cl);
+                break;
+            }
+        }
+
+    }
 
     /**
      * Changes the state of a listed Listing to suspended.
      * @param {Listing} listing Listing to be suspended.
      */
-    public void suspendListing(Listing listing){
+    private void suspendListing(Listing listing){
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("suspended");
@@ -193,7 +215,7 @@ public class LandlordController extends UserController {
      * Changes the Listing's Property's state to rented and deletes the Listing.
      * @param {Listing} listing Listing that is being rented.
      */
-    public void rentOutListing(Listing listing){
+    private void rentOutListing(Listing listing){
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("rented");
@@ -204,6 +226,16 @@ public class LandlordController extends UserController {
             }
         }
     }
+    
+    
+    //--------------------------------------------------
+    // Action Performed methods
+    //----------------------------------------------------
+    /**
+     * Runs when register Button has been pressed. Brings up a RegisterProperty page.
+     * Makes the LandlordView invisible.
+     * @param {ActionEvent} evt Event that occured
+     */
     public void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {
         rp = new RegisterPropertyPage();
         rp.setLc(this);
@@ -213,6 +245,11 @@ public class LandlordController extends UserController {
         rp.setVisible(true);
     }
 
+    /**
+     * Runs when Post Property button has been pressed. Starts process to post selected property
+     * and displays a FeePaymentView to the screen.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void postPropertButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(lp.getPropertyList().getSelectedValue() == null){
             JOptionPane.showMessageDialog(null, "Must select one of the properties to post.");
@@ -235,6 +272,12 @@ public class LandlordController extends UserController {
         }
     }
 
+
+    /**
+     * Runs when cancel Posting button has been pressed. Cancels selected posting and
+     * removes from the database.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void cancelPostingButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(lp.getPostedList().getSelectedValue() == null){
             JOptionPane.showMessageDialog(null, "You must select a Posting to cancel.");
@@ -276,6 +319,12 @@ public class LandlordController extends UserController {
         }
     }
 
+    /**
+     * Runs when Suspend button has been pressed. Changes selected Postings state to
+     * suspended if it was listed and moves it from the regular Listing array in the database to the 
+     * SuspendedListings one. If it was already suspended, gives the option to unsuspend it.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void suspendButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(lp.getPostedList().getSelectedValue() == null){
             JOptionPane.showMessageDialog(null, "You must select a Posting to suspend / un-suspend.");
@@ -324,6 +373,12 @@ public class LandlordController extends UserController {
         }
     }
 
+
+    /**
+     * Runs when Rent Out button has been pressed. Rents out selected property and refreshes
+     * LandlordView.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void rentOutButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(lp.getPostedList().getSelectedValue() == null){
             JOptionPane.showMessageDialog(null, "You must select a Posting to rent to someone.");
@@ -358,6 +413,11 @@ public class LandlordController extends UserController {
         }
     }
 
+    /**
+     * Runs when Exit button has been pressed. Stores all data to the database and exits the
+     * program.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {
         int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
                 "Confirmation:", JOptionPane.YES_NO_OPTION);
@@ -366,6 +426,11 @@ public class LandlordController extends UserController {
             System.exit(0);
         }
     }
+    
+    /**
+     * Runs when Pay button has been pressed. Posts Property for specified duration and fee.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void payButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(fp.getFeeList().getSelectedValue() == null){
             JOptionPane.showMessageDialog(null, "Must select the amount of days for the property to be posted");
@@ -391,10 +456,21 @@ public class LandlordController extends UserController {
         }
     }
 
+    /**
+     * Runs when Cancel Pay button has been pressed. Makes FeePaymentView invisible and displays
+     * the LandlordPage.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void cancelPayButtonActionPerformed(java.awt.event.ActionEvent evt) {
         fp.setVisible(false);
         lp.setVisible(true);
     }
+    
+    /**
+     * Runs when Post Property button has been pressed. Starts process to post selected property
+     * and displays a FeePaymentView to the screen.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void feeListMouseClicked(java.awt.event.MouseEvent evt) {
         String selected = fp.getFeeList().getSelectedValue();
         selected = selected.substring(0, selected.length()-5);
@@ -406,11 +482,22 @@ public class LandlordController extends UserController {
         }
     }
 
+    /**
+     * Runs when Back button has been pressed from the RegisterPropertyPage. 
+     * Makes the RegisterPropertyPage invisible and displays the LandlordPage.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void registerBackButtonActionPerformed(java.awt.event.ActionEvent evt) {
         rp.setVisible(false);
         lp.setVisible(true);
     }
 
+    /**
+     * Runs when confirm Register button has been pressed. Validates all entered info
+     * and if valid creates the new Property and adds it to the database. Closes
+     * the RegisterPropertyPage afterwards.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void cnfirmRegisterButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(rp.getAddressText().getText() == null){
             JOptionPane.showMessageDialog(null, "All fields must be filled");
@@ -459,6 +546,12 @@ public class LandlordController extends UserController {
             }
         }
     }
+ 
+    /**
+     * Runs when Send Email button has been pressed. Validates message and if valid,
+     * creates email and adds it to the database.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void sendEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String msg = ep.getEmailTextArea().getText();
         String sub = ep.getSubjectText().getText();
@@ -489,6 +582,10 @@ public class LandlordController extends UserController {
         }
     }
 
+    /**
+     * Makes the EmailPage invisible and displays the LandlordPage.
+     * @param {ActionEvent} evt Event that occurred
+     */
     public void cancelEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
         ep.setVisible(false);
         lp.setVisible(true);
