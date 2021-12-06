@@ -212,23 +212,29 @@ public class RenterController extends UserController {
             JOptionPane.showMessageDialog(null, "make an account to be able to use the messaging system");
         }
         else{
-            ep = new EmailPage();
-            ep.setRc(this);
-            ep.initComponents("send");
-            ep.setLocationRelativeTo(null);
-            String selected = rv.getjList1().getSelectedValue();
-            selected = selected.substring(9, selected.length()-1);
-            selected = selected.substring(0, 25);
-            selected = selected.trim();
-            System.out.println(selected);
-            for(Property p : db.getProperties()){
-                if(p.getAddress().equals(selected)){
-                    email = new Email(current.getEmail(), db.lookupLandlordEmail(p.getLandlordID()));
-                    email.setSubject(p.getAddress());
-                }
+            if(rv.getjList1().getSelectedValue() == null){
+                JOptionPane.showMessageDialog(null, "You must select a property first\n" +
+                        "to specify which landlord you\nyou would like to contact.");
             }
-            rv.setVisible(false);
-            ep.setVisible(true);
+            else{
+                ep = new EmailPage();
+                ep.setRc(this);
+                ep.initComponents("send");
+                ep.setLocationRelativeTo(null);
+                String selected = rv.getjList1().getSelectedValue();
+                selected = selected.substring(9, selected.length()-1);
+                selected = selected.substring(0, 25);
+                selected = selected.trim();
+                System.out.println(selected);
+                for(Property p : db.getProperties()){
+                    if(p.getAddress().equals(selected)){
+                        email = new Email(current.getEmail(), db.lookupLandlordEmail(p.getLandlordID()));
+                        email.setSubject(p.getAddress());
+                    }
+                }
+                rv.setVisible(false);
+                ep.setVisible(true);
+            }
         }
 
     }
