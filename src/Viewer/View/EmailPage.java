@@ -28,7 +28,7 @@ public class EmailPage extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    public void initComponents() {
+    public void initComponents(String type) {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -45,6 +45,15 @@ public class EmailPage extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Email");
 
+        if(type.equals("reply")){
+            if(rc == null){
+                subjectText.setText(lc.recieved.getSubject());
+            }
+            else{
+                subjectText.setText(rc.recieved.getSubject());
+            }
+        }
+
         emailTextArea.setColumns(20);
         emailTextArea.setLineWrap(true);
         emailTextArea.setRows(10);
@@ -53,14 +62,24 @@ public class EmailPage extends javax.swing.JFrame {
         sendEmailButton.setText("Send");
         sendEmailButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rc.sendEmailButtonActionPerformed(evt);
+                if(rc==null){
+                    lc.sendEmailButtonActionPerformed(evt);
+                }
+                else{
+                    rc.sendEmailButtonActionPerformed(evt);
+                }
             }
         });
 
         cancelEmalButton.setText("Cancel");
         cancelEmalButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rc.cancelEmailButtonActionPerformed(evt);
+                if(rc==null){
+                    lc.cancelEmailButtonActionPerformed(evt);
+                }
+                else{
+                    rc.cancelEmailButtonActionPerformed(evt);
+                }
             }
         });
 

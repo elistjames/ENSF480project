@@ -6,6 +6,7 @@ import Model.User.Email;
 import Model.User.Renter;
 import Model.User.SearchCriteria;
 import Model.User.User;
+import Viewer.View.EmailDialog;
 import Viewer.View.EmailPage;
 import Viewer.View.RegisterPage;
 import Viewer.View.RenterView;
@@ -16,10 +17,13 @@ import java.util.ArrayList;
 
 public class RenterController extends UserController {
     public Renter current;
-    RenterView rv;
-    RegisterPage rp;
-    EmailPage ep;
-    Email email;
+    public RenterView rv;
+    public RegisterPage rp;
+    public EmailPage ep;
+    public Email email;
+    public Email recieved;
+    EmailDialog ed;
+
 
     public RenterController(Renter currentUser, RenterView renterV){
         super(currentUser);
@@ -35,8 +39,26 @@ public class RenterController extends UserController {
         if(db.notifyRenter(current.getUserID())){
             JOptionPane.showMessageDialog(null, "There are new listings posted that match your criteria!");
         }
-        for(Listing l : db.getListings()){
-            System.out.println(l.getProperty().getAddress());
+        if(db.emailNotSeen(current.getEmail())){
+            checkEmails();
+        }
+    }
+
+    public void checkEmails(){
+        for(Email e : db.getEmails()){
+            if(e.getToEmail().equals(current.getEmail())){
+                JOptionPane.showMessageDialog(null, "You have received a message from a landlord.\n" +
+                        "Click Ok to view it.");
+                recieved = e;
+                db.getEmails().remove(e);
+                ed = new EmailDialog(rv, true);
+                ed.setRc(this);
+                ed.initComponents(e);
+                ed.setLocationRelativeTo(null);
+                ed.setVisible(true);
+
+                break;
+            }
         }
     }
 
@@ -186,23 +208,28 @@ public class RenterController extends UserController {
     }
 
     public void contactButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        ep = new EmailPage();
-        ep.setRc(this);
-        ep.initComponents();
-        ep.setLocationRelativeTo(null);
-        String selected = rv.getjList1().getSelectedValue();
-        selected = selected.substring(9, selected.length()-1);
-        selected = selected.substring(0, 25);
-        selected = selected.trim();
-        System.out.println(selected);
-        for(Property p : db.getProperties()){
-            if(p.getAddress().equals(selected)){
-                email = new Email(current.getEmail(), db.lookupLandlordEmail(p.getLandlordID()));
-                email.setSubject(p.getAddress());
-            }
+        if(current.getUserID() == 0){
+            JOptionPane.showMessageDialog(null, "make an account to be able to use the messaging system");
         }
-        rv.setVisible(false);
-        ep.setVisible(true);
+        else{
+            ep = new EmailPage();
+            ep.setRc(this);
+            ep.initComponents("send");
+            ep.setLocationRelativeTo(null);
+            String selected = rv.getjList1().getSelectedValue();
+            selected = selected.substring(9, selected.length()-1);
+            selected = selected.substring(0, 25);
+            selected = selected.trim();
+            System.out.println(selected);
+            for(Property p : db.getProperties()){
+                if(p.getAddress().equals(selected)){
+                    email = new Email(current.getEmail(), db.lookupLandlordEmail(p.getLandlordID()));
+                    email.setSubject(p.getAddress());
+                }
+            }
+            rv.setVisible(false);
+            ep.setVisible(true);
+        }
 
     }
     public void sendEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -212,7 +239,14 @@ public class RenterController extends UserController {
             JOptionPane.showMessageDialog(null, "Message is too long.\n Must be less than 1000 characters");
         }
         else{
-            String fullSubject = email.getSubject() + "   ||   "+sub;
+            String fullSubject = "";
+            if(recieved==null){
+                fullSubject = email.getSubject() + "   ||   "+sub;
+            }
+            else{
+                fullSubject = sub;
+            }
+
             email.setSubject(fullSubject);
             email.setMessage(msg);
             email.setDate(LocalDate.now());
@@ -220,12 +254,17 @@ public class RenterController extends UserController {
             ep.setVisible(false);
             rv.setVisible(true);
             JOptionPane.showMessageDialog(null, "Email sent");
+            if(db.emailNotSeen(current.getEmail())){
+                checkEmails();
+            }
         }
     }
 
     public void cancelEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
         ep.setVisible(false);
         rv.setVisible(true);
+        if(db.emailNotSeen(current.getEmail())){
+            checkEmails();
+        }
     }
-
 }
