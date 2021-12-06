@@ -14,6 +14,7 @@ import Model.User.Landlord;
 import Model.User.User;
 import Viewer.View.FeePaymentView;
 import Viewer.View.LandlordPage;
+import Viewer.View.RegisterPropertyPage;
 
 import javax.swing.*;
 import java.sql.Date;
@@ -28,6 +29,7 @@ public class LandlordController extends UserController {
     public Landlord current;
     LandlordPage lp;
     FeePaymentView fp;
+    RegisterPropertyPage rp;
     
     /**
      * A constructor that takes a Landlord object as input.
@@ -81,7 +83,9 @@ public class LandlordController extends UserController {
     public void cancelListing(Listing l){
         for(Listing cl : db.getListings()){
             if(cl.getProperty().getID() == l.getProperty().getID()){
+                cl.getProperty().setState("unlisted");
                 db.getListings().remove(cl);
+                break;
             }
         }
     }
@@ -116,6 +120,9 @@ public class LandlordController extends UserController {
             else if(state.equals("rented")){
                 rentOutListing(listing);
             }
+            else if(state.equals("cancelled")){
+                cancelListing(listing);
+            }
         }
     }
     
@@ -127,8 +134,10 @@ public class LandlordController extends UserController {
         for(Listing l : db.getSuspendedListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("listed");
+                l.setState("listed");
                 db.getListings().add(l);
                 db.getSuspendedListings().remove(l);
+                break;
             }
         }
     }
@@ -141,8 +150,10 @@ public class LandlordController extends UserController {
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("suspended");
+                l.setState("suspended");
                 db.getSuspendedListings().add(l);
                 db.getListings().remove(l);
+                break;
             }
         }
     }
@@ -158,36 +169,113 @@ public class LandlordController extends UserController {
                 db.getRentedProperties().add(l.getProperty());
                 db.getRentedDates().add(LocalDate.now());
                 db.getListings().remove(l);
+                break;
             }
         }
     }
     public void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        rp = new RegisterPropertyPage();
+        rp.setLc(this);
+        rp.initComponents();
+        rp.setLocationRelativeTo(null);
+        lp.setVisible(false);
+        rp.setVisible(true);
     }
 
     public void postPropertButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        String selected = lp.getPropertyList().getSelectedValue();
-        selected = selected.substring(4, 11);
-        if(db.getProperty(Integer.parseInt(selected.trim())).getState().equals("listed")){
-            JOptionPane.showMessageDialog(null, "The property with id: "+selected+", is already listed.");
+        if(lp.getPropertyList().getSelectedValue() == null){
+            JOptionPane.showMessageDialog(null, "Must select one of the properties to post.");
         }
         else{
-            fp = new FeePaymentView();
-            fp.setLc(this);
-            fp.initComponents();
-            fp.setLocationRelativeTo(null);
-            lp.setVisible(false);
-            fp.setVisible(true);
+            String selected = lp.getPropertyList().getSelectedValue();
+            selected = selected.substring(4, 11);
+            if(db.getProperty(Integer.parseInt(selected.trim())).getState().equals("listed")){
+                JOptionPane.showMessageDialog(null, "The property with id: "+selected+", is already listed.");
+            }
+            else{
+                fp = new FeePaymentView();
+                fp.setLc(this);
+                fp.initComponents();
+                fp.setLocationRelativeTo(null);
+                lp.setVisible(false);
+                fp.setVisible(true);
+            }
+            System.out.println(selected);
         }
-        System.out.println(selected);
     }
 
     public void cancelPostingButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        if(lp.getPostedList().getSelectedValue() == null){
+            JOptionPane.showMessageDialog(null, "You must select a Posting to cancel.");
+        }
+        else{
+            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel this posting?\n" +
+                    "You will not get any money back for paying a listing fee", "Confirmation", JOptionPane.YES_NO_OPTION);
+            String selectedProperty = lp.getPostedList().getSelectedValue();
+            selectedProperty = selectedProperty.substring(4, 11);
+            for(Listing l : db.getListings()){
+                if(l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())){
+                    changeListingState(l, "cancelled");
+                    break;
+                }
+            }
+            lp.setVisible(false);
+            lp = new LandlordPage();
+            lp.setLc(this);
+            lp.initComponents();
+            lp.setLocationRelativeTo(null);
+            lp.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully un-posted.\n" +
+                    "You may re-post the property if you wish but will have to re-pay the listing fee.");
+        }
     }
 
     public void suspendButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        if(lp.getPostedList().getSelectedValue() == null){
+            JOptionPane.showMessageDialog(null, "You must select a Posting to suspend / un-suspend.");
+        }
+        else{
+            String cState = "";
+            String selectedProperty = lp.getPostedList().getSelectedValue();
+            selectedProperty = selectedProperty.substring(4, 11);
+            for(Listing l : db.getListings()){
+                if(l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())){
+                    cState = "listed";
+                    changeListingState(l, "suspended");
+                    lp.setVisible(false);
+                    lp = new LandlordPage();
+                    lp.setLc(this);
+                    lp.initComponents();
+                    lp.setLocationRelativeTo(null);
+                    lp.setVisible(true);
+                    JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully suspended.");
+                    break;
+                }
+                else{
+                    cState = "suspended";
+                }
+            }
+            if(cState.equals("suspended")){
+                for(Listing l : db.getSuspendedListings()){
+                    if(l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())){
+                        int choice = JOptionPane.showConfirmDialog(null, "The selected posting is already suspended.\n" +
+                                        "If you click Yes, the selected posting will be un-suspended", "Are you sure?",
+                                JOptionPane.YES_NO_OPTION);
+                        if(choice == JOptionPane.YES_OPTION){
+                            changeListingState(l, "listed");
+                            lp.setVisible(false);
+                            lp = new LandlordPage();
+                            lp.setLc(this);
+                            lp.initComponents();
+                            lp.setLocationRelativeTo(null);
+                            lp.setVisible(true);
+                            JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully un-suspended.");
+                        }
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void rentOutButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,23 +291,28 @@ public class LandlordController extends UserController {
         }
     }
     public void payButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        String selectedFee = fp.getFeeList().getSelectedValue();
-        selectedFee = selectedFee.substring(0, selectedFee.length()-5);
-        String selectedProperty = lp.getPropertyList().getSelectedValue();
-        selectedProperty = selectedProperty.substring(4, 11);
-        for(ListingFee lf : db.getFees()){
-            if(lf.getDays() == Integer.parseInt(selectedFee.trim())){
-                postProperty(db.getProperty(Integer.parseInt(selectedProperty.trim())), lf.getDays());
-                break;
-            }
+        if(fp.getFeeList().getSelectedValue() == null){
+            JOptionPane.showMessageDialog(null, "Must select the amount of days for the property to be posted");
         }
-        lp = new LandlordPage();
-        lp.setLc(this);
-        lp.initComponents();
-        lp.setLocationRelativeTo(null);
-        fp.setVisible(false);
-        lp.setVisible(true);
-        JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully posted.");
+        else{
+            String selectedFee = fp.getFeeList().getSelectedValue();
+            selectedFee = selectedFee.substring(0, selectedFee.length()-5);
+            String selectedProperty = lp.getPropertyList().getSelectedValue();
+            selectedProperty = selectedProperty.substring(4, 11);
+            for(ListingFee lf : db.getFees()){
+                if(lf.getDays() == Integer.parseInt(selectedFee.trim())){
+                    postProperty(db.getProperty(Integer.parseInt(selectedProperty.trim())), lf.getDays());
+                    break;
+                }
+            }
+            lp = new LandlordPage();
+            lp.setLc(this);
+            lp.initComponents();
+            lp.setLocationRelativeTo(null);
+            fp.setVisible(false);
+            lp.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Propery with id: "+selectedProperty+" was successfully posted.");
+        }
     }
 
     public void cancelPayButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,6 +326,60 @@ public class LandlordController extends UserController {
             if(lf.getDays() == Integer.parseInt(selected.trim())){
                 fp.getPriceTextPane().setText(lf.getPrice() +".00");
                 break;
+            }
+        }
+    }
+
+    public void registerBackButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        rp.setVisible(false);
+        lp.setVisible(true);
+    }
+
+    public void cnfirmRegisterButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        if(rp.getAddressText().getText() == null){
+            JOptionPane.showMessageDialog(null, "All fields must be filled");
+        }
+        else if(String.valueOf(rp.getTypeOption().getSelectedItem()).equals("N/A")){
+            JOptionPane.showMessageDialog(null, "All fields must be filled");
+        }
+        else if(String.valueOf(rp.getnBedOption().getSelectedItem()).equals("N/A")){
+            JOptionPane.showMessageDialog(null, "All fields must be filled");
+        }
+        else if(String.valueOf(rp.getnBathOption().getSelectedItem()).equals("N/A")){
+            JOptionPane.showMessageDialog(null, "All fields must be filled");
+        }
+        else if(String.valueOf(rp.getFurnishedOption().getSelectedItem()).equals("N/A")){
+            JOptionPane.showMessageDialog(null, "All fields must be filled");
+        }
+        else if (String.valueOf(rp.getQuadrantOption().getSelectedItem()).equals("N/A")){
+            JOptionPane.showMessageDialog(null, "All fields must be filled");
+        }
+        else{
+            String address = rp.getAddressText().getText().replaceAll("( +)", " ").trim();
+            if(db.validateAddress(address)){
+                String type = String.valueOf(rp.getTypeOption().getSelectedItem());
+                String nBed = String.valueOf(rp.getnBedOption().getSelectedItem());
+                String nBath = String.valueOf(rp.getnBathOption().getSelectedItem());
+                String furnished = String.valueOf(rp.getFurnishedOption().getSelectedItem());
+                String cq = String.valueOf(rp.getQuadrantOption().getSelectedItem());
+                int isFurnished;
+                if(furnished.equals("Yes")){
+                    isFurnished = 1;
+                }
+                else{
+                    isFurnished = 0;
+                }
+                registerProperty(type, Integer.parseInt(nBed), Integer.parseInt(nBath), isFurnished, address, cq);
+                lp = new LandlordPage();
+                lp.setLc(this);
+                lp.initComponents();
+                lp.setLocationRelativeTo(null);
+                rp.setVisible(false);
+                lp.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Property registered.");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "This property Address is already in the system.");
             }
         }
     }

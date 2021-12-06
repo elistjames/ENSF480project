@@ -57,6 +57,12 @@ public class LandlordPage extends javax.swing.JFrame {
                         p.getState()));
             }
         }
+        for(Property p : lc.db.getRentedProperties()){
+            if(p.getLandlordID() == lc.current.getUserID()){
+                model.addElement("id: "+String.format(col1Format+" || "+col2Format+" || "+col3Format, p.getID(), p.getAddress(),
+                        p.getState()));
+            }
+        }
         propertyList.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.white, java.awt.Color.darkGray));
         propertyList.setModel(model);
         propertyList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -86,8 +92,14 @@ public class LandlordPage extends javax.swing.JFrame {
                 model2.addElement(String.format("id: "+col1Format2+" || State: "+col2Format2+" || Expires: "+col3Format2+" days",
                         l.getProperty().getID(), l.getState(), l.getDuration()-l.getCurrentDay()));
             }
-
         }
+        for(Listing l : lc.db.getSuspendedListings()){
+            if(l.getProperty().getLandlordID() == lc.current.getUserID()){
+                model2.addElement(String.format("id: "+col1Format2+" || State: "+col2Format2,
+                        l.getProperty().getID(), l.getState()));
+            }
+        }
+
         PostedList.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.white, java.awt.Color.darkGray));
         PostedList.setModel(model2);
         propertyList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
