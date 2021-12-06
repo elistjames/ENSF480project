@@ -112,7 +112,6 @@ public class LandlordController extends UserController {
                 ed.initComponents(e);
                 ed.setLocationRelativeTo(null);
                 ed.setVisible(true);
-
                 break;
             }
         }
