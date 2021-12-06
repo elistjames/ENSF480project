@@ -1,3 +1,10 @@
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Controller.UserController;
 
 import Model.Lising.Listing;
@@ -16,6 +23,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class RenterController extends UserController {
+	//--------------------------------------------------------------------------
+	// Member variables
+	//--------------------------------------------------------------------------
     public Renter current;
     public RenterView rv;
     public RegisterPage rp;
@@ -25,11 +35,20 @@ public class RenterController extends UserController {
     EmailDialog ed;
 
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+    /**
+     * A constructor that takes a Renter and RenterView as inputs.
+     * @param {Renter} currentUser The User currently signed in.
+     * @param {RenterView} renterV The GUI interface for the renter
+     */
     public RenterController(Renter currentUser, RenterView renterV){
         super(currentUser);
         current = currentUser;
         this.rv = renterV;
         this.rv.setRc(this);
+        //Update RenterView object with currentUser data
         rv.initComponents();
         rv.setLocationRelativeTo(null);
         rv.updateCriteriaBoxes(db.getCurrentSearch(current.getUserID()).getType(), db.getCurrentSearch(current.getUserID()).getN_bedrooms(),
@@ -62,10 +81,26 @@ public class RenterController extends UserController {
         }
     }
 
+    //---------------------------------------------------------------------------
+    // Public member functions
+    //---------------------------------------------------------------------------
+    
+    /**
+     * Adds an email sent by the renter to the database.
+     * @param {Email} email The Email object to be sent.
+     */
     public void sendEmail(Email email){
         db.getEmails().add(new Email(email.getFromEmail(), email.getToEmail(), email.getDate(), email.getSubject(), email.getMessage()));
     }
 
+    /**
+     * Modifies the Renter's Search Criteria. Does not modify the database.
+     * @param {String} type Type of property to be searched.
+     * @param {int} bedrooms Number of bedrooms for properties to be searched.
+     * @param {int} bathrooms Number of bathrooms in properties to be searched.
+     * @param {int} furnished Signifies whether property has been furnished.
+     * @param {String} cityQuadrant City Quadrant of properties to be searched.
+     */
     public void setSearchCriteria(String type, int bedrooms, int bathrooms, int furnished, String cityQuadrant){
         current.getSc().setType(type);
         current.getSc().setN_bedrooms(bedrooms);
@@ -74,6 +109,13 @@ public class RenterController extends UserController {
         current.getSc().setCityQuadrant(cityQuadrant);
     }
 
+    /**
+     * Registers User as a Registered Renter.
+     * @param {String} name Name of registering renter
+     * @param {String} username Username of registering renter
+     * @param {String} password Password of registering renter
+     * @param {String} email Email of registering renter
+     */
     public void registerAccount(String name, String username, String password, String email){
         int next = db.getNextUserID();
         current.setUserID(next);
@@ -88,6 +130,10 @@ public class RenterController extends UserController {
                 db.getCurrentSearch(0).isFurnished(), db.getCurrentSearch(0).getCityQuadrant()));
     }
 
+    /**
+     * Unregisters renter, deleting their data from the database
+     * and resetting the current user to a default unregistered renter.
+     */
     public void unregisterAccount(){
         for(Renter r : db.getRenters()){
             if(r.getUserID() == current.getUserID()){
@@ -110,6 +156,9 @@ public class RenterController extends UserController {
         current = new Renter(0, "none", "none", "none", "none", "renter");
     }
 
+    /**
+     * Searches Listings for ones that match the renters search Criteria.
+     */
     public void searchListings(){
         rv.setVisible(false);
         rv = new RenterView();
@@ -122,6 +171,9 @@ public class RenterController extends UserController {
         rv.setVisible(true);
     }
 
+    /**
+     * Modifies the Search Criteria saved in the database.
+     */
     public void updateSearchCriteria(String type, String nbed, String nbath, String furnished, String cq){
         db.getCurrentSearch(current.getUserID()).setType(type);
 
@@ -150,6 +202,11 @@ public class RenterController extends UserController {
         db.getCurrentSearch(current.getUserID()).setCityQuadrant(cq);
     }
 
+    /**
+     * Runs when Account Button has been pressed. Displays Register page and 
+     * gives option to delete account.
+     * @param {ActionEvent} evt Event that occurred.
+     */
     public void accountButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(current.getUserID() == 0){
             rp = new RegisterPage();
@@ -169,11 +226,23 @@ public class RenterController extends UserController {
             }
         }
     }
+    
+    /**
+     * Runs when Back Button has been pressed. Causes the RegisterPage to disappear
+     * and the RenterView to appear.
+     * @param {ActionEvent} evt Event that occurred.
+     */
     public void backButtonActionPerformed(java.awt.event.ActionEvent evt) {
         rp.setVisible(false);
         rv.setVisible(true);
     }
 
+    /**
+     * Runs when RegisterButton has been pressed. Checks user inputs for name, username,
+     * password, and email and checks to make sure that they are valid. If they are, registers
+     * the account. If not, displays an error message to the screen.
+     * @param {ActionEvent} evt Event that occurred.
+     */
     public void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String userIn = rp.getUsernameText().getText();
         String passIn = rp.getPasswordText().getText();
@@ -207,6 +276,11 @@ public class RenterController extends UserController {
         }
     }
 
+    /**
+     * Runs when Contact Button has been pressed. Displays Email Page and finds 
+     * the selected properties' Landlord's email.
+     * @param {ActionEvent} evt Event that occurred.
+     */
     public void contactButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(current.getUserID() == 0){
             JOptionPane.showMessageDialog(null, "make an account to be able to use the messaging system");
@@ -238,6 +312,13 @@ public class RenterController extends UserController {
         }
 
     }
+    
+    /**
+     * Runs when Send Email Button has been pressed. Checks that message is valid. If it is,
+     * it constructs and sends the email. Then closes down the EmailPage and opens the
+     * RenterView.
+     * @param {ActionEvent} evt Event that occurred.
+     */
     public void sendEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String msg = ep.getEmailTextArea().getText();
         String sub = ep.getSubjectText().getText();
@@ -266,6 +347,11 @@ public class RenterController extends UserController {
         }
     }
 
+    /**
+     * Runs when Cancel Email Button has been pressed. Closes the EmailPage 
+     * and opens the RenterView.
+     * @param {ActionEvent} evt Event that occurred.
+     */
     public void cancelEmailButtonActionPerformed(java.awt.event.ActionEvent evt) {
         ep.setVisible(false);
         rv.setVisible(true);
