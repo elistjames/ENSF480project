@@ -249,10 +249,6 @@ public class RenterView extends javax.swing.JFrame {
         rc.searchListings();
     }
 
-
-
-
-
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String tmpType = String.valueOf(typeOption.getSelectedItem());
         String tmpNbed = String.valueOf(nBedOption.getSelectedItem());

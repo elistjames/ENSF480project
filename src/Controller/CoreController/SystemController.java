@@ -1,12 +1,15 @@
 package Controller.CoreController;
 
+import Controller.UserController.ManagerController;
 import Controller.UserController.RenterController;
 import Controller.UserController.UserController;
 import Database.Database;
+import Model.User.Manager;
 import Model.User.Renter;
 import Model.User.User;
 import Viewer.Startup.StartPage;
 import Viewer.View.RenterView;
+import Viewer.View.ManagerView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,6 +22,8 @@ public class SystemController {
     Date currentDate;
     StartPage startPage;
     RenterView renterPage;
+    ManagerView managerView;
+
 
     public static void main(String[] args){
         SystemController sc = new SystemController();
@@ -47,7 +52,10 @@ public class SystemController {
 
                             }
                             else if(current.getType().equals("manager")){
-
+                                sc.startPage.setVisible(false);
+                                sc.managerView = new ManagerView();
+                                sc.currentController = new ManagerController((Manager)current, sc.managerView);
+                                System.out.println("you made it!");
                             }
                         }
                         else{
