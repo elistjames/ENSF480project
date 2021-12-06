@@ -150,8 +150,9 @@ public class EmailDialog extends javax.swing.JDialog {
             lc.ep.setLc(lc);
             lc.ep.initComponents("reply");
             lc.ep.setLocationRelativeTo(null);
-            lc.ep.setVisible(true);
             this.setVisible(false);
+            lc.ep.setVisible(true);
+
         }
         else{
             rc.email = new Email(rc.recieved.getToEmail(), rc.recieved.getFromEmail());
@@ -160,8 +161,9 @@ public class EmailDialog extends javax.swing.JDialog {
             rc.ep.setRc(rc);
             rc.ep.initComponents("reply");
             rc.ep.setLocationRelativeTo(null);
-            rc.ep.setVisible(true);
             this.setVisible(false);
+            rc.ep.setVisible(true);
+
         }
     }
 
