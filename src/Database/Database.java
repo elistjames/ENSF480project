@@ -103,6 +103,15 @@ public class Database {
         return validLogin;
     }
 
+    public boolean validateAddress(String address){
+        for(Property p : properties){
+            if(p.getAddress().equals(address)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void updateListingDates(Date currentDate){
         int counter = 0;
         while (counter < listings.size()){
