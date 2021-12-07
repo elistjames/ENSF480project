@@ -21,6 +21,8 @@ import Viewer.View.ChangeFeeView;
 import Viewer.View.ReportView;
 import javax.swing.*;
 
+import static javax.swing.JOptionPane.showConfirmDialog;
+
 public class ManagerController extends UserController {
 	//-------------------------------------------------------------------
 	// Member Variables
@@ -136,19 +138,31 @@ public class ManagerController extends UserController {
         boolean found = false;
 
         for(var existingFee: curr) {
-            if(existingFee.getPrice() == fee && existingFee.getDays() == period) {
+            if(existingFee.getDays() == period) {
                 found = true;
                 break;
-
             }
         }
 
         if(!found) {
-            curr.add(newFee);
+            db.getFees().add(newFee);
             db.pushFees();
             JOptionPane.showMessageDialog(null, "Success!");
         } else {
-            JOptionPane.showMessageDialog(null, "Existing Fee and Period found. Please try again");
+            int choice = showConfirmDialog(null, "Already have a fee for this listing period.\n Would you like to replace it?",
+                    "Replace?", JOptionPane.YES_NO_OPTION);
+            if(choice == JOptionPane.YES_OPTION){
+                for(ListingFee f : db.getFees()){
+                    if(f.getDays() == newFee.getDays()){
+                        db.getFees().remove(f);
+                        db.pushFees();
+                        JOptionPane.showMessageDialog(null, "Success!");
+                        break;
+                    }
+                }
+                db.getFees().add((newFee));
+                db.pushFees();
+            }
         }
     }
     
