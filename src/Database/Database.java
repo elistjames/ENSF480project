@@ -103,6 +103,15 @@ public class Database {
         return validLogin;
     }
 
+    public boolean validateAddress(String address){
+        for(Property p : properties){
+            if(p.getAddress().equals(address)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void updateListingDates(Date currentDate){
         int counter = 0;
         while (counter < listings.size()){
@@ -126,6 +135,15 @@ public class Database {
         r.setUserID(nextID);
         r.setType("renter");
         renters.add(r);
+    }
+
+    public boolean emailNotSeen(String email){
+        for(Email e : emails){
+            if(e.getToEmail().equals(email)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void registerProperty(Property p){
@@ -839,12 +857,6 @@ public class Database {
         this.pushEmails();
         this.pushSuspendedListings();
 
-        for(Email e : emails){
-            System.out.println(e.getSubject());
-            System.out.println(e.getDate().toString());
-            System.out.println(e.getMessage());
-        }
-
     }
 
     public void pullAll(){
@@ -862,13 +874,6 @@ public class Database {
         this.pullEmails();
         this.pullSuspendedListings();
 
-        for(SearchCriteria sc : searches){
-            System.out.println(sc.getType());
-            System.out.println(sc.getN_bedrooms());
-            System.out.println(sc.getN_bathrooms());
-            System.out.println(sc.isFurnished());
-            System.out.println(sc.getCityQuadrant());
-        }
     }
 
     public int getNextPropertyID(){
@@ -950,7 +955,8 @@ public class Database {
         return new Landlord();
     }
 
-    private Property getProperty(int propertyID){
+    public Property getProperty(int propertyID){
+
         for(Property p : properties){
             if(p.getID() == propertyID){
                 return p;

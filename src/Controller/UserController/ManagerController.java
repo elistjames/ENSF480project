@@ -1,3 +1,11 @@
+/** 
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Controller.UserController;
 
 import java.time.temporal.ValueRange;
@@ -14,6 +22,9 @@ import Viewer.View.ReportView;
 import javax.swing.*;
 
 public class ManagerController extends UserController {
+	//-------------------------------------------------------------------
+	// Member Variables
+	//-------------------------------------------------------------------
     Manager current;
     ManagerView mv;
     ListingStatusView lsv;
@@ -31,18 +42,14 @@ public class ManagerController extends UserController {
         this.mv.setVisible(true);
     }
 
-    public void viewListings(){
 
-    }
-
-
-    public void cancelListing(Listing l){
-        for(Listing cl : db.getListings()){
-            if(cl.getProperty().getID() == l.getProperty().getID()){
-                db.getListings().remove(cl);
-            }
-        }
-    }
+    // public void cancelListing(Listing l){
+    //     for(Listing cl : db.getListings()){
+    //         if(cl.getProperty().getID() == l.getProperty().getID()){
+    //             db.getListings().remove(cl);
+    //         }
+    //     }
+    // }
 
     public SummaryReport getReport(String startDate, String endDate){
 
@@ -50,13 +57,13 @@ public class ManagerController extends UserController {
         return report;
     }
 
-    public void changeFee(ListingFee lf, int new_price){
-        for (ListingFee f : db.getFees()) {
-            if (f.getDays() ==  lf.getDays()){
-                f.setPrice(new_price);
-            }
-        }
-    }
+    // public void changeFee(ListingFee lf, int new_price){
+    //     for (ListingFee f : db.getFees()) {
+    //         if (f.getDays() ==  lf.getDays()){
+    //             f.setPrice(new_price);
+    //         }
+    //     }
+    // }
 
     public void viewRenters(JList jlist){
         DefaultListModel<String> model = new DefaultListModel<>();
@@ -84,9 +91,6 @@ public class ManagerController extends UserController {
         jlist.setModel(model);
     }
 
-    public void addFee(int duration, int price){
-        db.getFees().add(new ListingFee(price, duration));
-    }
 
     public void openListingStateView(String selected, JList jlist){
         String[] info = selected.split(" ");
@@ -135,6 +139,7 @@ public class ManagerController extends UserController {
             if(existingFee.getPrice() == fee && existingFee.getDays() == period) {
                 found = true;
                 break;
+
             }
         }
 
@@ -146,7 +151,13 @@ public class ManagerController extends UserController {
             JOptionPane.showMessageDialog(null, "Existing Fee and Period found. Please try again");
         }
     }
-
+    
+    /**
+     * Changes a listing whose state is suspended to listed.
+     * Adds it to the database's regular list of listings, so that it is
+     * shown when renters search for listings.
+     * @param {Listing} listing Listing to be unsuspended.
+     */
     public void unsuspendListing(Listing listing){
         for(Listing l : db.getSuspendedListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
@@ -156,7 +167,23 @@ public class ManagerController extends UserController {
             }
         }
     }
+    
+    /**
+     * Removes Listing from database.
+     * @param {Listing} l Listing to be cancelled.
+     */
+    public void cancelListing(Listing l){
+        for(Listing cl : db.getListings()){
+            if(cl.getProperty().getID() == l.getProperty().getID()){
+                db.getListings().remove(cl);
+            }
+        }
+    }
 
+    /**
+     * Changes the listings state to suspended.
+     * @param {Listing} listing Listing to be suspended.
+     */
     public void suspendListing(Listing listing){
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
@@ -166,4 +193,50 @@ public class ManagerController extends UserController {
             }
         }
     }
+    
+    //----------------------------------------------------------------------
+    // Periodic Report functions
+    //-----------------------------------------------------------------------
+    
+    /**
+     * Constructs a periodic report and displays it on the screen.
+     */
+    public void getReport(){
+        int monthlyListings = 0;
+        for(Listing l : db.getListings()) {
+            if(l.getCurrentDay() <= 30){
+                monthlyListings++;
+            }
+        }
+        int active_list = db.getListings().size();
+        SummaryReport monthlyReport = new SummaryReport(monthlyListings,4,active_list,db.getRentedProperties());
+        //gui implementation
+    }
+
+    //----------------------------------------------------------------------
+    // Listing Fee functions
+    //---------------------------------------------------------------------
+    /**
+     * Changes the price of a ListingFee.
+     * @param {ListingFee} lf Which ListingFee to change
+     * @param {int} new_price Price to change ListingFee to.
+     */
+    public void changeFee(ListingFee lf, int new_price){
+            for (ListingFee f : db.getFees()) {
+                if (f.getDays() ==  lf.getDays()){
+                    f.setPrice(new_price);
+                }
+            }
+    }
+
+
+    /**
+     * Creates new ListingFee.
+     * @param {int} duration Duration of fee.
+     * @param {int} price Price of fee.
+     */
+    public void addFee(int duration, int price){
+        db.getFees().add(new ListingFee(price, duration));
+    }
+
 }
