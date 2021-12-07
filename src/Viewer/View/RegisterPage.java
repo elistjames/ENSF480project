@@ -33,7 +33,7 @@ public class RegisterPage extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         usernameText = new javax.swing.JTextField();
-        passwordText = new javax.swing.JTextField();
+        passwordText = new javax.swing.JPasswordField();
         firstNameText = new javax.swing.JTextField();
         emailText = new javax.swing.JTextField();
         registerButton = new javax.swing.JButton();

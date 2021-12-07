@@ -197,6 +197,85 @@ public class Database {
         }
     }
 
+    public void updateListing(String selectedState, String selectedID) {
+
+        // Modify property state
+        for(var property: properties) {
+            if(property.getID() == Integer.parseInt(selectedID)) {
+                property.setState(selectedState);
+            }
+        }
+
+        // Modify listing status
+        ArrayList<Listing> newListings = new ArrayList<Listing>();
+        boolean found = false;
+        for(var listing: listings) {
+            Property currProperty = listing.getProperty();
+            // Modifying existing
+            if(currProperty.getID() == Integer.parseInt(selectedID)) {
+                found = true;
+                listing.setState(selectedState);
+            } 
+
+            newListings.add(listing);
+        }
+
+        if(!found) {
+            Listing toAdd = new Listing(this.getProperty(Integer.parseInt(selectedID)),
+            30, selectedState, LocalDate.now(), 0);
+            newListings.add(toAdd);
+        }
+
+        listings = newListings;
+        // try {
+        //     Statement stmt = dbConnect.createStatement();
+        //     String updateProperties = "UPDATE properties SET State = \"" + selectedState + "\" WHERE ID = \"" + selectedID + "\"";
+        
+        //     // If we have general functions for these, replace these query lines with function calls
+        //     String insertListing = "INSERT INTO listings (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
+
+        //     // Checks if there is an existing listing with the same property ID
+        //     ResultSet checkExist = stmt.executeQuery("SELECT * FROM listings WHERE PropertyID = \"" + selectedID + "\""); 
+
+        //     String deleteListing = "DELETE FROM listings WHERE PropertyID = \"" + selectedID + "\"";
+
+
+
+
+        //     if(selectedState == "Active" && !checkExist.isBeforeFirst()) {
+        //         ResultSet result = stmt.executeQuery("SELECT * FROM properties WHERE ID = \"" + selectedID + "\""); 
+                
+        //         //Creating new listing when state is set to active
+        //         // This is hard coded with default duration and currentday values
+        //         Listing newListing = new Listing(this.getProperty(Integer.parseInt(selectedID)),
+        //         30, selectedState,
+        //         LocalDate.now(), 0);
+
+        //         PreparedStatement myStmt = dbConnect.prepareStatement(insertListing);
+
+        //         myStmt.setInt(1, newListing.getProperty().getID());
+        //         myStmt.setInt(2, newListing.getDuration());
+        //         myStmt.setString(3, newListing.getState());
+        //         myStmt.setString(4, newListing.getStartDate().toString());
+        //         myStmt.setInt(5, newListing.getCurrentDay());
+
+        //         myStmt.executeUpdate();
+        //         myStmt.close();
+                
+        //     // If not active, delete listing
+        //     } else if(selectedState != "Active" && checkExist.isBeforeFirst()){
+        //         stmt.executeUpdate(deleteListing);
+        //     }
+        //     stmt.executeUpdate(updateProperties);
+
+        //     System.out.println("Why no work");
+        // } catch(SQLException e) {
+        //     System.out.println(e);
+        // }
+        
+
+    }
+
 
 
     public User getCurrentUser(String username, String password) {
@@ -229,6 +308,7 @@ public class Database {
                         result.getString("Username"), result.getString("Password"),
                         result.getString("Email"), "renter"));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -244,6 +324,7 @@ public class Database {
                         result.getString("Username"), result.getString("Password"),
                         result.getString("Email"), "landlord"));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -261,6 +342,7 @@ public class Database {
                         result.getInt("Furnished"), result.getString("Address"),
                         result.getString("CityQuadrant"), result.getString("State")));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -276,6 +358,7 @@ public class Database {
                         result.getString("Username"), result.getString("Password"),
                         result.getString("Email"), "manager"));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -304,6 +387,7 @@ public class Database {
                         result.getInt("Duration"), result.getString("State"),
                         LocalDate.parse(result.getString("StartDate")), result.getInt("CurrentDay")));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -322,6 +406,7 @@ public class Database {
                         result.getString("CityQuadrant"), "rented"));
                 this.rentedDates.add(LocalDate.parse(result.getString("DateRented")));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -337,6 +422,7 @@ public class Database {
                         result.getInt("Duration"), result.getString("State"),
                         LocalDate.parse(result.getString("StartDate")), result.getInt("CurrentDay")));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -350,6 +436,7 @@ public class Database {
             while(result.next()) { //run while next row exists
                 this.rentersToNotify.add(result.getInt("renterID"));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -366,6 +453,7 @@ public class Database {
                         result.getInt("Bathrooms"),result.getInt("Furnished"),
                         result.getString("CityQuadrant")));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -379,6 +467,7 @@ public class Database {
             while(result.next()) { //run while next row exists
                 this.listingDates.add(LocalDate.parse(result.getString("DateOfListing")));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -400,6 +489,7 @@ public class Database {
                         LocalDate.parse(result.getString("Date")), result.getString("Subject"),
                         result.getString("Message")));
             }
+            result.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -501,7 +591,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-    private void pushFees(){
+    public void pushFees(){
         try{
             Statement statement = dbConnect.createStatement();
             statement.executeUpdate("DELETE FROM fees");
@@ -817,7 +907,56 @@ public class Database {
         return (nextID+1);
     }
 
+    public SummaryReport getSummaryReport(String startDate, String endDate) {
+        try {
+            // Statement stmt = dbConnect.createStatement();
+            ResultSet listedCount = dbConnect.createStatement().executeQuery("SELECT COUNT(*) AS listedCount FROM listingdates WHERE DateOfListing between \""+ startDate + "\" and \"" + endDate + "\""); 
+            ResultSet activeCount = dbConnect.createStatement().executeQuery("SELECT COUNT(*) AS activeCount FROM listings WHERE State = \"Active\" AND StartDate between \""+ startDate + "\" and \"" + endDate + "\""); 
+            ResultSet rentedCount = dbConnect.createStatement().executeQuery("SELECT COUNT(*) AS rentedCount FROM rented WHERE DateRented between \""+ startDate + "\" and \"" + endDate + "\""); 
+            ResultSet rentedList = dbConnect.createStatement().executeQuery("SELECT * FROM rented WHERE DateRented between \""+ startDate + "\" and \"" + endDate + "\""); 
+            listedCount.next();
+            activeCount.next();
+            rentedCount.next();
+            System.out.println(listedCount.getInt("listedCount") + rentedCount.getInt("rentedCount") +  
+            activeCount.getInt("activeCount"));
+            ArrayList<Property> rented = new ArrayList<Property>();
+
+            while(rentedList.next()) {
+                Property curr = new Property(rentedList.getInt("LandlordID"), rentedList.getString("Type"), rentedList.getInt("Bedrooms"), 
+                rentedList.getInt("Bathrooms"), rentedList.getInt("Furnished"), rentedList.getString("Address"), rentedList.getString("CityQuadrant"));
+                System.out.println("------------------------------------");
+                rented.add(curr);
+            }
+            // int userID, String name, String username, String password, String email, String type
+            SummaryReport report = new SummaryReport(listedCount.getInt("listedCount"), rentedCount.getInt("rentedCount"),  
+                                                activeCount.getInt("activeCount"),  rented);
+            // listedCount.close();
+            // activeCount.close();
+            // rentedList.close();
+            // rentedCount.close();
+
+            return report;
+        } catch(SQLException e) {System.out.println(e);}
+
+        return new SummaryReport();
+    }
+
+    public Landlord getLandlord(int id) {
+        try {
+            Statement stmt = dbConnect.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM landlords WHERE ID = \"" + id + "\""); 
+            // int userID, String name, String username, String password, String email, String type
+            Landlord returned = new Landlord(result.getInt("ID"), result.getString("Name"), 
+            result.getString("Username"), result.getString("Password"), result.getString("Email"), "landlord");
+
+            return returned;
+        } catch(Exception e) {}
+
+        return new Landlord();
+    }
+
     public Property getProperty(int propertyID){
+
         for(Property p : properties){
             if(p.getID() == propertyID){
                 return p;

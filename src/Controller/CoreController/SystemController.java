@@ -10,16 +10,23 @@
 
 package Controller.CoreController;
 
+import Controller.UserController.ManagerController;
+import Controller.UserController.RenterController;
+import Controller.UserController.UserController;
+import Database.Database;
+import Model.User.Manager;
 import Controller.UserController.LandlordController;
 import Controller.UserController.RenterController;
 import Controller.UserController.UserController;
 import Database.Database;
 import Model.User.Landlord;
+
 import Model.User.Renter;
 import Model.User.User;
 import Viewer.Startup.StartPage;
 import Viewer.View.LandlordPage;
 import Viewer.View.RenterView;
+import Viewer.View.ManagerView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -33,6 +40,7 @@ import java.time.LocalDate;
  * the View package and the Model package and handles the communication between the two.
  */
 public class SystemController {
+
 	//------------------------------------------------------
 	// Member Variables - Fields
 	//------------------------------------------------------
@@ -46,7 +54,7 @@ public class SystemController {
     					 // first booted up.
     RenterView renterPage; //An object that holds the GUI interface for the Renter
     LandlordPage landlordPage;
-    
+    ManagerView managerView;
     
     //-------------------------------------------------------
     // Main function
@@ -57,6 +65,7 @@ public class SystemController {
      * to ask for a username and password from the user. Then keeps the program running by
      * waiting for and responding to the users input.
      */
+
     public static void main(String[] args){
         SystemController sc = new SystemController();
         sc.db = Database.getOnlyInstance(); //Get instance of Database, generate one 
@@ -91,7 +100,10 @@ public class SystemController {
                                 sc.currentController = new LandlordController((Landlord)current, sc.landlordPage);
                             }
                             else if(current.getType().equals("manager")){
-
+                                sc.startPage.setVisible(false);
+                                sc.managerView = new ManagerView();
+                                sc.currentController = new ManagerController((Manager)current, sc.managerView);
+                                System.out.println("you made it!");
                             }
                         }
                         else{

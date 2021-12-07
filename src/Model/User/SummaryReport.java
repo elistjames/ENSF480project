@@ -10,6 +10,8 @@ public class SummaryReport {
     private int activeListings;
     private ArrayList<Property> rentedProperties;
 
+    public SummaryReport() {}
+
     public SummaryReport(int housesListed, int housesRented, int activeListings, ArrayList<Property> rentedProperties) {
         this.housesListed = housesListed;
         this.housesRented = housesRented;
@@ -25,7 +27,7 @@ public class SummaryReport {
         return housesRented;
     }
 
-    public int getActivitiesListings() {
+    public int getActiveListings() {
         return activeListings;
     }
 

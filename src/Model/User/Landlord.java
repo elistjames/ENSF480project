@@ -10,5 +10,6 @@ public class Landlord extends User {
     public Landlord(int userID, String name, String username, String password, String email, String type) {
         super(userID, name, username, password, email, type);
     }
+    public Landlord(){}
 }
 
