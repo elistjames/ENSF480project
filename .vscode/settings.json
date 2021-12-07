@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "C:\\Users\\Luke\\Desktop\\School\\Year 2\\Winter 2021\\ENSF 409\\Unit Testing\\lib\\junit-4.13.2.jar",
+        "C:\\Users\\Luke\\Desktop\\School\\Year 2\\Winter 2021\\ENSF 409\\Unit Testing\\lib\\hamcrest-core-1.3.jar",
+        "sqlite-jdbc-3.36.0.3.jar"
+    ]
+}
