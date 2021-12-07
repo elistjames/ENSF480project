@@ -330,11 +330,16 @@ public class LandlordController extends UserController {
             JOptionPane.showMessageDialog(null, "You must select a Posting to suspend / un-suspend.");
         }
         else{
+            System.out.println("got to the button");
             String cState = "";
             String selectedProperty = lp.getPostedList().getSelectedValue();
             selectedProperty = selectedProperty.substring(4, 11);
+            if(db.getListings().isEmpty()){
+                cState = "suspended";
+            }
             for(Listing l : db.getListings()){
                 if(l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())){
+                    System.out.println("no no no");
                     cState = "listed";
                     changeListingState(l, "suspended");
                     lp.setVisible(false);
@@ -347,9 +352,11 @@ public class LandlordController extends UserController {
                     break;
                 }
                 else{
+                    System.out.println("Propery hello");
                     cState = "suspended";
                 }
             }
+            System.out.println(cState);
             if(cState.equals("suspended")){
                 for(Listing l : db.getSuspendedListings()){
                     if(l.getProperty().getID() == Integer.parseInt(selectedProperty.trim())){

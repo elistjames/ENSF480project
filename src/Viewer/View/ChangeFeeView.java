@@ -96,8 +96,9 @@ public class ChangeFeeView extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
             int period = Integer.parseInt(jTextField1.getText());
-            int fee = Integer.parseInt(jTextField2.getText());  
+            int fee = Integer.parseInt(jTextField2.getText());
             mc.updateFee(period, fee);
+
         } catch(Exception e) {
             JOptionPane.showMessageDialog(null, "Please enter numerical values for both fields.");
         }
