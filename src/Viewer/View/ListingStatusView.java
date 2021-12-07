@@ -33,7 +33,7 @@ public class ListingStatusView extends javax.swing.JFrame {
 
         currentStatusLabel.setText(currStatus);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Rented", "Cancelled", "Suspended" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "rented", "listed", "unlisted", "suspended" }));
 
         changeStatusButton.setText("Change Status");
         changeStatusButton.addActionListener(new java.awt.event.ActionListener() {
