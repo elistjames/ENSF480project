@@ -64,6 +64,13 @@ public class RenterController extends UserController {
         }
     }
 
+    //-----------------------------------------------------------------
+    // Email functions
+    //-----------------------------------------------------------------
+    /**
+     * Goes through the Emails in the database and finds the first email
+     * directed to the current User.
+     */
     public void checkEmails(){
         for(Email e : db.getEmails()){
             if(e.getToEmail().equals(current.getEmail())){
@@ -81,10 +88,6 @@ public class RenterController extends UserController {
             }
         }
     }
-
-    //---------------------------------------------------------------------------
-    // Public member functions
-    //---------------------------------------------------------------------------
     
     /**
      * Adds an email sent by the renter to the database.
@@ -94,6 +97,10 @@ public class RenterController extends UserController {
         db.getEmails().add(new Email(email.getFromEmail(), email.getToEmail(), email.getDate(), email.getSubject(), email.getMessage()));
     }
 
+    
+    //-----------------------------------------------------------------------------
+    // Search Listings methods
+    //-----------------------------------------------------------------------------
     /**
      * Modifies the Renter's Search Criteria. Does not modify the database.
      * @param {String} type Type of property to be searched.
@@ -109,7 +116,56 @@ public class RenterController extends UserController {
         current.getSc().setFurnished(furnished);
         current.getSc().setCityQuadrant(cityQuadrant);
     }
+    
+    /**
+     * Modifies the Search Criteria saved in the database.
+     */
+    public void updateSearchCriteria(String type, String nbed, String nbath, String furnished, String cq){
+        db.getCurrentSearch(current.getUserID()).setType(type);
 
+        if(nbed.equals("N/A")){
+            db.getCurrentSearch(current.getUserID()).setN_bedrooms(-1);
+        }
+        else{
+            db.getCurrentSearch(current.getUserID()).setN_bedrooms(Integer.parseInt(nbed));
+        }
+        if(nbath.equals("N/A")){
+            db.getCurrentSearch(current.getUserID()).setN_bathrooms(-1);
+        }
+        else{
+            db.getCurrentSearch(current.getUserID()).setN_bathrooms(Integer.parseInt(nbath));
+        }
+        if(furnished.equals("N/A")){
+            db.getCurrentSearch(current.getUserID()).setFurnished(-1);
+        }
+        else if(furnished.equals("Yes")){
+            db.getCurrentSearch(current.getUserID()).setFurnished(1);
+        }
+        else{
+            db.getCurrentSearch(current.getUserID()).setFurnished(0);
+        }
+
+        db.getCurrentSearch(current.getUserID()).setCityQuadrant(cq);
+    }
+
+    /**
+     * Searches Listings for ones that match the renters search Criteria.
+     */
+    public void searchListings(){
+        rv.setVisible(false);
+        rv = new RenterView();
+        this.rv.setRc(this);
+        rv.initComponents();
+        rv.setLocationRelativeTo(null);
+        rv.updateCriteriaBoxes(db.getCurrentSearch(current.getUserID()).getType(), db.getCurrentSearch(current.getUserID()).getN_bedrooms(),
+                db.getCurrentSearch(current.getUserID()).getN_bathrooms(), db.getCurrentSearch(current.getUserID()).isFurnished(),
+                db.getCurrentSearch(current.getUserID()).getCityQuadrant());
+        rv.setVisible(true);
+    }
+
+    //--------------------------------------------------------------------
+    // Registration/Deregistration methods
+    //--------------------------------------------------------------------
     /**
      * Registers User as a Registered Renter.
      * @param {String} name Name of registering renter
@@ -157,52 +213,10 @@ public class RenterController extends UserController {
         current = new Renter(0, "none", "none", "none", "none", "renter");
     }
 
-    /**
-     * Searches Listings for ones that match the renters search Criteria.
-     */
-    public void searchListings(){
-        rv.setVisible(false);
-        rv = new RenterView();
-        this.rv.setRc(this);
-        rv.initComponents();
-        rv.setLocationRelativeTo(null);
-        rv.updateCriteriaBoxes(db.getCurrentSearch(current.getUserID()).getType(), db.getCurrentSearch(current.getUserID()).getN_bedrooms(),
-                db.getCurrentSearch(current.getUserID()).getN_bathrooms(), db.getCurrentSearch(current.getUserID()).isFurnished(),
-                db.getCurrentSearch(current.getUserID()).getCityQuadrant());
-        rv.setVisible(true);
-    }
 
-    /**
-     * Modifies the Search Criteria saved in the database.
-     */
-    public void updateSearchCriteria(String type, String nbed, String nbath, String furnished, String cq){
-        db.getCurrentSearch(current.getUserID()).setType(type);
-
-        if(nbed.equals("N/A")){
-            db.getCurrentSearch(current.getUserID()).setN_bedrooms(-1);
-        }
-        else{
-            db.getCurrentSearch(current.getUserID()).setN_bedrooms(Integer.parseInt(nbed));
-        }
-        if(nbath.equals("N/A")){
-            db.getCurrentSearch(current.getUserID()).setN_bathrooms(-1);
-        }
-        else{
-            db.getCurrentSearch(current.getUserID()).setN_bathrooms(Integer.parseInt(nbath));
-        }
-        if(furnished.equals("N/A")){
-            db.getCurrentSearch(current.getUserID()).setFurnished(-1);
-        }
-        else if(furnished.equals("Yes")){
-            db.getCurrentSearch(current.getUserID()).setFurnished(1);
-        }
-        else{
-            db.getCurrentSearch(current.getUserID()).setFurnished(0);
-        }
-
-        db.getCurrentSearch(current.getUserID()).setCityQuadrant(cq);
-    }
-
+    //-----------------------------------------------------------------------
+    // ActionPerformed methods
+    //-----------------------------------------------------------------------
     /**
      * Runs when Account Button has been pressed. Displays Register page and 
      * gives option to delete account.
@@ -277,6 +291,9 @@ public class RenterController extends UserController {
         }
     }
 
+    //-------------------------------
+    // Email Related
+    //-------------------------------
     /**
      * Runs when Contact Button has been pressed. Displays Email Page and finds 
      * the selected properties' Landlord's email.

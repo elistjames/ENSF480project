@@ -34,7 +34,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 /**
- * @author 
  * This class is the main controller for the ENSF480project for group 23 in Fall 2021.
  * It contains the main function to start the program and the essential objects to link
  * the View package and the Model package and handles the communication between the two.
@@ -48,7 +47,7 @@ public class SystemController {
     public Database db; //An object that retrieves data from a MySQL Database
     					//and stores it.
     UserController currentController; //An object that stores the current User object and acts
-    								  //as a go between between the User and this page.
+    								  //as a go-between between the User and this page.
     Date currentDate; // The current date, from when the program was booted up.
     StartPage startPage; // An object that holds a GUI interface that is shown when the project is
     					 // first booted up.
@@ -138,6 +137,9 @@ public class SystemController {
 
     }
 
+    /**
+     * A default constructor.
+     */
     public SystemController(){
 
     }

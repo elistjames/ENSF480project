@@ -34,6 +34,10 @@ public class ManagerController extends UserController {
     ReportView rv;
     JList jlist = new javax.swing.JList<>();
 
+    
+    //-------------------------------------------------------------
+    // Constructor
+    //-------------------------------------------------------------
     public ManagerController(Manager currentUser, ManagerView managerV) {
         super(currentUser);
         current = currentUser;
