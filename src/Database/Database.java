@@ -911,7 +911,7 @@ public class Database {
         try {
             // Statement stmt = dbConnect.createStatement();
             ResultSet listedCount = dbConnect.createStatement().executeQuery("SELECT COUNT(*) AS listedCount FROM listingdates WHERE DateOfListing between \""+ startDate + "\" and \"" + endDate + "\""); 
-            ResultSet activeCount = dbConnect.createStatement().executeQuery("SELECT COUNT(*) AS activeCount FROM listings WHERE State = \"Active\" AND StartDate between \""+ startDate + "\" and \"" + endDate + "\""); 
+            ResultSet activeCount = dbConnect.createStatement().executeQuery("SELECT COUNT(*) AS activeCount FROM listings WHERE State = \"listed\" AND StartDate between \""+ startDate + "\" and \"" + endDate + "\"");
             ResultSet rentedCount = dbConnect.createStatement().executeQuery("SELECT COUNT(*) AS rentedCount FROM rented WHERE DateRented between \""+ startDate + "\" and \"" + endDate + "\""); 
             ResultSet rentedList = dbConnect.createStatement().executeQuery("SELECT * FROM rented WHERE DateRented between \""+ startDate + "\" and \"" + endDate + "\""); 
             listedCount.next();
