@@ -6,13 +6,7 @@
  * Last Editted:
  */
 
-/**
- * A class that accesses a database and retrieves and
- * stores the data there. It is also in charge of filling
- * the database with new data when the program exits. It follows the Singleton design
- * pattern and therefore only one instance of it can exist
- * at any point in time.
- */
+
 package Database;
 import java.sql.*;
 import java.time.temporal.ChronoUnit;
@@ -26,10 +20,21 @@ import Model.Lising.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-
+/**
+ * A class that accesses a database and retrieves and
+ * stores the data there. It is also in charge of filling
+ * the database with new data when the program exits. It follows the Singleton design
+ * pattern and therefore only one instance of it can exist
+ * at any point in time.
+ */
 public class Database {
+	/**
+	 * The variable that stores the only instance of Database
+	 * that can exist, according to the Singleton design pattern.
+	 */
     private static Database onlyInstance;
 
+    //Arrays of data
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Renter> renters = new ArrayList<>();
     private ArrayList<Landlord> landlords = new ArrayList<>();
@@ -48,19 +53,44 @@ public class Database {
 
     private ArrayList<Listing> suspendedListings = new ArrayList<>();
 
+    /**
+     * Connection used to connect to the database.
+     */
     private Connection dbConnect;
     private ResultSet results;
 
+    //-------------------------------
+    // Constructor
+    //-------------------------------
+    
+    /**
+     * Basic constructor. Made private for the
+     * Singleton design pattern.
+     */
     private Database() {
 
     }
 
+    //----------------------------------
+    // Database instance retrieval
+    //----------------------------------
+    /**
+     * Returns the only instance of Database in the program,
+     * creates one if there is none.
+     * @return {Database} The only instance of Database in the program.
+     */
     public static Database getOnlyInstance() {
         if (onlyInstance == null)
             onlyInstance = new Database();
         return onlyInstance;
     }
 
+    //---------------------------------
+    // Database connection
+    //---------------------------------
+    /**
+     * Initializes connection to the database.
+     */
     public void initializeConnection() {
         try {
             String DBURL = "jdbc:sqlite:ensf480.db";
@@ -71,6 +101,17 @@ public class Database {
         }
     }
 
+    
+    
+    //------------------------------------------------------------------------
+    // Validation methods, finding whether usernames, etc are already in use.
+    //------------------------------------------------------------------------
+    
+    /**
+     * Checks to see whether a username is already being used.
+     * @param {String} username Username to be validated.
+     * @return False if the username corresponds to an existing User, true if it doesn't.
+     */
     public boolean validateUsername(String username){
         for(User user : users){
             if(user.getUsername().compareTo(username) == 0){
@@ -80,6 +121,11 @@ public class Database {
         return true;
     }
 
+    /**
+     * Checks to see whether password is already in use.
+     * @param {String} password Password to be validated.
+     * @return True if password is not being used by any User in the program. False if it is.
+     */
     public boolean validatePassword(String password){
         for(User user : users){
             if(user.getPassword().compareTo(password) == 0){
@@ -89,6 +135,11 @@ public class Database {
         return true;
     }
 
+    /**
+     * Checks to see whether Email is already in use.
+     * @param {String} email Email to be validated.
+     * @return True if email is not being used by any other User in the program. False if it is.
+     */
     public boolean validateEmail(String email){
         for(User user : users){
             if(user.getEmail().compareTo(email) == 0){
@@ -98,6 +149,11 @@ public class Database {
         return true;
     }
 
+    /**
+     * Checks to see whether ListingFee already exists with this duration.
+     * @param {int} days Duration of fee.
+     * @return False if there is already a fee with this duration. True otherwise.
+     */
     public boolean validateListingFee(int days){
         for(ListingFee lf : fees){
             if(lf.getDays() == days){
@@ -107,6 +163,12 @@ public class Database {
         return true;
     }
 
+    /**
+     * Checks if there is a User with specified username and password.
+     * @param {String} username Username to be verified.
+     * @param {String} password Password to be verified.
+     * @return True if User with username and password exists, false otherwise.
+     */
     public boolean validateLogin(String username, String password){
         boolean validLogin = false;
         for(User u : users){
@@ -118,6 +180,11 @@ public class Database {
         return validLogin;
     }
 
+    /**
+     * Checks if there if already a Property with this address.
+     * @param {String} address Address to be verified.
+     * @return False if there is a Property with this address already, true otherwise.
+     */
     public boolean validateAddress(String address){
         for(Property p : properties){
             if(p.getAddress().equals(address)){
@@ -127,6 +194,16 @@ public class Database {
         return true;
     }
 
+    
+    //--------------------------------------------------------------------------
+    // Methods to find, modify and add data
+    //--------------------------------------------------------------------------
+    
+    /**
+     * Updates Listings based on current date, expiring Listings who's durations
+     * have expired.
+     * @param {Date} currentDate Date object holding the current date.
+     */
     public void updateListingDates(Date currentDate){
         int counter = 0;
         while (counter < listings.size()){
@@ -145,6 +222,10 @@ public class Database {
 
     }
 
+    /**
+     * Adds a Renter to the database.
+     * @param {Renter} r Renter to be registered.
+     */
     public void registerRenter(Renter r){
         int nextID = getNextUserID();
         r.setUserID(nextID);
@@ -152,6 +233,11 @@ public class Database {
         renters.add(r);
     }
 
+    /**
+     * Checks to see if there exists an email with the ToEmail matching the parameter.s
+     * @param {String} email Email to be verified.
+     * @return True if an email exists with a toEmail that mathes the paramter. False otherwise.
+     */
     public boolean emailNotSeen(String email){
         for(Email e : emails){
             if(e.getToEmail().equals(email)){
@@ -161,12 +247,21 @@ public class Database {
         return false;
     }
 
+    /**
+     * Adds Property to the database.
+     * @param {Property} p Property to be registered.
+     */
     public void registerProperty(Property p){
         int nextID = getNextPropertyID();
         p.setID(nextID);
         properties.add(p);
     }
 
+    /**
+     * Finds Renters whose search criteria matches the Property parameter and adds them
+     * to the array of rentersToNotify if they are not already on there.
+     * @param {Property} p Property to notify renters of.
+     */
     public void updateRentersToNotify(Property p){
         for(Renter r : renters){
             if(getCurrentSearch(r.getUserID()).getType().equals(p.getType())||getCurrentSearch(r.getUserID()).getType().equals("N/A")){
@@ -185,6 +280,11 @@ public class Database {
         }
     }
 
+    /**
+     * Checks whether Renter is to be notified.
+     * @param {int} id Id of Renter
+     * @return True if Renter is on rentersToNotify array, false otherwise.
+     */
     public boolean notifyRenter(int id){
         for(int i = 0; i < rentersToNotify.size(); i++){
             if(rentersToNotify.get(i) == id){
@@ -195,6 +295,11 @@ public class Database {
         return false;
     }
 
+    /**
+     * Finds the SearchCriteria of the Renter with the parameter's ID.
+     * @param {int} currentId Id of current Renter.
+     * @return Search criteria of Renter.
+     */
     public SearchCriteria getCurrentSearch(int currentId){
         for(SearchCriteria sc : searches){
             if(sc.getRenterID() == currentId){
@@ -204,6 +309,11 @@ public class Database {
         return null;
     }
 
+    /**
+     * Replaces the SearchCriteria in the database with the same RenterID
+     * as current with current.
+     * @param {SearchCriteria} current
+     */
     private void updateCurrentSearchCriteria(SearchCriteria current){
         for(int i = 0; i < searches.size(); i++){
             if(searches.get(i).getRenterID() == current.getRenterID()){
@@ -212,6 +322,11 @@ public class Database {
         }
     }
 
+    /**
+     * Changes the state of Property and Listing with selectedID.
+     * @param {String} selectedState State to change to.
+     * @param {String} selectedID ID of selected Property.
+     */
     public void updateListing(String selectedState, String selectedID) {
 
         // Modify property state
@@ -291,8 +406,12 @@ public class Database {
 
     }
 
-
-
+    /**
+     * Finds  and returns User with username and password from the database.
+     * @param {String} username Username of User to find.
+     * @param {String} password Password of User to find.
+     * @return User with username and password that equals the parameters.
+     */
     public User getCurrentUser(String username, String password) {
         User current = new Renter(0,"**","**","**","**","**");
         for(Renter r : renters){
@@ -313,6 +432,14 @@ public class Database {
         return current;
     }
 
+    
+    
+    //--------------------------------------------
+    // Pulling methods
+    //--------------------------------------------
+    /**
+     * Takes Renter info from the database and stores it into renters Array.
+     */
     private void pullRenters(){
         ResultSet result; //create new ResultSet object
         try {
@@ -329,6 +456,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes Landlord info from the database and stores it into landlords Array.
+     */
     private void pullLandlords(){
         ResultSet result; //create new ResultSet object
         try {
@@ -345,6 +475,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes Property info from the database and stores it into properties Array.
+     */
     private void pullProperties(){
         ResultSet result; //create new ResultSet object
         try {
@@ -363,6 +496,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes Manager info from the database and stores it into managers Array.
+     */
     private void pullManagers(){
         ResultSet result; //create new ResultSet object
         try {
@@ -379,6 +515,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes ListingFee info from the database and stores it into fees Array.
+     */
     private void pullFees(){
         ResultSet result; //create new ResultSet object
         try {
@@ -392,6 +531,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes Listing info from the database and stores it into listings Array.
+     */
     private void pullListings(){
         ResultSet result; //create new ResultSet object
         try {
@@ -408,6 +550,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes RentedProperties info from the database and stores it into rentedProperties and rentedDates Arrays.
+     */
     private void pullRentedProperties(){
         ResultSet result; //create new ResultSet object
         try {
@@ -427,6 +572,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes info of suspended Listings from the database and stores it into suspendedListings Array.
+     */
     private void pullSuspendedListings(){
         ResultSet result; //create new ResultSet object
         try {
@@ -443,6 +591,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes info of Renters to notify from the database and stores it into rentersToNotify Array.
+     */
     private void pullRTN(){
         ResultSet result; //create new ResultSet object
         try {
@@ -457,6 +608,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes SearchCriteria info from the database and stores it into searches Array.
+     */
     private void pullSearchCriterias(){
         ResultSet result; //create new ResultSet object
         try {
@@ -474,6 +628,9 @@ public class Database {
         }
     }
 
+    /**
+     * Takes info of listingDates from the database and stores it into listingDates Array.
+     */
     private void pullListingDates(){
         ResultSet result; //create new ResultSet object
         try {
@@ -488,12 +645,18 @@ public class Database {
         }
     }
 
+    /**
+     * Populates users Array with contents of renters, landlords, and managers Arrays.
+     */
     private void pullUsers(){
         users.addAll(renters);
         users.addAll(landlords);
         users.addAll(managers);
     }
 
+    /**
+     * Takes Email info from the database and stores it into emails Array.
+     */
     private void pullEmails(){
         ResultSet result; //create new ResultSet object
         try {
@@ -510,6 +673,36 @@ public class Database {
         }
     }
 
+    /**
+     * Takes all data from the database and stores it in arrays in this class.
+     */
+    public void pullAll(){
+        this.pullRenters();
+        this.pullLandlords();
+        this.pullProperties();
+        this.pullManagers();
+        this.pullFees();
+        this.pullListings();
+        this.pullUsers();
+        this.pullListingDates();
+        this.pullRentedProperties();
+        this.pullRTN();
+        this.pullSearchCriterias();
+        this.pullEmails();
+        this.pullSuspendedListings();
+
+    }
+
+    
+    
+    
+    //---------------------------------------------
+    // Methods to push to database
+    //---------------------------------------------
+    
+    /**
+     * Stores info from renters Array into the database.
+     */
     private void pushRenters(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -533,6 +726,10 @@ public class Database {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Stores info from landlords Array into the database.
+     */
     private void pushLandlords(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -556,6 +753,10 @@ public class Database {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Stores info from properties Array into the database.
+     */
     private void pushProperties(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -583,6 +784,10 @@ public class Database {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Stores info from managers Array into the database.
+     */
     private void pushManagers(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -606,6 +811,10 @@ public class Database {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Stores info from fees Array into the database.
+     */
     public void pushFees(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -626,6 +835,10 @@ public class Database {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Stores info from listings Array into the database.
+     */
     private void pushListings(){
         l = new Listing[listings.size()];
         for(int i = 0; i < l.length; i++){
@@ -653,6 +866,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores info from renters, landlords, and managers Array into a User category in the database.
+     */
     private void pushUsers(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -706,6 +922,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores info from suspendedListings Array into the database.
+     */
     private void pushSuspendedListings(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -730,6 +949,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores info from rentersToNotify Array into the database.
+     */
     private void pushRTN(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -750,6 +972,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores info from rentedProperties Array into the database.
+     */
     private void pushRentedProperties(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -778,6 +1003,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores info from listingDates Array into the database.
+     */
     private void pushListingDates(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -798,6 +1026,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores info from searches Array into the database.
+     */
     private void pushSearchCriterias(){
         for(SearchCriteria criteria : searches){
             if(criteria.getRenterID() == 0){
@@ -832,6 +1063,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores info from emails Array into the database.
+     */
     private void pushEmails(){
         try{
             Statement statement = dbConnect.createStatement();
@@ -857,6 +1091,9 @@ public class Database {
         }
     }
 
+    /**
+     * Stores all data in this class in the database.
+     */
     public void pushAll(){
         this.pushRenters();
         this.pushLandlords();
@@ -874,23 +1111,16 @@ public class Database {
 
     }
 
-    public void pullAll(){
-        this.pullRenters();
-        this.pullLandlords();
-        this.pullProperties();
-        this.pullManagers();
-        this.pullFees();
-        this.pullListings();
-        this.pullUsers();
-        this.pullListingDates();
-        this.pullRentedProperties();
-        this.pullRTN();
-        this.pullSearchCriterias();
-        this.pullEmails();
-        this.pullSuspendedListings();
 
-    }
-
+    //------------------------------------------------------
+    // Methods to find IDs
+    //------------------------------------------------------
+   
+    /**
+     * Finds the next available Property ID by searching for the
+     * greatest property ID that currently exists.
+     * @return Next available id.
+     */
     public int getNextPropertyID(){
         if(properties.isEmpty()&&rentedProperties.isEmpty()){
             return 1000000;
@@ -909,6 +1139,11 @@ public class Database {
         return (nextID+1);
     }
 
+    /**
+     * Finds the next available User ID by searching for the
+     * greatest User ID that currently exists.
+     * @return Next available id.
+     */
     public int getNextUserID(){
         if(users.isEmpty()){
             return 1000000;
@@ -922,6 +1157,17 @@ public class Database {
         return (nextID+1);
     }
 
+    
+    //-------------------------------------------------------
+    // Methods to retrieve data from database.
+    //-------------------------------------------------------
+    
+    /**
+     * Finds relevant data for the SummaryReport and returns it.
+     * @param {String} startDate First date to consider for the SummaryReport.
+     * @param {String} endDate Last date to consider for the SummaryReport.
+     * @return SummaryReport with data regarding what occurred between startDate and endDate
+     */
     public SummaryReport getSummaryReport(String startDate, String endDate) {
         try {
             // Statement stmt = dbConnect.createStatement();
@@ -956,6 +1202,11 @@ public class Database {
         return new SummaryReport();
     }
 
+    /**
+     * Finds and returns landlord.
+     * @param {int} id
+     * @return Landlord with id equal to parameter.
+     */
     public Landlord getLandlord(int id) {
         try {
             Statement stmt = dbConnect.createStatement();
@@ -970,6 +1221,11 @@ public class Database {
         return new Landlord();
     }
 
+    /**
+     * Finds and returns Property.
+     * @param {int} propertyID
+     * @return Property with id equal to parameter.
+     */
     public Property getProperty(int propertyID){
 
         for(Property p : properties){
@@ -980,6 +1236,11 @@ public class Database {
         return null;
     }
 
+    /**
+     * Finds the email of a landlord from their ID.
+     * @param {int} id ID of landlord.
+     * @return Email of the landlord.
+     */
     public String lookupLandlordEmail(int id){
         String email = "";
         for(Landlord l : landlords){
@@ -991,6 +1252,11 @@ public class Database {
         return email;
     }
 
+    /**
+     * Finds a Landlord from their ID.
+     * @param {int} id ID of landlord.
+     * @return Landlord with that id.
+     */
     public Landlord lookupLandlord(int id){
         for(Landlord l : landlords){
             if(l.getUserID() == id){
@@ -1001,7 +1267,10 @@ public class Database {
     }
 
 
-    //getters
+    //----------------------------------
+    // Getters
+    //----------------------------------
+    
     public ArrayList<User> getUsers() {
         return users;
     }

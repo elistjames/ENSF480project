@@ -20,7 +20,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 /**
- * A class that extends the UserClass where the currentUser
+ * A class that extends the UserController class where the currentUser
  * object contains a Landlord instance. Contains various
  * functions that implement the actions a Landlord can take.
  */
@@ -65,7 +65,7 @@ public class LandlordController extends UserController {
     public Email recieved;
     
     /**
-     * GUI interface that shows an email the landlord has recieved.
+     * GUI interface that shows an email the landlord has received.
      */
     EmailDialog ed;
     

@@ -23,16 +23,48 @@ import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * A class that extends the UserController class where the currentUser
+ * object contains a Renter instance. Contains various
+ * functions that implement the actions a Renter can take.
+ */
 public class RenterController extends UserController {
 	//--------------------------------------------------------------------------
 	// Member variables
 	//--------------------------------------------------------------------------
-    public Renter current;
+    /**
+     * Current Renter that is logged in.
+     */
+	public Renter current;
+	
+	/**
+	 * Main GUI interface for the logged in Renter.
+	 */
     public RenterView rv;
+    
+    /**
+     * Page that an unregistered Renter can use to make an account.
+     */
     public RegisterPage rp;
+    
+    /**
+     * The GUI interface for when the renter is sending an email.
+     */
     public EmailPage ep;
+    
+    /**
+     * Email object that the renter can send.
+     */
     public Email email;
+
+    /**
+     * Email that the renter has received.
+     */
     public Email recieved;
+    
+    /**
+     * GUI interface that shows an email the renter has received.
+     */
     EmailDialog ed;
 
 
