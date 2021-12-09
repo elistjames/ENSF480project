@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
@@ -6,6 +14,11 @@ import Model.Lising.Listing;
 
 import javax.swing.*;
 import java.util.ArrayList;
+
+/**
+ * A GUI interface class that appears when a Manager
+ * tries to change a listings status.
+ */
 public class ListingStatusView extends javax.swing.JFrame {
     private ManagerController mc;
     private String currStatus;

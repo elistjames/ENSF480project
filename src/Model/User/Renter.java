@@ -1,10 +1,21 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.User;
 import Model.Lising.*;
 
 import java.util.ArrayList;
 
 
-
+/**
+ * A subclass of User that represents a Renter who
+ * is using the program.
+ */
 public class Renter extends User{
     SearchCriteria sc;
 

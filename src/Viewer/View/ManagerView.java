@@ -1,3 +1,11 @@
+/**
+ * Author(s): Luke
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
@@ -8,8 +16,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 /**
- *
- * @author Luke
+ * A GUI interface class for Managers that gives options to show
+ * available information and change certain info.
  */
 public class ManagerView extends javax.swing.JFrame {
 

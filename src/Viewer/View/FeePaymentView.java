@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
@@ -5,6 +13,11 @@ import Model.Lising.ListingFee;
 
 import javax.swing.*;
 
+/**
+ * A GUI interface class for the landlord that appears
+ * when the landlord is paying a fee to post a property.
+ * Lists options and gives information regarding this process.
+ */
 public class FeePaymentView extends javax.swing.JFrame {
     LandlordController lc;
     /**

@@ -1,7 +1,20 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.Lising;
 
 import java.time.LocalDate;
 
+/**
+ * A class that represents a Property posting.
+ * Includes a reference to that property, as well
+ * as dates and durations for the Listing.
+ */
 public class Listing {
 
     private Property property;

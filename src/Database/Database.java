@@ -1,3 +1,18 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
+/**
+ * A class that accesses a database and retrieves and
+ * stores the data there. It is also in charge of filling
+ * the database with new data when the program exits. It follows the Singleton design
+ * pattern and therefore only one instance of it can exist
+ * at any point in time.
+ */
 package Database;
 import java.sql.*;
 import java.time.temporal.ChronoUnit;

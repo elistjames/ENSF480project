@@ -29,13 +29,44 @@ public class LandlordController extends UserController {
 	//----------------------------------------------------------------------------------
 	// Member variables
 	//---------------------------------------------------------------------------------
+	/**
+	 * The current User that is logged in.
+	 */
     public Landlord current;
+    
+    /**
+     * The main GUI interface for the logged in User.
+     */
     public LandlordPage lp;
+    
+    /**
+     * The GUI interface for when a Landlord is paying to post a property.
+     */
     FeePaymentView fp;
+    
+    /**
+     * The GUI interface for when the landlord is registering a property.
+     */
     RegisterPropertyPage rp;
+    
+    /**
+     * The GUI interface for when the landlord is sending an email.
+     */
     public EmailPage ep;
+    
+    /**
+     * Email object that the landlord can send.
+     */
     public Email email;
+    
+    /**
+     * Email that the landlord has received.
+     */
     public Email recieved;
+    
+    /**
+     * GUI interface that shows an email the landlord has recieved.
+     */
     EmailDialog ed;
     
     //-------------------------------------------------------
@@ -228,9 +259,13 @@ public class LandlordController extends UserController {
     }
     
     
-    //--------------------------------------------------
+    //-----------------------------------------------------------------------------------
     // Action Performed methods
-    //----------------------------------------------------
+    //------------------------------------------------------------------------------------
+    
+    //------------------------------
+    // Registering Property Buttons
+    //------------------------------
     /**
      * Runs when register Button has been pressed. Brings up a RegisterProperty page.
      * Makes the LandlordView invisible.

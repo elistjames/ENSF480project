@@ -44,15 +44,42 @@ public class SystemController {
 	// Member Variables - Fields
 	//------------------------------------------------------
 	
-    public Database db; //An object that retrieves data from a MySQL Database
-    					//and stores it.
-    UserController currentController; //An object that stores the current User object and acts
-    								  //as a go-between between the User and this page.
-    Date currentDate; // The current date, from when the program was booted up.
-    StartPage startPage; // An object that holds a GUI interface that is shown when the project is
-    					 // first booted up.
-    RenterView renterPage; //An object that holds the GUI interface for the Renter
+	/**
+	 * An object that retrieves data from a MySQL Database
+     * and stores it.
+	 */
+    public Database db; 
+    
+    /**
+     * An object that stores the current User object and acts
+     * as a go-between between the User and this page.
+     */
+    UserController currentController;
+    
+    /**
+     * The current date, from when the program was booted up.
+     */
+    Date currentDate;
+    
+    /**
+     * An object that holds a GUI interface that is shown when the project is
+     * first booted up.
+     */
+    StartPage startPage;
+    
+    /**
+     * An object that holds the GUI interface for the current Renter
+     */
+    RenterView renterPage;
+    
+    /**
+     * Object that holds the GUI interface for the current Landlord
+     */
     LandlordPage landlordPage;
+    
+    /**
+     * Object that holds the GUI interface for the current Manager
+     */
     ManagerView managerView;
     
     //-------------------------------------------------------
@@ -79,13 +106,19 @@ public class SystemController {
         //Runs the following function after all previous events have been completed.
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+            	//Open StartPage
                 sc.startPage = new StartPage();
                 sc.startPage.setLocationRelativeTo(null);
                 sc.startPage.setVisible(true);
+                
+                //Response to Pressing Login on StartPage
                 sc.startPage.getjButton1().addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    	//Get Username and Password
                         String usernameIn = sc.startPage.getjTextField1().getText();
                         String passwordIn = new String(sc.startPage.getjPasswordField1().getPassword());
+                        
+                        //Validates Username and Password and finds the User they correspond to
                         if(sc.db.validateLogin(usernameIn, passwordIn)){
                             User current = sc.db.getCurrentUser(usernameIn, passwordIn);
                             if(current.getType().equals("renter")){
@@ -110,14 +143,19 @@ public class SystemController {
                         }
                     }
                 });
+                
+                //Responds to Pressing Skip on the StartPage
                 sc.startPage.getjButton2().addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         sc.startPage.setVisible(false);
                         sc.renterPage = new RenterView();
+                        //Makes the User a default renter
                         sc.currentController = new RenterController(new Renter(0, "none", "none",
                                 "none", "none", "renter"), sc.renterPage);
                     }
                 });
+                
+                //Responds to pressing Exit on the StartPage
                 sc.startPage.getjButton3().addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",

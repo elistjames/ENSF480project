@@ -1,8 +1,20 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.User;
 
 import Model.Lising.ListingFee;
 import Database.Database;
 
+/**
+ * A subclass of User that represents a Manager who
+ * is using the program.
+ */
 public class Manager extends User{
     private Database db;
 
