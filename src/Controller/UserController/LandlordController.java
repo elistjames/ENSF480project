@@ -18,7 +18,7 @@ import javax.swing.*;
 import java.time.LocalDate;
 
 /**
- * A class that extends the UserClass where the currentUser
+ * A class that extends the UserController class where the currentUser
  * object contains a Landlord instance. Contains various
  * functions that implement the actions a Landlord can take.
  */

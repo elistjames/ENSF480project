@@ -22,10 +22,20 @@ import Model.User.User;
  * and the Database.
  */
 public abstract class UserController {
-    public Database db; //Database object that contains User data.
+	/**
+	 * Database object that contains User data.
+	 */
+    public Database db;
 
-    public User currentUser; //Current User logged in to Program
+    /**
+     * Current User logged in to Program
+     */
+    public User currentUser;
     
+    
+    //--------------------------------
+    // Constructor
+    //--------------------------------
     /**
      * A constructor that takes a User object and initializes the currentUser
      * member variable with it. The db object takes the instance of the Database

@@ -22,21 +22,51 @@ import java.util.ArrayList;
 
 import static javax.swing.JOptionPane.showConfirmDialog;
 
+/**
+ * A class that extends the UserController class where the currentUser
+ * object contains a Landlord instance. Contains various
+ * functions that implement the actions a Landlord can take.
+ */
 public class ManagerController extends UserController {
 	//-------------------------------------------------------------------
 	// Member Variables
 	//-------------------------------------------------------------------
+	/**
+	 * The current manager who is logged in to the program.
+	 */
     Manager current;
+    
+    /**
+     * The main GUI interface for a Manager.
+     */
     ManagerView mv;
+    
+    /**
+     * The GUI interface for changing the status of a listing.
+     */
     ListingStatusView lsv;
+    
+    /**
+     * The GUI interface for changing a fee amount.
+     */
     ChangeFeeView cfv;
+    
+    /**
+     * The GUI interface for viewing a report.
+     */
     ReportView rv;
+    
     JList jlist = new javax.swing.JList<>();
 
     
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
+    /**
+     * A constructor that takes a Manager and ManagerView as inputs.
+     * @param {Manager} currentUser Current logged in Manager.
+     * @param {ManagerView} managerV GUI interface for the Manager.
+     */
     public ManagerController(Manager currentUser, ManagerView managerV) {
         super(currentUser);
         current = currentUser;
@@ -48,12 +78,27 @@ public class ManagerController extends UserController {
     }
 
 
+
+    // public void cancelListing(Listing l){
+    //     for(Listing cl : db.getListings()){
+    //         if(cl.getProperty().getID() == l.getProperty().getID()){
+    //             db.getListings().remove(cl);
+    //         }
+    //     }
+    // }
+
     public SummaryReport getReport(String startDate, String endDate){
 
         return db.getSummaryReport(startDate, endDate);
     }
-
-
+  
+    //----------------------------------------------
+    // Methods to change what is shows on main GUI
+    //----------------------------------------------
+    /**
+     * Sets the data that the Manager can view as an array of all the renters.
+     * @param {JList} jlist
+     */
     public void viewRenters(JList jlist){
         DefaultListModel<String> model = new DefaultListModel<>();
         for(var renter: db.getRenters()) {
@@ -63,6 +108,10 @@ public class ManagerController extends UserController {
         jlist.setModel(model);
     }
 
+    /**
+     * Sets the data that the Manager can view as an array of all the landlords.
+     * @param jlist
+     */
     public void viewLandlords(JList jlist){
         DefaultListModel<String> model = new DefaultListModel<>();
         for(var landlord: db.getLandlords()) {
@@ -71,6 +120,11 @@ public class ManagerController extends UserController {
         
         jlist.setModel(model);
     }
+    
+    /**
+     * Sets the data that the Manager can view as an array of all the properties.
+     * @param jlist
+     */
     public void viewProperties(JList jlist){
         DefaultListModel<String> model = new DefaultListModel<>();
         for(var property: db.getProperties()) {
@@ -80,6 +134,18 @@ public class ManagerController extends UserController {
         jlist.setModel(model);
     }
 
+
+
+    
+    //----------------------------------
+    // Change ListingState methods
+    //----------------------------------
+    
+    /**
+     * Changes the state of the selected listing.
+     * @param selectedState {String} New state of listing.
+     * @param selectedID Listing whose state is being changed.
+     */
 
     public void openListingStateView(String selected, JList jlist){
         String[] info = selected.split(" ");
@@ -162,53 +228,12 @@ public class ManagerController extends UserController {
         }
     }
 
+
     public void updateListingState(String selectedState, String selectedID) {
         db.updateListing(selectedState, selectedID);
         viewProperties(jlist);
         
         // Reload page
-    }
-
-    public void openFeeView() {
-        cfv = new ChangeFeeView();
-        cfv.setMc(this);
-        cfv.initComponents();
-        cfv.setLocationRelativeTo(null);
-        cfv.setVisible(true);
-    }
-
-    public void updateFee(int period, int fee) {
-        ArrayList<ListingFee> curr = db.getFees();
-        ListingFee newFee = new ListingFee(fee, period);
-        boolean found = false;
-
-        for(var existingFee: curr) {
-            if(existingFee.getDays() == period) {
-                found = true;
-                break;
-            }
-        }
-
-        if(!found) {
-            db.getFees().add(newFee);
-            db.pushFees();
-            JOptionPane.showMessageDialog(null, "Success!");
-        } else {
-            int choice = showConfirmDialog(null, "Already have a fee for this listing period.\n Would you like to replace it?",
-                    "Replace?", JOptionPane.YES_NO_OPTION);
-            if(choice == JOptionPane.YES_OPTION){
-                for(ListingFee f : db.getFees()){
-                    if(f.getDays() == newFee.getDays()){
-                        db.getFees().remove(f);
-                        db.pushFees();
-                        JOptionPane.showMessageDialog(null, "Success!");
-                        break;
-                    }
-                }
-                db.getFees().add((newFee));
-                db.pushFees();
-            }
-        }
     }
     
     /**
@@ -246,6 +271,26 @@ public class ManagerController extends UserController {
         }
     }
     
+    /**
+     * Finds the selected property and opens the ListingStatusView to change
+     * that properties status.
+     * @param {String} selected String detailing selected property and its current status.
+     * @param {JList} jlist
+     */
+    public void openListingStateView(String selected, JList jlist){
+        String[] info = selected.split(" ");
+
+        String propertyID = info[0];
+        String status = info[1];
+
+        lsv = new ListingStatusView(status, propertyID);
+        lsv.setMc(this);
+        lsv.initComponents();
+        lsv.setLocationRelativeTo(null);
+        lsv.setVisible(true);
+
+    }
+    
     //----------------------------------------------------------------------
     // Periodic Report functions
     //-----------------------------------------------------------------------
@@ -264,6 +309,30 @@ public class ManagerController extends UserController {
         SummaryReport monthlyReport = new SummaryReport(monthlyListings,4,active_list,db.getRentedProperties());
         //gui implementation
     }
+    
+    /**
+     * Opens the ReportView GUI interface
+     */
+    public void openReportView(){
+        rv = new ReportView();
+        rv.setMc(this);
+        rv.initComponents();
+        rv.setLocationRelativeTo(null);
+        rv.setVisible(true);
+
+    }
+    
+    /**
+     * Gets and returns Summary Report based on parameters.
+     * @param {String} startDate Beginning date of what to include in the report.
+     * @param {String} endDate End date of what to include in the report.
+     * @return The requested SummaryReport
+     */
+    public SummaryReport getReport(String startDate, String endDate){
+
+        SummaryReport report = db.getSummaryReport(startDate, endDate);
+        return report;
+    }
 
     //----------------------------------------------------------------------
     // Listing Fee functions
@@ -281,4 +350,62 @@ public class ManagerController extends UserController {
             }
     }
 
+    /**
+     * Creates new ListingFee.
+     * @param duration {int} Duration of fee.
+     * @param price {int} Price of fee.
+     */
+    public void addFee(int duration, int price){
+        db.getFees().add(new ListingFee(price, duration));
+    }
+    
+    /**
+     * Changes the fee for an already existing ListingFee.
+     * @param period {int} Duration of ListingFee
+     * @param fee {int} New fee
+     */
+    public void updateFee(int period, int fee) {
+        ArrayList<ListingFee> curr = db.getFees();
+        ListingFee newFee = new ListingFee(fee, period);
+        boolean found = false;
+
+        for(var existingFee: curr) {
+            if(existingFee.getDays() == period) {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) {
+            db.getFees().add(newFee);
+            db.pushFees();
+            JOptionPane.showMessageDialog(null, "Success!");
+        } else {
+            int choice = showConfirmDialog(null, "Already have a fee for this listing period.\n Would you like to replace it?",
+                    "Replace?", JOptionPane.YES_NO_OPTION);
+            if(choice == JOptionPane.YES_OPTION){
+                for(ListingFee f : db.getFees()){
+                    if(f.getDays() == newFee.getDays()){
+                        db.getFees().remove(f);
+                        db.pushFees();
+                        JOptionPane.showMessageDialog(null, "Success!");
+                        break;
+                    }
+                }
+                db.getFees().add((newFee));
+                db.pushFees();
+            }
+        }
+    }
+    
+    /**
+     * Opens the changeFeeView interface.
+     */
+    public void openFeeView() {
+        cfv = new ChangeFeeView();
+        cfv.setMc(this);
+        cfv.initComponents();
+        cfv.setLocationRelativeTo(null);
+        cfv.setVisible(true);
+    }
 }

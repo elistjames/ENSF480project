@@ -16,7 +16,8 @@ import java.time.LocalDate;
  */
 public class Listing {
 
-    private Property property;
+   
+	Property property;
     private int duration;
     private String state;
     private LocalDate startDate;
