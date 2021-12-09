@@ -1,9 +1,8 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Manjot
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Nov 28, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Model.Lising;
@@ -60,16 +59,8 @@ public class Property {
         return landlordID;
     }
 
-    public void setLandlordID(int landlordID) {
-        this.landlordID = landlordID;
-    }
-
     public String getAddress() {
         return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getType() {
@@ -84,32 +75,16 @@ public class Property {
         return bedrooms;
     }
 
-    public void setBedrooms(int bedrooms) {
-        this.bedrooms = bedrooms;
-    }
-
     public int getBathrooms() {
         return bathrooms;
-    }
-
-    public void setBathrooms(int bathrooms) {
-        this.bathrooms = bathrooms;
     }
 
     public int isFurnished() {
         return furnished;
     }
 
-    public void setFurnished(int furnished) {
-        this.furnished = furnished;
-    }
-
     public String getCityQuadrant() {
         return cityQuadrant;
-    }
-
-    public void setCityQuadrant(String cityQuadrant) {
-        this.cityQuadrant = cityQuadrant;
     }
 
     public String getState() {

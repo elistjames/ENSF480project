@@ -1,19 +1,14 @@
-/**
+/*
  * Author(s): Luke
- * Editted by:
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 5, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
-import Controller.UserController.RenterController;
-import Model.Lising.Listing;
-
 import javax.swing.*;
-import java.util.ArrayList;
 
 /**
  * A GUI interface class for Managers that gives options to show
@@ -30,9 +25,12 @@ public class ManagerView extends javax.swing.JFrame {
     }
 
     public ManagerView() {
-        // initComponents();
+
     }
 
+    /**
+     * This method is called to initialize the Components.
+     */
     public void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -63,49 +61,49 @@ public class ManagerView extends javax.swing.JFrame {
         renterButton.setText("View All Renters\n");
         renterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                renterButtonActionPerformed(evt);
+                renterButtonActionPerformed();
             }
         });
 
         landlordButton.setText("View All Landlords");
         landlordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                landlordButtonActionPerformed(evt);
+                landlordButtonActionPerformed();
             }
         });
 
         propertyButton.setText("View All Properties");
         propertyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                propertyButtonActionPerformed(evt);
+                propertyButtonActionPerformed();
             }
         });
 
         updatePropertyButton.setText("Update Property Status");
         updatePropertyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updatePropertyButtonActionPerformed(evt);
+                updatePropertyButtonActionPerformed();
             }
         });
 
         changeFeeButton.setText("Change Fee");
         changeFeeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeFeeButtonActionPerformed(evt);
+                changeFeeButtonActionPerformed();
             }
         });
 
         summaryButton.setText("Get Periodical Summary");
         summaryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                summaryButtonActionPerformed(evt);
+                summaryButtonActionPerformed();
             }
         });
 
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitButtonActionPerformed(evt);
+                exitButtonActionPerformed();
             }
         });
 
@@ -177,9 +175,9 @@ public class ManagerView extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }
 
-    private void renterButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    private void renterButtonActionPerformed() {
         // Pass in jList element to update its model
         updatePropertyButton.setVisible(false);
         mc.viewRenters(jList1);
@@ -187,14 +185,14 @@ public class ManagerView extends javax.swing.JFrame {
         System.out.println("Renter button pressed");
     }                                            
 
-    private void landlordButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void landlordButtonActionPerformed() {
         // TODO add your handling code here:
         updatePropertyButton.setVisible(false);
         mc.viewLandlords(jList1);
         System.out.println("Landlord Button pressed");
     }                                              
 
-    private void propertyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void propertyButtonActionPerformed() {
         // TODO add your handling code here:
         updatePropertyButton.setVisible(true);
         mc.viewProperties(jList1);
@@ -202,7 +200,7 @@ public class ManagerView extends javax.swing.JFrame {
         
     }
 
-    private void updatePropertyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+    private void updatePropertyButtonActionPerformed() {
         // Popup small window that allows you to view the current status of a property and change it 
         // (Dropdown menu)
         String selected = jList1.getSelectedValue();
@@ -214,17 +212,17 @@ public class ManagerView extends javax.swing.JFrame {
         }
     }    
     
-    private void changeFeeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
+    private void changeFeeButtonActionPerformed() {
         // TODO add your handling code here:
         mc.openFeeView();
     }          
 
-    private void summaryButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void summaryButtonActionPerformed() {
         // TODO add your handling code here:
         mc.openReportView();
     }                 
 
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void exitButtonActionPerformed() {
         // TODO add your handling code here:
         int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
         "Confirmation:", JOptionPane.YES_NO_OPTION);

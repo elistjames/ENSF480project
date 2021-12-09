@@ -1,9 +1,8 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Manjot
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Nov 28, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Model.Lising;
@@ -40,9 +39,7 @@ public class Listing {
         return duration;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
+
 
     public String getState() {
         return state;
@@ -58,10 +55,6 @@ public class Listing {
 
     public LocalDate getStartDate() {
         return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
     }
 
     public int getCurrentDay() {

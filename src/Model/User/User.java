@@ -1,9 +1,8 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Manjot
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Nov 27, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Model.User;

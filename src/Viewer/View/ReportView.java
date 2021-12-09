@@ -1,25 +1,19 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Luke
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 5, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
-import Controller.UserController.RenterController;
-import Model.Lising.Listing;
-import Model.User.SummaryReport;
 import Model.Lising.Property;
-
+import Model.User.SummaryReport;
 import javax.swing.*;
-
-import java.util.Date;  
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -33,7 +27,6 @@ public class ReportView extends javax.swing.JFrame {
      * Creates new form ReportView
      */
     public ReportView() {
-        // initComponents();
     }
 
     public void setMc(ManagerController mc) {
@@ -64,7 +57,7 @@ public class ReportView extends javax.swing.JFrame {
         SearchButton.setText("Search");
         SearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchButtonActionPerformed(evt);
+                SearchButtonActionPerformed();
             }
         });
 
@@ -82,12 +75,6 @@ public class ReportView extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(rentedList);
-
-        // totalListed.setText("jLabel6");
-
-        // totalRented.setText("jLabel7");
-
-        // totalActive.setText("jLabel8");
 
         jLabel6.setText("Desired End Date (yyyy-mm-dd)");
 
@@ -156,9 +143,9 @@ public class ReportView extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }
 
-    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {               
+    private void SearchButtonActionPerformed() {
         // Check to make sure start and end date are valid
         // End date can't be bigger than start date, and end date can't be in the future
         try {
@@ -192,9 +179,6 @@ public class ReportView extends javax.swing.JFrame {
         } 
 
     }                                        
-                                       
-
-
 
     // Variables declaration - do not modify                     
     private javax.swing.JButton SearchButton;

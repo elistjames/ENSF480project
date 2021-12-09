@@ -1,9 +1,8 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Manjot
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Nov 28, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Model.User;
@@ -18,15 +17,6 @@ public class SearchCriteria {
     private int n_bathrooms;
     private int furnished;
     private String cityQuadrant;
-
-    public SearchCriteria(int id) {
-        this.renterID = id;
-        type = "N/A";
-        n_bedrooms = -1;
-        n_bathrooms = -1;
-        furnished = -1;
-        cityQuadrant = "N/A";
-    }
 
     public SearchCriteria(int renterID, String type, int n_bedrooms, int n_bathrooms, int furnished,
                           String cityQuadrant) {

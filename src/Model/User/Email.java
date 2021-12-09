@@ -1,9 +1,8 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Manjot
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Nov 30, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Model.User;
@@ -25,8 +24,6 @@ public class Email {
     public Email(String fromEmail, String toEmail) {
         this.fromEmail = fromEmail;
         this.toEmail = toEmail;
-        this.subject = subject;
-        this.message = message;
     }
 
     public Email(String fromEmail, String toEmail, LocalDate date, String subject,String message) {
@@ -56,14 +53,6 @@ public class Email {
 
     public String getSubject() {
         return subject;
-    }
-
-    public void setFromEmail(String fromEmail) {
-        this.fromEmail = fromEmail;
-    }
-
-    public void setToEmail(String toEmail) {
-        this.toEmail = toEmail;
     }
 
     public void setSubject(String subject) {

@@ -1,25 +1,24 @@
-/** 
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Luke, Manjot
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 1, 2021
+ * Last Editted: Dec 6, 2021
  */
 
 package Controller.UserController;
 
-import java.time.temporal.ValueRange;
-import java.util.ArrayList;
 import Model.Lising.Listing;
 import Model.Lising.ListingFee;
 import Model.User.Manager;
 import Model.User.SummaryReport;
-import Model.User.User;
-import Viewer.View.ManagerView;
-import Viewer.View.ListingStatusView;
 import Viewer.View.ChangeFeeView;
+import Viewer.View.ListingStatusView;
+import Viewer.View.ManagerView;
 import Viewer.View.ReportView;
+
 import javax.swing.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static javax.swing.JOptionPane.showConfirmDialog;
 
@@ -79,6 +78,7 @@ public class ManagerController extends UserController {
     }
 
 
+
     // public void cancelListing(Listing l){
     //     for(Listing cl : db.getListings()){
     //         if(cl.getProperty().getID() == l.getProperty().getID()){
@@ -87,17 +87,11 @@ public class ManagerController extends UserController {
     //     }
     // }
 
+    public SummaryReport getReport(String startDate, String endDate){
 
-
-    // public void changeFee(ListingFee lf, int new_price){
-    //     for (ListingFee f : db.getFees()) {
-    //         if (f.getDays() ==  lf.getDays()){
-    //             f.setPrice(new_price);
-    //         }
-    //     }
-    // }
-
-    
+        return db.getSummaryReport(startDate, endDate);
+    }
+  
     //----------------------------------------------
     // Methods to change what is shows on main GUI
     //----------------------------------------------
@@ -141,6 +135,7 @@ public class ManagerController extends UserController {
     }
 
 
+
     
     //----------------------------------
     // Change ListingState methods
@@ -148,9 +143,92 @@ public class ManagerController extends UserController {
     
     /**
      * Changes the state of the selected listing.
-     * @param {String} selectedState New state of listing.
+     * @param selectedState {String} New state of listing.
      * @param selectedID Listing whose state is being changed.
      */
+
+    public void openListingStateView(String selected, JList jlist){
+        String[] info = selected.split(" ");
+
+        String propertyID = info[0];
+        String status = info[1];
+        if(status.equals("rented")){
+            JOptionPane.showMessageDialog(null, "This property is rented,\nTherefore the status cannot\n" +
+                    "be changed until the property's \nlease ends.");
+        }
+        else if(status.equals("unlisted")){
+            JOptionPane.showMessageDialog(null, "The property is currently un-posted by its owner.\n" +
+                    "You may not set it to active without the owners consent");
+        }
+        else{
+            lsv = new ListingStatusView(status, propertyID);
+            lsv.setMc(this);
+            lsv.initComponents();
+            lsv.updateComboBox(status);
+            lsv.setLocationRelativeTo(null);
+            lsv.setVisible(true);
+        }
+    }
+
+    public void openReportView(){
+        rv = new ReportView();
+        rv.setMc(this);
+        rv.initComponents();
+        rv.setLocationRelativeTo(null);
+        rv.setVisible(true);
+
+    }
+
+    public void changeListingState(Listing listing, String state){
+        System.out.println(listing.getProperty().getState());
+        System.out.println(state);
+        if(listing.getState().equals("suspended")){
+
+            if(state.equals("unlisted")){
+                unsuspendListing(listing);
+                cancelListing(listing);
+            }
+            else if(state.equals("listed")){
+                unsuspendListing(listing);
+            }
+        }
+        else if(listing.getState().equals("listed")){
+            switch (state) {
+                case "suspended" -> suspendListing(listing);
+                case "rented" -> rentOutListing(listing);
+                case "unlisted" -> cancelListing(listing);
+            }
+        }
+        viewProperties(jlist);
+    }
+
+    private void rentOutListing(Listing listing){
+        for(Listing l : db.getListings()){
+            if(l.getProperty().getID() == listing.getProperty().getID()){
+                l.getProperty().setState("rented");
+                db.getRentedProperties().add(l.getProperty());
+                db.getRentedDates().add(LocalDate.now());
+                db.getListings().remove(l);
+                break;
+            }
+        }
+    }
+
+    private void unsuspendListing(Listing listing){
+
+        for(Listing l : db.getSuspendedListings()){
+            if(l.getProperty().getID() == listing.getProperty().getID()){
+
+                l.getProperty().setState("listed");
+                l.setState("listed");
+                db.getListings().add(l);
+                db.getSuspendedListings().remove(l);
+                break;
+            }
+        }
+    }
+
+
     public void updateListingState(String selectedState, String selectedID) {
         db.updateListing(selectedState, selectedID);
         viewProperties(jlist);
@@ -162,21 +240,12 @@ public class ManagerController extends UserController {
      * Changes a listing whose state is suspended to listed.
      * Adds it to the database's regular list of listings, so that it is
      * shown when renters search for listings.
-     * @param {Listing} listing Listing to be unsuspended.
+     * @param listing {Listing} Listing to be unsuspended.
      */
-    public void unsuspendListing(Listing listing){
-        for(Listing l : db.getSuspendedListings()){
-            if(l.getProperty().getID() == listing.getProperty().getID()){
-                l.getProperty().setState("listed");
-                db.getListings().add(l);
-                db.getSuspendedListings().remove(l);
-            }
-        }
-    }
     
     /**
      * Removes Listing from database.
-     * @param {Listing} l Listing to be cancelled.
+     * @param l {Listing} Listing to be cancelled.
      */
     public void cancelListing(Listing l){
         for(Listing cl : db.getListings()){
@@ -188,14 +257,16 @@ public class ManagerController extends UserController {
 
     /**
      * Changes the listings state to suspended.
-     * @param {Listing} listing Listing to be suspended.
+     * @param listing {Listing} Listing to be suspended.
      */
-    public void suspendListing(Listing listing){
+    private void suspendListing(Listing listing){
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("suspended");
+                l.setState("suspended");
                 db.getSuspendedListings().add(l);
                 db.getListings().remove(l);
+                break;
             }
         }
     }
@@ -268,8 +339,8 @@ public class ManagerController extends UserController {
     //---------------------------------------------------------------------
     /**
      * Changes the price of a ListingFee.
-     * @param {ListingFee} lf Which ListingFee to change
-     * @param {int} new_price Price to change ListingFee to.
+     * @param lf {ListingFee} Which ListingFee to change
+     * @param new_price {int} Price to change ListingFee to.
      */
     public void changeFee(ListingFee lf, int new_price){
             for (ListingFee f : db.getFees()) {
@@ -279,11 +350,10 @@ public class ManagerController extends UserController {
             }
     }
 
-
     /**
      * Creates new ListingFee.
-     * @param {int} duration Duration of fee.
-     * @param {int} price Price of fee.
+     * @param duration {int} Duration of fee.
+     * @param price {int} Price of fee.
      */
     public void addFee(int duration, int price){
         db.getFees().add(new ListingFee(price, duration));
@@ -291,8 +361,8 @@ public class ManagerController extends UserController {
     
     /**
      * Changes the fee for an already existing ListingFee.
-     * @param {int} period Duration of ListingFee
-     * @param {int} fee New fee
+     * @param period {int} Duration of ListingFee
+     * @param fee {int} New fee
      */
     public void updateFee(int period, int fee) {
         ArrayList<ListingFee> curr = db.getFees();
@@ -338,5 +408,4 @@ public class ManagerController extends UserController {
         cfv.setLocationRelativeTo(null);
         cfv.setVisible(true);
     }
-
 }

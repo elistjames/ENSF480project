@@ -1,19 +1,16 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Luke
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 5, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
-import Controller.UserController.RenterController;
 import Model.Lising.Listing;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 /**
  * A GUI interface class that appears when a Manager
@@ -33,6 +30,9 @@ public class ListingStatusView extends javax.swing.JFrame {
         this.mc = mc;
     }
 
+    /**
+     * This method is called to initialize the Components.
+     */
     public void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
@@ -51,7 +51,7 @@ public class ListingStatusView extends javax.swing.JFrame {
         changeStatusButton.setText("Change Status");
         changeStatusButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeStatusButtonActionPerformed(evt);
+                changeStatusButtonActionPerformed();
             }
         });
 
@@ -89,14 +89,42 @@ public class ListingStatusView extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }
 
-    private void changeStatusButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-        // TODO add your handling code here:
-        mc.updateListingState(jComboBox1.getSelectedItem().toString(), currID);
-        currentStatusLabel.setText(jComboBox1.getSelectedItem().toString());
+    private void changeStatusButtonActionPerformed() {
+        String selected = String.valueOf(jComboBox1.getSelectedItem());
+        String st = "suspended";
+        for(Listing l: mc.db.getListings()){
+            if(Integer.parseInt(currID) == l.getProperty().getID()){
+                st = "listed";
+                mc.changeListingState(l, selected);
+                break;
+            }
+        }
+        if(st.equals("suspended")){
+            for(Listing l: mc.db.getSuspendedListings()){
+                if(Integer.parseInt(currID) == l.getProperty().getID()){
+                    if(selected.equals("rented")){
+                        mc.changeListingState(l, "listed");
+                    }
+                    mc.changeListingState(l, selected);
+                    break;
+                }
+            }
+        }
+        //mc.updateListingState(selected, currID);
+        currentStatusLabel.setText(selected);
         JOptionPane.showMessageDialog(null, "Success!");
-    }                                                  
+    }
+
+    public void updateComboBox(String currentState){
+        switch (currentState) {
+            case "rented" -> jComboBox1.setSelectedIndex(0);
+            case "unlisted" -> jComboBox1.setSelectedIndex(2);
+            case "suspended" -> jComboBox1.setSelectedIndex(3);
+            default -> jComboBox1.setSelectedIndex(1);
+        }
+    }
 
 
     // Variables declaration - do not modify                     

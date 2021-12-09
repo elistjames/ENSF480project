@@ -1,35 +1,29 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Luke, Manjot
  * Documented by: Ryan Sommerville
- * Date Created:
- * Last Editted:
+ * Date Created: Dec 3, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 
 
 package Controller.CoreController;
 
+import Controller.UserController.LandlordController;
 import Controller.UserController.ManagerController;
 import Controller.UserController.RenterController;
 import Controller.UserController.UserController;
 import Database.Database;
-import Model.User.Manager;
-import Controller.UserController.LandlordController;
-import Controller.UserController.RenterController;
-import Controller.UserController.UserController;
-import Database.Database;
 import Model.User.Landlord;
-
+import Model.User.Manager;
 import Model.User.Renter;
 import Model.User.User;
 import Viewer.Startup.StartPage;
 import Viewer.View.LandlordPage;
-import Viewer.View.RenterView;
 import Viewer.View.ManagerView;
+import Viewer.View.RenterView;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.time.LocalDate;
 
@@ -104,71 +98,65 @@ public class SystemController {
         sc.db.updateListingDates(sc.currentDate);
         
         //Runs the following function after all previous events have been completed.
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-            	//Open StartPage
-                sc.startPage = new StartPage();
-                sc.startPage.setLocationRelativeTo(null);
-                sc.startPage.setVisible(true);
-                
-                //Response to Pressing Login on StartPage
-                sc.startPage.getjButton1().addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    	//Get Username and Password
-                        String usernameIn = sc.startPage.getjTextField1().getText();
-                        String passwordIn = new String(sc.startPage.getjPasswordField1().getPassword());
-                        
-                        //Validates Username and Password and finds the User they correspond to
-                        if(sc.db.validateLogin(usernameIn, passwordIn)){
-                            User current = sc.db.getCurrentUser(usernameIn, passwordIn);
-                            if(current.getType().equals("renter")){
-                                sc.startPage.setVisible(false);
-                                sc.renterPage = new RenterView();
-                                sc.currentController = new RenterController((Renter)current, sc.renterPage);
-                            }
-                            else if(current.getType().equals("landlord")){
-                                sc.startPage.setVisible(false);
-                                sc.landlordPage = new LandlordPage();
-                                sc.currentController = new LandlordController((Landlord)current, sc.landlordPage);
-                            }
-                            else if(current.getType().equals("manager")){
-                                sc.startPage.setVisible(false);
-                                sc.managerView = new ManagerView();
-                                sc.currentController = new ManagerController((Manager)current, sc.managerView);
-                                System.out.println("you made it!");
-                            }
-                        }
-                        else{
-                            JOptionPane.showMessageDialog(null, "invalid login");
-                        }
-                    }
-                });
-                
-                //Responds to Pressing Skip on the StartPage
-                sc.startPage.getjButton2().addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        sc.startPage.setVisible(false);
-                        sc.renterPage = new RenterView();
-                        //Makes the User a default renter
-                        sc.currentController = new RenterController(new Renter(0, "none", "none",
-                                "none", "none", "renter"), sc.renterPage);
-                    }
-                });
-                
-                //Responds to pressing Exit on the StartPage
-                sc.startPage.getjButton3().addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
-                                "Confirmation:", JOptionPane.YES_NO_OPTION);
-                        if(choice == JOptionPane.YES_OPTION){
-                            sc.db.pushAll();
-                            System.exit(0);
-                        }
+        java.awt.EventQueue.invokeLater(() -> {
+            //Open StartPage
+            sc.startPage = new StartPage();
+            sc.startPage.setLocationRelativeTo(null);
+            sc.startPage.setVisible(true);
 
-                    }
-                });
+            //Response to Pressing Login on StartPage
+            sc.startPage.getjButton1().addActionListener(evt -> {
+                //Get Username and Password
+                String usernameIn = sc.startPage.getjTextField1().getText();
+                String passwordIn = new String(sc.startPage.getjPasswordField1().getPassword());
 
-            }
+                //Validates Username and Password and finds the User they correspond to
+                if(sc.db.validateLogin(usernameIn, passwordIn)){
+                    User current = sc.db.getCurrentUser(usernameIn, passwordIn);
+                    switch (current.getType()) {
+                        case "renter" -> {
+                            sc.startPage.setVisible(false);
+                            sc.renterPage = new RenterView();
+                            sc.currentController = new RenterController((Renter) current, sc.renterPage);
+                        }
+                        case "landlord" -> {
+                            sc.startPage.setVisible(false);
+                            sc.landlordPage = new LandlordPage();
+                            sc.currentController = new LandlordController((Landlord) current, sc.landlordPage);
+                        }
+                        case "manager" -> {
+                            sc.startPage.setVisible(false);
+                            sc.managerView = new ManagerView();
+                            sc.currentController = new ManagerController((Manager) current, sc.managerView);
+                            System.out.println("you made it!");
+                        }
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "invalid login");
+                }
+            });
+
+            //Responds to Pressing Skip on the StartPage
+            sc.startPage.getjButton2().addActionListener(evt -> {
+                sc.startPage.setVisible(false);
+                sc.renterPage = new RenterView();
+                //Makes the User a default renter
+                sc.currentController = new RenterController(new Renter(0, "none", "none",
+                        "none", "none", "renter"), sc.renterPage);
+            });
+
+            //Responds to pressing Exit on the StartPage
+            sc.startPage.getjButton3().addActionListener(evt -> {
+                int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
+                        "Confirmation:", JOptionPane.YES_NO_OPTION);
+                if(choice == JOptionPane.YES_OPTION){
+                    sc.db.pushAll();
+                    System.exit(0);
+                }
+
+            });
+
         });
 
 

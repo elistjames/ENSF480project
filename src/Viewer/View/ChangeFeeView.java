@@ -1,19 +1,14 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Luke
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 5, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
-import Controller.UserController.RenterController;
-import Model.Lising.Listing;
-
 import javax.swing.*;
-import java.util.ArrayList;
 
 /**
  * A GUI interface class that appears when a Manager is
@@ -31,7 +26,10 @@ public class ChangeFeeView extends javax.swing.JFrame {
     public void setMc(ManagerController mc) {
         this.mc = mc;
     }
-                      
+
+    /**
+     * This method is called to initialize the Components.
+     */
     public void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
@@ -102,10 +100,10 @@ public class ChangeFeeView extends javax.swing.JFrame {
 
 
         pack();
-    }// </editor-fold>                        
+    }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
+
         try{
             int period = Integer.parseInt(jTextField1.getText());
             int fee = Integer.parseInt(jTextField2.getText());
