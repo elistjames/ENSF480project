@@ -17,6 +17,7 @@ import Viewer.View.ManagerView;
 import Viewer.View.ReportView;
 
 import javax.swing.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static javax.swing.JOptionPane.showConfirmDialog;
@@ -85,13 +86,22 @@ public class ManagerController extends UserController {
 
         String propertyID = info[0];
         String status = info[1];
-
-        lsv = new ListingStatusView(status, propertyID);
-        lsv.setMc(this);
-        lsv.initComponents();
-        lsv.setLocationRelativeTo(null);
-        lsv.setVisible(true);
-
+        if(status.equals("rented")){
+            JOptionPane.showMessageDialog(null, "This property is rented,\nTherefore the status cannot\n" +
+                    "be changed until the property's \nlease ends.");
+        }
+        else if(status.equals("unlisted")){
+            JOptionPane.showMessageDialog(null, "The property is currently un-posted by its owner.\n" +
+                    "You may not set it to active without the owners consent");
+        }
+        else{
+            lsv = new ListingStatusView(status, propertyID);
+            lsv.setMc(this);
+            lsv.initComponents();
+            lsv.updateComboBox(status);
+            lsv.setLocationRelativeTo(null);
+            lsv.setVisible(true);
+        }
     }
 
     public void openReportView(){
@@ -101,6 +111,55 @@ public class ManagerController extends UserController {
         rv.setLocationRelativeTo(null);
         rv.setVisible(true);
 
+    }
+
+    public void changeListingState(Listing listing, String state){
+        System.out.println(listing.getProperty().getState());
+        System.out.println(state);
+        if(listing.getState().equals("suspended")){
+
+            if(state.equals("unlisted")){
+                unsuspendListing(listing);
+                cancelListing(listing);
+            }
+            else if(state.equals("listed")){
+                unsuspendListing(listing);
+            }
+        }
+        else if(listing.getState().equals("listed")){
+            switch (state) {
+                case "suspended" -> suspendListing(listing);
+                case "rented" -> rentOutListing(listing);
+                case "unlisted" -> cancelListing(listing);
+            }
+        }
+        viewProperties(jlist);
+    }
+
+    private void rentOutListing(Listing listing){
+        for(Listing l : db.getListings()){
+            if(l.getProperty().getID() == listing.getProperty().getID()){
+                l.getProperty().setState("rented");
+                db.getRentedProperties().add(l.getProperty());
+                db.getRentedDates().add(LocalDate.now());
+                db.getListings().remove(l);
+                break;
+            }
+        }
+    }
+
+    private void unsuspendListing(Listing listing){
+
+        for(Listing l : db.getSuspendedListings()){
+            if(l.getProperty().getID() == listing.getProperty().getID()){
+
+                l.getProperty().setState("listed");
+                l.setState("listed");
+                db.getListings().add(l);
+                db.getSuspendedListings().remove(l);
+                break;
+            }
+        }
     }
 
     public void updateListingState(String selectedState, String selectedID) {
@@ -175,12 +234,14 @@ public class ManagerController extends UserController {
      * Changes the listings state to suspended.
      * @param listing {Listing} Listing to be suspended.
      */
-    public void suspendListing(Listing listing){
+    private void suspendListing(Listing listing){
         for(Listing l : db.getListings()){
             if(l.getProperty().getID() == listing.getProperty().getID()){
                 l.getProperty().setState("suspended");
+                l.setState("suspended");
                 db.getSuspendedListings().add(l);
                 db.getListings().remove(l);
+                break;
             }
         }
     }
