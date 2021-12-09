@@ -1,14 +1,13 @@
-/**
+/*
  * Author(s): Eli St. James
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 5, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
-
 import javax.swing.*;
 
 /**
@@ -223,52 +222,12 @@ public class RegisterPropertyPage extends javax.swing.JFrame {
         return addressText;
     }
 
-    public JButton getCnfirmRegisterButton() {
-        return cnfirmRegisterButton;
-    }
-
     public JComboBox<String> getFurnishedOption() {
         return furnishedOption;
     }
 
     public JLabel getjLabel1() {
         return jLabel1;
-    }
-
-    public JLabel getjLabel2() {
-        return jLabel2;
-    }
-
-    public JLabel getjLabel3() {
-        return jLabel3;
-    }
-
-    public JLabel getjLabel4() {
-        return jLabel4;
-    }
-
-    public JLabel getjLabel5() {
-        return jLabel5;
-    }
-
-    public JLabel getjLabel6() {
-        return jLabel6;
-    }
-
-    public JLabel getjLabel7() {
-        return jLabel7;
-    }
-
-    public JLabel getjLabel8() {
-        return jLabel8;
-    }
-
-    public JLabel getjLabel9() {
-        return jLabel9;
-    }
-
-    public JPanel getjPanel1() {
-        return jPanel1;
     }
 
     public JComboBox<String> getnBathOption() {
@@ -281,10 +240,6 @@ public class RegisterPropertyPage extends javax.swing.JFrame {
 
     public JComboBox<String> getQuadrantOption() {
         return quadrantOption;
-    }
-
-    public JButton getRegisterBackButton() {
-        return registerBackButton;
     }
 
     public JComboBox<String> getTypeOption() {

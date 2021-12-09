@@ -1,18 +1,14 @@
 /*
  * Author(s): Luke
  * Documented by: Ryan Sommerville
- * Date created: Dec
- * Last Editted:
+ * Date created: Dec 5, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
-import Controller.UserController.RenterController;
-import Model.Lising.Listing;
-
 import javax.swing.*;
-import java.util.ArrayList;
 
 /**
  * A GUI interface class that appears when a Manager
@@ -53,7 +49,7 @@ public class ListingStatusView extends javax.swing.JFrame {
         changeStatusButton.setText("Change Status");
         changeStatusButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeStatusButtonActionPerformed(evt);
+                changeStatusButtonActionPerformed();
             }
         });
 
@@ -91,10 +87,9 @@ public class ListingStatusView extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }
 
-    private void changeStatusButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-        // TODO add your handling code here:
+    private void changeStatusButtonActionPerformed() {
         mc.updateListingState(jComboBox1.getSelectedItem().toString(), currID);
         currentStatusLabel.setText(jComboBox1.getSelectedItem().toString());
         JOptionPane.showMessageDialog(null, "Success!");

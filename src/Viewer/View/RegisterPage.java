@@ -1,8 +1,8 @@
-/**
+/*
  * Author(s): Eli St. James
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 4, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
@@ -173,10 +173,6 @@ public class RegisterPage extends javax.swing.JFrame {
     private javax.swing.JTextField usernameText;
     // End of variables declaration
 
-    public JButton getBackButton() {
-        return backButton;
-    }
-
     public JTextField getEmailText() {
         return emailText;
     }
@@ -189,32 +185,8 @@ public class RegisterPage extends javax.swing.JFrame {
         return jLabel1;
     }
 
-    public JLabel getjLabel2() {
-        return jLabel2;
-    }
-
-    public JLabel getjLabel3() {
-        return jLabel3;
-    }
-
-    public JLabel getjLabel4() {
-        return jLabel4;
-    }
-
-    public JLabel getjLabel5() {
-        return jLabel5;
-    }
-
-    public JPanel getjPanel1() {
-        return jPanel1;
-    }
-
     public JTextField getPasswordText() {
         return passwordText;
-    }
-
-    public JButton getRegisterButton() {
-        return registerButton;
     }
 
     public JTextField getUsernameText() {

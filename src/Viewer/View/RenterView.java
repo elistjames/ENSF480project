@@ -1,8 +1,8 @@
-/**
+/*
  * Author(s): Eli St. James
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 4, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Viewer.View;
@@ -69,7 +69,7 @@ public class RenterView extends javax.swing.JFrame {
         searchButton.setText("Search");
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
+                searchButtonActionPerformed();
             }
         });
 
@@ -96,7 +96,6 @@ public class RenterView extends javax.swing.JFrame {
                     if(l.getProperty().getBathrooms() == rc.db.getCurrentSearch(rc.current.getUserID()).getN_bathrooms()||rc.db.getCurrentSearch(rc.current.getUserID()).getN_bathrooms() == -1){
                         if(l.getProperty().isFurnished() == rc.db.getCurrentSearch(rc.current.getUserID()).isFurnished()||rc.db.getCurrentSearch(rc.current.getUserID()).isFurnished() == -1){
                             if(l.getProperty().getCityQuadrant().equals(rc.db.getCurrentSearch(rc.current.getUserID()).getCityQuadrant())||rc.db.getCurrentSearch(rc.current.getUserID()).getCityQuadrant().equals("N/A")){
-                                String tmp2 = "Address: "+l.getProperty().getAddress()+"          Posted By: "+ rc.db.lookupLandlord(l.getProperty().getLandlordID()).getName()+"       Expires in "+(l.getDuration()-l.getCurrentDay())+" days.";
                                 String tmp = String.format("Address: %1$-25s Posted by: %2$-20s Posting expires in %3$3d days",
                                         l.getProperty().getAddress(), rc.db.lookupLandlord(l.getProperty().getLandlordID()).getName(),
                                         l.getDuration()-l.getCurrentDay());
@@ -118,7 +117,7 @@ public class RenterView extends javax.swing.JFrame {
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitButtonActionPerformed(evt);
+                exitButtonActionPerformed();
             }
         });
 
@@ -146,7 +145,7 @@ public class RenterView extends javax.swing.JFrame {
         applyButton.setText("Apply");
         applyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                applyButtonActionPerformed(evt);
+                applyButtonActionPerformed();
             }
         });
 
@@ -243,7 +242,7 @@ public class RenterView extends javax.swing.JFrame {
         pack();
     }
 
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void exitButtonActionPerformed() {
         int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
                 "Confirmation:", JOptionPane.YES_NO_OPTION);
         if(choice == JOptionPane.YES_OPTION) {
@@ -252,11 +251,11 @@ public class RenterView extends javax.swing.JFrame {
         }
     }
 
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void searchButtonActionPerformed() {
         rc.searchListings();
     }
 
-    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void applyButtonActionPerformed() {
         String tmpType = String.valueOf(typeOption.getSelectedItem());
         String tmpNbed = String.valueOf(nBedOption.getSelectedItem());
         String tmpNbath = String.valueOf(nBathOption.getSelectedItem());
@@ -330,81 +329,11 @@ public class RenterView extends javax.swing.JFrame {
     // End of variables declaration
 
 
-
-
-    public JButton getApplyButton() {
-        return applyButton;
-    }
-
-    public JButton getAccountButton() {
-        return accountButton;
-    }
-
-    public JButton getContactButton() {
-        return contactButton;
-    }
-
-    public JButton getExitButton() {
-        return exitButton;
-    }
-
-    public JComboBox<String> getFurnishedOption() {
-        return furnishedOption;
-    }
-
     public JLabel getjLabel1() {
         return jLabel1;
     }
 
-    public JLabel getjLabel2() {
-        return jLabel2;
-    }
-
-    public JLabel getjLabel3() {
-        return jLabel3;
-    }
-
-    public JLabel getjLabel4() {
-        return jLabel4;
-    }
-
-    public JLabel getjLabel5() {
-        return jLabel5;
-    }
-
     public JList<String> getjList1() {
         return jList1;
-    }
-
-    public JMenuItem getjMenuItem1() {
-        return jMenuItem1;
-    }
-
-    public JScrollPane getListingView() {
-        return listingView;
-    }
-
-    public JComboBox<String> getnBathOption() {
-        return nBathOption;
-    }
-
-    public JComboBox<String> getnBedOption() {
-        return nBedOption;
-    }
-
-    public JComboBox<String> getQuadrantOption() {
-        return quadrantOption;
-    }
-
-    public JPanel getRenterPanel() {
-        return renterPanel;
-    }
-
-    public JButton getSearchButton() {
-        return searchButton;
-    }
-
-    public JComboBox<String> getTypeOption() {
-        return typeOption;
     }
 }
