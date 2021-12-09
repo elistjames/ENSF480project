@@ -2,7 +2,7 @@
  * Author(s): Eli, Luke, Manjot
  * Documented by: Ryan Sommerville
  * Date created: Dec 1, 2021
- * Last Editted: Dec 6, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Controller.UserController;

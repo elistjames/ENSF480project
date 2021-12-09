@@ -77,16 +77,12 @@ public class ManagerController extends UserController {
         this.mv.setVisible(true);
     }
 
-
-
-    // public void cancelListing(Listing l){
-    //     for(Listing cl : db.getListings()){
-    //         if(cl.getProperty().getID() == l.getProperty().getID()){
-    //             db.getListings().remove(cl);
-    //         }
-    //     }
-    // }
-
+    /**
+     * Gets and returns Summary Report based on parameters.
+     * @param {String} startDate Beginning date of what to include in the report.
+     * @param {String} endDate End date of what to include in the report.
+     * @return The requested SummaryReport
+     */
     public SummaryReport getReport(String startDate, String endDate){
 
         return db.getSummaryReport(startDate, endDate);
@@ -147,6 +143,12 @@ public class ManagerController extends UserController {
      * @param selectedID Listing whose state is being changed.
      */
 
+    /**
+     * Finds the selected property and opens the ListingStatusView to change
+     * that properties status.
+     * @param {String} selected String detailing selected property and its current status.
+     * @param {JList} jlist
+     */
     public void openListingStateView(String selected, JList jlist){
         String[] info = selected.split(" ");
 
@@ -168,15 +170,6 @@ public class ManagerController extends UserController {
             lsv.setLocationRelativeTo(null);
             lsv.setVisible(true);
         }
-    }
-
-    public void openReportView(){
-        rv = new ReportView();
-        rv.setMc(this);
-        rv.initComponents();
-        rv.setLocationRelativeTo(null);
-        rv.setVisible(true);
-
     }
 
     public void changeListingState(Listing listing, String state){
@@ -214,6 +207,12 @@ public class ManagerController extends UserController {
         }
     }
 
+    /**
+     * Changes a listing whose state is suspended to listed.
+     * Adds it to the database's regular list of listings, so that it is
+     * shown when renters search for listings.
+     * @param listing {Listing} Listing to be unsuspended.
+     */
     private void unsuspendListing(Listing listing){
 
         for(Listing l : db.getSuspendedListings()){
@@ -235,13 +234,6 @@ public class ManagerController extends UserController {
         
         // Reload page
     }
-    
-    /**
-     * Changes a listing whose state is suspended to listed.
-     * Adds it to the database's regular list of listings, so that it is
-     * shown when renters search for listings.
-     * @param listing {Listing} Listing to be unsuspended.
-     */
     
     /**
      * Removes Listing from database.
@@ -270,26 +262,7 @@ public class ManagerController extends UserController {
             }
         }
     }
-    
-    /**
-     * Finds the selected property and opens the ListingStatusView to change
-     * that properties status.
-     * @param {String} selected String detailing selected property and its current status.
-     * @param {JList} jlist
-     */
-    public void openListingStateView(String selected, JList jlist){
-        String[] info = selected.split(" ");
 
-        String propertyID = info[0];
-        String status = info[1];
-
-        lsv = new ListingStatusView(status, propertyID);
-        lsv.setMc(this);
-        lsv.initComponents();
-        lsv.setLocationRelativeTo(null);
-        lsv.setVisible(true);
-
-    }
     
     //----------------------------------------------------------------------
     // Periodic Report functions
@@ -321,18 +294,7 @@ public class ManagerController extends UserController {
         rv.setVisible(true);
 
     }
-    
-    /**
-     * Gets and returns Summary Report based on parameters.
-     * @param {String} startDate Beginning date of what to include in the report.
-     * @param {String} endDate End date of what to include in the report.
-     * @return The requested SummaryReport
-     */
-    public SummaryReport getReport(String startDate, String endDate){
 
-        SummaryReport report = db.getSummaryReport(startDate, endDate);
-        return report;
-    }
 
     //----------------------------------------------------------------------
     // Listing Fee functions
