@@ -1,6 +1,5 @@
 /**
  * Author(s): Luke
- * Editted by:
  * Documented by: Ryan Sommerville
  * Date created:
  * Last Editted:
@@ -33,6 +32,9 @@ public class ManagerView extends javax.swing.JFrame {
         // initComponents();
     }
 
+    /**
+     * This method is called to initialize the Components.
+     */
     public void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();

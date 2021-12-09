@@ -1,6 +1,5 @@
 /**
- * Author(s):
- * Editted by:
+ * Author(s): Luke
  * Documented by: Ryan Sommerville
  * Date created:
  * Last Editted:

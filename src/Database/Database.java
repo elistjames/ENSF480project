@@ -1,12 +1,11 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli St. James
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Nov 27, 2021
+ * Last Edited: Dec 6, 2021
  */
 
-/**
+/*
  * A class that accesses a database and retrieves and
  * stores the data there. It is also in charge of filling
  * the database with new data when the program exits. It follows the Singleton design
@@ -14,15 +13,14 @@
  * at any point in time.
  */
 package Database;
+
+import Model.Lising.Listing;
+import Model.Lising.ListingFee;
+import Model.Lising.Property;
+import Model.User.*;
 import java.sql.*;
-import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-
-import Model.User.*;
-
-import Model.Lising.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -222,7 +220,7 @@ public class Database {
         }
 
         // Modify listing status
-        ArrayList<Listing> newListings = new ArrayList<Listing>();
+        ArrayList<Listing> newListings = new ArrayList<>();
         boolean found = false;
         for(var listing: listings) {
             Property currProperty = listing.getProperty();
@@ -242,53 +240,6 @@ public class Database {
         }
 
         listings = newListings;
-        // try {
-        //     Statement stmt = dbConnect.createStatement();
-        //     String updateProperties = "UPDATE properties SET State = \"" + selectedState + "\" WHERE ID = \"" + selectedID + "\"";
-        
-        //     // If we have general functions for these, replace these query lines with function calls
-        //     String insertListing = "INSERT INTO listings (PropertyID,Duration,State,StartDate,CurrentDay) VALUES (?,?,?,?,?)";
-
-        //     // Checks if there is an existing listing with the same property ID
-        //     ResultSet checkExist = stmt.executeQuery("SELECT * FROM listings WHERE PropertyID = \"" + selectedID + "\""); 
-
-        //     String deleteListing = "DELETE FROM listings WHERE PropertyID = \"" + selectedID + "\"";
-
-
-
-
-        //     if(selectedState == "Active" && !checkExist.isBeforeFirst()) {
-        //         ResultSet result = stmt.executeQuery("SELECT * FROM properties WHERE ID = \"" + selectedID + "\""); 
-                
-        //         //Creating new listing when state is set to active
-        //         // This is hard coded with default duration and currentday values
-        //         Listing newListing = new Listing(this.getProperty(Integer.parseInt(selectedID)),
-        //         30, selectedState,
-        //         LocalDate.now(), 0);
-
-        //         PreparedStatement myStmt = dbConnect.prepareStatement(insertListing);
-
-        //         myStmt.setInt(1, newListing.getProperty().getID());
-        //         myStmt.setInt(2, newListing.getDuration());
-        //         myStmt.setString(3, newListing.getState());
-        //         myStmt.setString(4, newListing.getStartDate().toString());
-        //         myStmt.setInt(5, newListing.getCurrentDay());
-
-        //         myStmt.executeUpdate();
-        //         myStmt.close();
-                
-        //     // If not active, delete listing
-        //     } else if(selectedState != "Active" && checkExist.isBeforeFirst()){
-        //         stmt.executeUpdate(deleteListing);
-        //     }
-        //     stmt.executeUpdate(updateProperties);
-
-        //     System.out.println("Why no work");
-        // } catch(SQLException e) {
-        //     System.out.println(e);
-        // }
-        
-
     }
 
 
@@ -945,10 +896,6 @@ public class Database {
             // int userID, String name, String username, String password, String email, String type
             SummaryReport report = new SummaryReport(listedCount.getInt("listedCount"), rentedCount.getInt("rentedCount"),  
                                                 activeCount.getInt("activeCount"),  rented);
-            // listedCount.close();
-            // activeCount.close();
-            // rentedList.close();
-            // rentedCount.close();
 
             return report;
         } catch(SQLException e) {System.out.println(e);}

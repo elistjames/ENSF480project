@@ -1,8 +1,7 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Luke
  * Documented by: Ryan Sommerville
- * Date created:
+ * Date created: Dec
  * Last Editted:
  */
 
@@ -33,6 +32,9 @@ public class ListingStatusView extends javax.swing.JFrame {
         this.mc = mc;
     }
 
+    /**
+     * This method is called to initialize the Components.
+     */
     public void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();

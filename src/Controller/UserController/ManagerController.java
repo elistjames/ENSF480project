@@ -1,25 +1,23 @@
-/** 
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Eli, Luke, Manjot
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 1, 2021
+ * Last Editted: Dec 6, 2021
  */
 
 package Controller.UserController;
 
-import java.time.temporal.ValueRange;
-import java.util.ArrayList;
 import Model.Lising.Listing;
 import Model.Lising.ListingFee;
 import Model.User.Manager;
 import Model.User.SummaryReport;
-import Model.User.User;
-import Viewer.View.ManagerView;
-import Viewer.View.ListingStatusView;
 import Viewer.View.ChangeFeeView;
+import Viewer.View.ListingStatusView;
+import Viewer.View.ManagerView;
 import Viewer.View.ReportView;
+
 import javax.swing.*;
+import java.util.ArrayList;
 
 import static javax.swing.JOptionPane.showConfirmDialog;
 
@@ -49,27 +47,11 @@ public class ManagerController extends UserController {
     }
 
 
-    // public void cancelListing(Listing l){
-    //     for(Listing cl : db.getListings()){
-    //         if(cl.getProperty().getID() == l.getProperty().getID()){
-    //             db.getListings().remove(cl);
-    //         }
-    //     }
-    // }
-
     public SummaryReport getReport(String startDate, String endDate){
 
-        SummaryReport report = db.getSummaryReport(startDate, endDate);
-        return report;
+        return db.getSummaryReport(startDate, endDate);
     }
 
-    // public void changeFee(ListingFee lf, int new_price){
-    //     for (ListingFee f : db.getFees()) {
-    //         if (f.getDays() ==  lf.getDays()){
-    //             f.setPrice(new_price);
-    //         }
-    //     }
-    // }
 
     public void viewRenters(JList jlist){
         DefaultListModel<String> model = new DefaultListModel<>();
@@ -174,21 +156,12 @@ public class ManagerController extends UserController {
      * Changes a listing whose state is suspended to listed.
      * Adds it to the database's regular list of listings, so that it is
      * shown when renters search for listings.
-     * @param {Listing} listing Listing to be unsuspended.
+     * @param listing {Listing} Listing to be unsuspended.
      */
-    public void unsuspendListing(Listing listing){
-        for(Listing l : db.getSuspendedListings()){
-            if(l.getProperty().getID() == listing.getProperty().getID()){
-                l.getProperty().setState("listed");
-                db.getListings().add(l);
-                db.getSuspendedListings().remove(l);
-            }
-        }
-    }
     
     /**
      * Removes Listing from database.
-     * @param {Listing} l Listing to be cancelled.
+     * @param l {Listing} Listing to be cancelled.
      */
     public void cancelListing(Listing l){
         for(Listing cl : db.getListings()){
@@ -200,7 +173,7 @@ public class ManagerController extends UserController {
 
     /**
      * Changes the listings state to suspended.
-     * @param {Listing} listing Listing to be suspended.
+     * @param listing {Listing} Listing to be suspended.
      */
     public void suspendListing(Listing listing){
         for(Listing l : db.getListings()){
@@ -236,8 +209,8 @@ public class ManagerController extends UserController {
     //---------------------------------------------------------------------
     /**
      * Changes the price of a ListingFee.
-     * @param {ListingFee} lf Which ListingFee to change
-     * @param {int} new_price Price to change ListingFee to.
+     * @param lf {ListingFee} Which ListingFee to change
+     * @param new_price {int} Price to change ListingFee to.
      */
     public void changeFee(ListingFee lf, int new_price){
             for (ListingFee f : db.getFees()) {
@@ -245,16 +218,6 @@ public class ManagerController extends UserController {
                     f.setPrice(new_price);
                 }
             }
-    }
-
-
-    /**
-     * Creates new ListingFee.
-     * @param {int} duration Duration of fee.
-     * @param {int} price Price of fee.
-     */
-    public void addFee(int duration, int price){
-        db.getFees().add(new ListingFee(price, duration));
     }
 
 }

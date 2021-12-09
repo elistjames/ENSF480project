@@ -1,15 +1,13 @@
-/**
- * Author(s):
- * Editted by:
+/*
+ * Author(s): Manjot, Luke
  * Documented by: Ryan Sommerville
- * Date created:
- * Last Editted:
+ * Date created: Dec 1, 2021
+ * Last Edited: Dec 6, 2021
  */
 
 package Model.User;
 
 import Model.Lising.Property;
-
 import java.util.ArrayList;
 
 /**
