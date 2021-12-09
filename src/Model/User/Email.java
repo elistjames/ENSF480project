@@ -1,7 +1,20 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.User;
 
 import java.time.LocalDate;
 
+/**
+ * A class that holds the information for an email,
+ * including from and to, as well as the subject, date,
+ * and message.
+ */
 public class Email {
     private String fromEmail;
     private String toEmail;

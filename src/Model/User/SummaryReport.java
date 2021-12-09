@@ -1,9 +1,20 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.User;
 
 import Model.Lising.Property;
 
 import java.util.ArrayList;
 
+/**
+ * A class that holds the information that forms a periodic report.
+ */
 public class SummaryReport {
     private int housesListed;
     private int housesRented;

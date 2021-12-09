@@ -1,9 +1,20 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
 
 import javax.swing.*;
 
+/**
+ * A GUI interface class that handles the process to register a property.
+ */
 public class RegisterPropertyPage extends javax.swing.JFrame {
     LandlordController lc;
 

@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.RenterController;
@@ -6,6 +14,9 @@ import Model.Lising.Listing;
 import javax.swing.*;
 import java.util.ArrayList;
 
+/**
+ * A GUI interface that shows the main view for renters.
+ */
 public class RenterView extends javax.swing.JFrame {
     private RenterController rc;
 

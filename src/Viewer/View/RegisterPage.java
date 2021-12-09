@@ -1,9 +1,20 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.RenterController;
 
 import javax.swing.*;
 
+/**
+ * A GUI interface class that handles the process for a regular renter to register an account.
+ */
 public class RegisterPage extends javax.swing.JFrame {
     private RenterController rc;
     /**

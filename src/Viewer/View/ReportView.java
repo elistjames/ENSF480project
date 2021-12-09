@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
@@ -13,6 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
+/**
+ * A GUI interface class that shows the periodic report
+ * that Managers can view.
+ */
 public class ReportView extends javax.swing.JFrame {
 
     private ManagerController mc;

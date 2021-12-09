@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
@@ -7,6 +15,11 @@ import Model.Lising.Property;
 
 import javax.swing.*;
 
+/**
+ * A GUI interface class for Landlords that shows information
+ * available to the Landlord and gives options for actions
+ * the landlord can take.
+ */
 public class LandlordPage extends javax.swing.JFrame {
     LandlordController lc;
     /**

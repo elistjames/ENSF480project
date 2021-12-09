@@ -1,5 +1,17 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.Lising;
 
+/**
+ * A class that represents a property and holds information
+ * about that property.
+ */
 public class Property {
     private int landlordID;
     private int ID;

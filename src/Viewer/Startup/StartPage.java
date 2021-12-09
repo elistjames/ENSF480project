@@ -1,9 +1,21 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.Startup;
 
 import Controller.CoreController.SystemController;
 
 import javax.swing.*;
 
+/**
+ * A GUI class that appears when the program is first run.
+ * Gives options to login, skip, or exit.
+ */
 public class StartPage extends javax.swing.JFrame {
 
     /**

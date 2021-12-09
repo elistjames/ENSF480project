@@ -1,5 +1,17 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.Lising;
 
+/**
+ * A class that represents a particular listing fee,
+ * including the duration and amount of the fee.
+ */
 public class ListingFee {
     private int price;
     private int days;

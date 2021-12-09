@@ -1,5 +1,16 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.User;
 
+/**
+ * A class that holds criteria to search for properties.
+ */
 public class SearchCriteria {
     private int renterID;
     private String type;

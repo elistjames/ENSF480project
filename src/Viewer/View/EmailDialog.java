@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
@@ -6,6 +14,9 @@ import Model.User.Email;
 
 import java.time.LocalDate;
 
+/**
+ * A Dialog box that shows an email that a Renter or Landlord has recieved.
+ */
 public class EmailDialog extends javax.swing.JDialog {
     RenterController rc;
     LandlordController lc;

@@ -1,5 +1,17 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Model.User;
 
+/**
+ * An abstract class that represents a User of the program
+ * and holds their login and contact info.
+ */
 public abstract class User {
 
     private String name;

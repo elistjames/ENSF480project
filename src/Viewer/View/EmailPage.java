@@ -1,3 +1,11 @@
+/**
+ * Author(s):
+ * Editted by:
+ * Documented by: Ryan Sommerville
+ * Date created:
+ * Last Editted:
+ */
+
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
@@ -6,6 +14,10 @@ import Controller.UserController.UserController;
 
 import javax.swing.*;
 
+/**
+ * A GUI interface class that appears when a Landlord or Renter
+ * is sending an email.
+ */
 public class EmailPage extends javax.swing.JFrame {
     RenterController rc;
     LandlordController lc;
