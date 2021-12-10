@@ -8,8 +8,8 @@
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
-import Model.Lising.Listing;
-import Model.Lising.Property;
+import Model.Listing.Listing;
+import Model.Listing.Property;
 
 import javax.swing.*;
 

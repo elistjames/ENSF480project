@@ -18,9 +18,9 @@
 
 package Database;
 
-import Model.Lising.Listing;
-import Model.Lising.ListingFee;
-import Model.Lising.Property;
+import Model.Listing.Listing;
+import Model.Listing.ListingFee;
+import Model.Listing.Property;
 import Model.User.*;
 import java.sql.*;
 import java.time.LocalDate;

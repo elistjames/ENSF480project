@@ -7,7 +7,7 @@
 
 package Controller.UserController;
 
-import Model.Lising.Property;
+import Model.Listing.Property;
 import Model.User.Email;
 import Model.User.Renter;
 import Model.User.SearchCriteria;

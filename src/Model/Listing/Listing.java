@@ -5,7 +5,7 @@
  * Last Edited: Dec 6, 2021
  */
 
-package Model.Lising;
+package Model.Listing;
 
 import java.time.LocalDate;
 

@@ -7,8 +7,8 @@
 
 package Controller.UserController;
 
-import Model.Lising.Listing;
-import Model.Lising.ListingFee;
+import Model.Listing.Listing;
+import Model.Listing.ListingFee;
 import Model.User.Manager;
 import Model.User.SummaryReport;
 import Viewer.View.ChangeFeeView;

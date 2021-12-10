@@ -8,7 +8,7 @@
 package Viewer.View;
 
 import Controller.UserController.ManagerController;
-import Model.Lising.Property;
+import Model.Listing.Property;
 import Model.User.SummaryReport;
 import javax.swing.*;
 import java.text.SimpleDateFormat;

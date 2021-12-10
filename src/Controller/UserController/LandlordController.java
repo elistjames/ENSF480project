@@ -7,9 +7,9 @@
 
 package Controller.UserController;
 
-import Model.Lising.Listing;
-import Model.Lising.ListingFee;
-import Model.Lising.Property;
+import Model.Listing.Listing;
+import Model.Listing.ListingFee;
+import Model.Listing.Property;
 import Model.User.Email;
 import Model.User.Landlord;
 import Viewer.View.*;

@@ -7,7 +7,7 @@
 
 package Model.User;
 
-import Model.Lising.Property;
+import Model.Listing.Property;
 import java.util.ArrayList;
 
 /**

@@ -8,7 +8,7 @@
 package Viewer.View;
 
 import Controller.UserController.LandlordController;
-import Model.Lising.ListingFee;
+import Model.Listing.ListingFee;
 
 import javax.swing.*;
 

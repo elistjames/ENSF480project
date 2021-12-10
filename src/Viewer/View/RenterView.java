@@ -8,7 +8,7 @@
 package Viewer.View;
 
 import Controller.UserController.RenterController;
-import Model.Lising.Listing;
+import Model.Listing.Listing;
 
 import javax.swing.*;
 
